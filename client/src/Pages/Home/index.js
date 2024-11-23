@@ -48,58 +48,63 @@ const Home = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     context.setisHeaderFooterShow(true);
-    setselectedCat(context.categoryData[0]?.name);
-
+  
+    // Kiểm tra xem context.categoryData có phải là mảng và có ít nhất một phần tử không
+    if (context.categoryData && Array.isArray(context.categoryData) && context.categoryData.length > 0) {
+      setselectedCat(context.categoryData[0]?.name);
+    } else {
+      setselectedCat('default-category-name'); // Giá trị mặc định nếu không có categoryData hợp lệ
+    }
+  
     const location = localStorage.getItem("location");
-
+  
     if (location !== null && location !== "" && location !== undefined) {
       fetchDataFromApi(`/api/products/featured?location=${location}`).then(
         (res) => {
           setFeaturedProducts(res);
         }
       );
-
+  
       fetchDataFromApi(
         `/api/products?page=1&perPage=16&location=${location}`
       ).then((res) => {
         setProductsData(res);
       });
     }
-
+  
     fetchDataFromApi("/api/homeBanner").then((res) => {
       setHomeSlides(res);
     });
-
+  
     fetchDataFromApi("/api/banners").then((res) => {
       setBannerList(res);
     });
-
+  
     fetchDataFromApi("/api/homeSideBanners").then((res) => {
       setHomeSideBanners(res);
     });
-
+  
     fetchDataFromApi("/api/homeBottomBanners").then((res) => {
       setHomeBottomBanners(res);
     });
-
+  
     context.setEnableFilterTab(false);
     context.setIsBottomShow(true);
-  }, []);
+  }, [context.categoryData]);
+  
+  
+  
+  
 
   useEffect(() => {
-    if (context.categoryData[0] !== undefined) {
+    // Kiểm tra context.categoryData có phải là mảng và có ít nhất một phần tử
+    if (Array.isArray(context.categoryData) && context.categoryData.length > 0) {
       setselectedCat(context.categoryData[0].name);
-    }
-
-    if (context.categoryData?.length !== 0) {
-      const randomIndex = Math.floor(
-        Math.random() * context.categoryData.length
-      );
-
+  
+      const randomIndex = Math.floor(Math.random() * context.categoryData.length);
+  
       fetchDataFromApi(
-        `/api/products/catId?catId=${
-          context.categoryData[randomIndex]?.id
-        }&location=${localStorage.getItem("location")}`
+        `/api/products/catId?catId=${context.categoryData[randomIndex]?.id}&location=${localStorage.getItem("location")}`
       ).then((res) => {
         setRandomCatProducts({
           catName: context.categoryData[randomIndex]?.name,
@@ -109,6 +114,7 @@ const Home = () => {
       });
     }
   }, [context.categoryData]);
+  
 
   useEffect(() => {
     if (selectedCat !== undefined) {
