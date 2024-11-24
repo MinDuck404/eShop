@@ -1,10 +1,16 @@
 const mongoose = require('mongoose');
 
+
+
 const categorySchema = mongoose.Schema({
     name:{
         type:String,
+        required:true
+    },
+    slug:{
+        type:String,
         required:true,
-        trim: true
+        unique:true
     },
     images:[
         {
@@ -14,14 +20,9 @@ const categorySchema = mongoose.Schema({
     color:{
         type:String,
     },
-    parentCatName:{
-        type:String,
-    },
-    parentId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
-        default: null
-      }
+    parentId:{
+        type:String
+    }
 },{timestamps:true})
 
 categorySchema.virtual('id').get(function () {

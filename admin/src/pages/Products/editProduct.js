@@ -32,7 +32,6 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 import axios from "axios";
 import CountryDropdown from "../../components/CountryDropdown";
 import Select2 from "react-select";
-import SearchableSelect from "../../components/SearchableSelect";
 
 //breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -92,10 +91,6 @@ const EditUpload = () => {
   const [selectedLocation, setSelectedLocation] = useState([]);
   const [countryList, setCountryList] = useState([]);
 
-  const [thirdSubCatData, setThirdSubCatData] = useState([]);
-  const [third_subCatVal, setthird_subCatVal] = useState("");
-  const [thirdLevelCatData, setThirdLevelCatData] = useState([]);
-
   let { id } = useParams();
 
   const history = useNavigate();
@@ -112,9 +107,6 @@ const EditUpload = () => {
     catId: "",
     subCatId: "",
     category: "",
-    thirdsubCat: "",
-    thirdsubCatName: "",
-    thirdsubCatId: "",
     countInStock: null,
     rating: 0,
     isFeatured: null,
@@ -141,54 +133,23 @@ const EditUpload = () => {
     setCountryList(updatedArray);
   }, [context?.countryList]);
 
-  useEffect(() => {
-    fetchDataFromApi("/api/category/all").then((res) => {
-      const catArr = [];
-      const thirdLevelCatArr = [];
-
-      let cat;
-      res?.length !== 0 &&
-        res?.map((item) => {
-          if (item?.parentId === null) {
-            catArr.push(item);
-            cat = item.name;
-          }
-          if (item?.parentId !== null) {
-            //console.log(item)
-            thirdLevelCatArr.push(item);
-          }
-        });
-
-      setCatData(catArr);
-      setThirdLevelCatData(thirdLevelCatArr);
-    });
-  }, []);
-
   // useEffect(() => {
   //   formFields.location = context.selectedCountry;
   // }, [context.selectedCountry]);
 
   useEffect(() => {
     const subCatArr = [];
-    const thirdsubCatArr = [];
 
-    context.catData?.length !== 0 &&
-      context.catData?.map((cat, index) => {
+    context.catData?.categoryList?.length !== 0 &&
+      context.catData?.categoryList?.map((cat, index) => {
         if (cat?.children.length !== 0) {
           cat?.children?.map((subCat) => {
             subCatArr.push(subCat);
-
-            if (subCat?.children.length !== 0) {
-              subCat?.children?.map((thirdsubCat) => {
-                thirdsubCatArr.push(thirdsubCat);
-              });
-            }
           });
         }
       });
 
     setSubCatData(subCatArr);
-    setThirdSubCatData(thirdsubCatArr);
   }, [context.catData]);
 
   useEffect(() => {
@@ -201,7 +162,7 @@ const EditUpload = () => {
     fetchDataFromApi("/api/imageUpload").then((res) => {
       res?.map((item) => {
         item?.images?.map((img) => {
-          deleteImages(`/api/category/deleteImage?img=${img}`).then((res) => {
+          deleteImages(`/api/products/deleteImage?img=${img}`).then((res) => {
             deleteData("/api/imageUpload/deleteAllImages");
           });
         });
@@ -221,9 +182,6 @@ const EditUpload = () => {
         category: res.category,
         catId: res.catId,
         subCat: res.subCat,
-        thirdsubCat: res.thirdsubCat,
-        thirdsubCatName: res.thirdsubCatName,
-        thirdsubCatId: res.thirdsubCatId,
         countInStock: res.countInStock,
         rating: res.rating,
         isFeatured: res.isFeatured,
@@ -240,7 +198,6 @@ const EditUpload = () => {
       console.log(res);
       setcategoryVal(res.category?._id);
       setSubCatVal(res.subCatId);
-      setthird_subCatVal(res.thirdsubCatName);
       setisFeaturedValue(res.isFeatured);
       setProductRAMS(res.productRam);
       setProductSize(res.size);
@@ -271,15 +228,6 @@ const EditUpload = () => {
   const handleChangeSubCategory = (event) => {
     setSubCatVal(event.target.value);
     formFields.subCatId = event.target.value;
-  };
-
-  const selectSubCat = (subCat, id) => {
-    setFormFields(() => ({
-      ...formFields,
-      subCat: subCat,
-      subCatName: subCat,
-      subCatId: id,
-    }));
   };
 
   const checkSubCatName = (subCatName) => {
@@ -360,15 +308,6 @@ const EditUpload = () => {
     formFields.catId = id;
   };
 
-  const selectThirdSubCat = (subCat, id) => {
-    setFormFields(() => ({
-      ...formFields,
-      thirdsubCat: subCat,
-      thirdsubCatName: subCat,
-      thirdsubCatId: id,
-    }));
-  };
-
   let img_arr = [];
   let uniqueArray = [];
 
@@ -425,14 +364,23 @@ const EditUpload = () => {
           uniqueArray = img_arr.filter(
             (item, index) => img_arr.indexOf(item) === index
           );
+          const appendedArray = [...previews, ...uniqueArray];
 
-          //  const appendedArray = [...previews, ...uniqueArray];
-
-          setPreviews(uniqueArray);
+          setPreviews(appendedArray);
 
           setTimeout(() => {
             setUploading(false);
             img_arr = [];
+            uniqueArray=[];
+            fetchDataFromApi("/api/imageUpload").then((res) => {
+              res?.map((item) => {
+                item?.images?.map((img) => {
+                  deleteImages(`/api/products/deleteImage?img=${img}`).then((res) => {
+                    deleteData("/api/imageUpload/deleteAllImages");
+                  });
+                });
+              });
+            });
             context.setAlertBox({
               open: true,
               error: false,
@@ -445,8 +393,6 @@ const EditUpload = () => {
   };
 
   const removeImg = async (index, imgUrl) => {
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    if (userInfo?.email === "rinkuv37@gmail.com") {
     const imgIndex = previews.indexOf(imgUrl);
 
     deleteImages(`/api/category/deleteImage?img=${imgUrl}`).then((res) => {
@@ -461,14 +407,6 @@ const EditUpload = () => {
       // only splice array when item is found
       previews.splice(index, 1); // 2nd parameter means remove one item only
     }
-  }
-  else{
-    context.setAlertBox({
-      open: true,
-      error: true,
-      msg: "Only Admin can delete Product Image",
-    });
-   }
   };
 
   useEffect(() => {
@@ -478,10 +416,6 @@ const EditUpload = () => {
   const handleChangeLocation = (selectedOptions) => {
     setSelectedLocation(selectedOptions);
     console.log(selectedOptions);
-  };
-
-  const handleChangeThirdSubCategory = (event) => {
-    setthird_subCatVal(event.target.value);
   };
 
   const edit_Product = (e) => {
@@ -695,20 +629,18 @@ const EditUpload = () => {
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                      <h6>FIRST LEVEL CATEGORY</h6>
-                      <Select
-                        value={categoryVal}
-                        onChange={handleChangeCategory}
-                        displayEmpty
-                        inputProps={{ "aria-label": "Without label" }}
-                        className="w-100"
-                      >
-                        <MenuItem value="">
-                          <em value={null}>None</em>
-                        </MenuItem>
-                        {context.catData?.length !== 0 &&
-                          context.catData?.map((cat, index) => {
-                            if (cat?.parentId === null) {
+                      <h6>CATEGORY</h6>
+
+                      {categoryVal !== "" && (
+                        <Select
+                          value={categoryVal}
+                          onChange={handleChangeCategory}
+                          displayEmpty
+                          inputProps={{ "aria-label": "Without label" }}
+                          className="w-100"
+                        >
+                          {context.catData?.categoryList?.length !== 0 &&
+                            context.catData?.categoryList?.map((cat, index) => {
                               return (
                                 <MenuItem
                                   className="text-capitalize"
@@ -719,15 +651,16 @@ const EditUpload = () => {
                                   {cat.name}
                                 </MenuItem>
                               );
-                            }
-                          })}
-                      </Select>
+                            })}
+                        </Select>
+                      )}
                     </div>
                   </div>
 
                   <div className="col">
                     <div className="form-group">
-                      <h6>SECOND LEVEL CATEGORY</h6>
+                      <h6>SUB CATEGORY</h6>
+
                       <Select
                         value={subCatVal}
                         onChange={handleChangeSubCategory}
@@ -745,9 +678,7 @@ const EditUpload = () => {
                                 className="text-capitalize"
                                 value={subCat._id}
                                 key={index}
-                                onClick={() =>
-                                  selectSubCat(subCat.name, subCat._id)
-                                }
+                                onClick={() => checkSubCatName(subCat.name)}
                               >
                                 {subCat.name}
                               </MenuItem>
@@ -759,20 +690,13 @@ const EditUpload = () => {
 
                   <div className="col">
                     <div className="form-group">
-                      <h6>THIRD LEVEL CATEGORY</h6>
-
-                      {
-                        thirdLevelCatData?.length > 0 &&
-                        <SearchableSelect
-                        options={thirdLevelCatData}
-                        selectedValue={third_subCatVal}
-                        label="Fruits"
-                        selectCat={selectThirdSubCat}
+                      <h6>PRICE</h6>
+                      <input
+                        type="text"
+                        name="price"
+                        value={formFields.price}
+                        onChange={inputChange}
                       />
-                      }
-
-
-                     
                     </div>
                   </div>
                 </div>
@@ -780,21 +704,9 @@ const EditUpload = () => {
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                      <h6>PRICE</h6>
-                      <input
-                        type="number"
-                        name="price"
-                        value={formFields.price}
-                        onChange={inputChange}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="col">
-                    <div className="form-group">
                       <h6>OLD PRICE </h6>
                       <input
-                        type="number"
+                        type="text"
                         name="oldPrice"
                         value={formFields.oldPrice}
                         onChange={inputChange}
@@ -820,21 +732,21 @@ const EditUpload = () => {
                       </Select>
                     </div>
                   </div>
-                </div>
 
-                <div className="row">
-                  <div className="col-md-4">
+                  <div className="col">
                     <div className="form-group">
                       <h6>PRODUCT STOCK </h6>
                       <input
-                        type="number"
+                        type="text"
                         name="countInStock"
                         value={formFields.countInStock}
                         onChange={inputChange}
                       />
                     </div>
                   </div>
+                </div>
 
+                <div className="row">
                   <div className="col-md-4">
                     <div className="form-group">
                       <h6>BRAND</h6>
@@ -851,16 +763,14 @@ const EditUpload = () => {
                     <div className="form-group">
                       <h6>DISCOUNT</h6>
                       <input
-                        type="number"
+                        type="text"
                         name="discount"
                         value={formFields.discount}
                         onChange={inputChange}
                       />
                     </div>
                   </div>
-                </div>
 
-                <div className="row">
                   <div className="col-md-4">
                     <div className="form-group">
                       <h6>PRODUCT RAMS</h6>
@@ -882,7 +792,9 @@ const EditUpload = () => {
                       </Select>
                     </div>
                   </div>
+                </div>
 
+                <div className="row">
                   <div className="col-md-4">
                     <div className="form-group">
                       <h6>PRODUCT WEIGHT</h6>
@@ -924,9 +836,7 @@ const EditUpload = () => {
                       </Select>
                     </div>
                   </div>
-                </div>
 
-                <div className="row">
                   <div className="col-md-4">
                     <div className="form-group">
                       <h6>RATINGS</h6>

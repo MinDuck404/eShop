@@ -57,9 +57,7 @@ const HomeSlidesList = () => {
   }, []);
 
   const deleteSlide = (id) => {
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    if (userInfo?.email === "rinkuv37@gmail.com") {
-      context.setProgress(30);
+    context.setProgress(30);
       deleteData(`/api/homeBanner/${id}`).then((res) => {
         context.setProgress(100);
         fetchDataFromApi("/api/homeBanner").then((res) => {
@@ -72,14 +70,6 @@ const HomeSlidesList = () => {
           });
         });
       });
-    }
-    else{
-      context.setAlertBox({
-        open: true,
-        error: true,
-        msg: "Only Admin can delete slide",
-      });
-     }
   };
 
   return (

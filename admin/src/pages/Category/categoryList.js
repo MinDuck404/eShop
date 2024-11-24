@@ -57,35 +57,21 @@ const Category = () => {
   }, []);
 
   const deleteCat = (id) => {
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    if (userInfo?.email === "rinkuv37@gmail.com") {
-      const confirmed =  window.confirm("Are you sure to delete this category. if deleted all the sub category belongs to this category will remove from the database.");
-      if(confirmed){
-        setIsLoadingBar(true);
-        context.setProgress(30);
-        deleteData(`/api/category/${id}`).then((res) => {
-          context.setProgress(100);
-          fetchDataFromApi("/api/category").then((res) => {
-            setCatData(res);
-            context.setProgress(100);
-            context.setProgress({
-              open: true,
-              error: false,
-              msg: "Category Deleted!",
-            });
-            setIsLoadingBar(false);
-          });
+    setIsLoadingBar(true);
+    context.setProgress(30);
+    deleteData(`/api/category/${id}`).then((res) => {
+      context.setProgress(100);
+      fetchDataFromApi("/api/category").then((res) => {
+        setCatData(res);
+        context.setProgress(100);
+        context.setProgress({
+          open: true,
+          error: false,
+          msg: "Category Deleted!",
         });
-      }
-      else{
-          context.setAlertBox({
-            open: true,
-            error: true,
-            msg: "Only Admin can delete Category",
-          });
-         }
-      }
- 
+        setIsLoadingBar(false);
+      });
+    });
   };
 
   return (
@@ -131,9 +117,11 @@ const Category = () => {
               </thead>
 
               <tbody>
-                {catData?.length !== 0 &&
-                  catData?.map((item, index) => {
-                    if(item?.parentId===null){
+                {catData?.categoryList?.length !== 0 &&
+                  catData?.categoryList
+                    ?.slice(0)
+                    .reverse()
+                    .map((item, index) => {
                       return (
                         <tr key={index}>
                           <td>
@@ -179,8 +167,6 @@ const Category = () => {
                           </td>
                         </tr>
                       );
-                    }
-                    
                     })}
               </tbody>
             </table>

@@ -2,7 +2,6 @@
 
   .res-hide{display: none !important;}
   .res-col{flex-direction: column !important;}
-  .res-full{width: 100% !important;  max-width: 100% !important; flex: 0 0 100% !important;}
 
   body,html{overflow-x: hidden !important;}
 
@@ -14,7 +13,6 @@
 
   header .part3{max-width: 60% !important; flex: 0 0 60% !important;}
 
-.chartWrapper{width: 100% !important; overflow-x: scroll !important; overflow-y: hidden !important;}
 
   .main .sidebarWrapper{width: 80% !important; height: 100vh !important; position: fixed; top: 0px; left: -100%; z-index: 10000; opacity: 0; transition:all 0.3s ease-in-out}
   .main .sidebarWrapper .sidebar{width: 100% !important; position: relative !important; top: 0px !important;  max-height:inherit !important;}
@@ -57,6 +55,8 @@
 
   .MuiBreadcrumbs-root{display: none !important;}
 
+  .chartWrapper{width: 100%; overflow-x: scroll; overflow-y: hidden;}
+
 }
 
 @media only screen and (min-width:320px) and (max-width:575px){
@@ -72,8 +72,6 @@
   .card h5{font-size: 16px !important;}
 
   .btn-blue{font-size: 11px !important;}
-
-  .subCats .btn1_{font-size: 12px !important;}
   
   
 }

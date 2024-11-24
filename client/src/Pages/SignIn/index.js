@@ -7,8 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import GoogleImg from "../../assets/images/googleImg.png";
 import CircularProgress from "@mui/material/CircularProgress";
-import { postData } from "../../utils/api";
-
+import { editData, postData } from "../../utils/api";
 
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { firebaseApp } from "../../firebase";
@@ -18,12 +17,13 @@ const googleProvider = new GoogleAuthProvider();
 
 const SignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpenVerifyEmailBox, setIsOpenVerifyEmailBox] = useState(false);
   const context = useContext(MyContext);
   const history = useNavigate();
 
   useEffect(() => {
     context.setisHeaderFooterShow(false);
-    
+
     context.setEnableFilterTab(false);
   }, []);
 
@@ -51,61 +51,89 @@ const SignIn = () => {
       return false;
     }
 
-    if (formfields.password === "") {
-      context.setAlertBox({
-        open: true,
-        error: true,
-        msg: "password can not be blank!",
-      });
-      return false;
-    }
+    if (isOpenVerifyEmailBox === false) {
+      if (formfields.password === "") {
+        context.setAlertBox({
+          open: true,
+          error: true,
+          msg: "password can not be blank!",
+        });
+        return false;
+      }
 
-    setIsLoading(true);
-    postData("/api/user/signin", formfields).then((res) => {
-      try {
-        if (res.error !== true) {
-          localStorage.setItem("token", res.token);
+      setIsLoading(true);
+      postData("/api/user/signin", formfields).then((res) => {
+        try {
+          if (res.error !== true) {
+            localStorage.setItem("token", res.token);
 
-          const user = {
-            name: res.user?.name,
-            email: res.user?.email,
-            userId: res.user?.id,
-            image:res?.user?.images[0]
-          }
+            const user = {
+              name: res.user?.name,
+              email: res.user?.email,
+              userId: res.user?.id,
+              image: res?.user?.images[0],
+            };
 
-          localStorage.setItem("user", JSON.stringify(user));
-          context.setUser(JSON.stringify(user))
+            localStorage.setItem("user", JSON.stringify(user));
+            context.setUser(JSON.stringify(user));
 
-          context.setAlertBox({
-            open: true,
-            error: false,
-            msg: res.msg,
-          });
+            context.setAlertBox({
+              open: true,
+              error: false,
+              msg: res.msg,
+            });
 
-          setTimeout(() => {
-            history("/");
-            context.setIsLogin(true);
+            setTimeout(() => {
+              history("/");
+              context.setIsLogin(true);
+              setIsLoading(false);
+              context.setisHeaderFooterShow(true);
+              //window.location.href = "/";
+            }, 2000);
+          } 
+          else {
+            if (res?.isVerify === false) {
+              setIsLoading(true);
+              setIsOpenVerifyEmailBox(true);
+            }
+
+            context.setAlertBox({
+              open: true,
+              error: true,
+              msg: res.msg,
+            });
             setIsLoading(false);
-            context.setisHeaderFooterShow(true);
-            //window.location.href = "/";
-          }, 2000);
-        } else {
-          context.setAlertBox({
-            open: true,
-            error: true,
-            msg: res.msg,
-          });
+          }
+        } catch (error) {
+          console.log(error);
           setIsLoading(false);
         }
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
-    });
+      });
+    }
+
+    if (isOpenVerifyEmailBox === true) {
+      localStorage.setItem("userEmail", formfields.email);
+      postData("/api/user/verifyAccount/resendOtp", {
+        email: formfields.email,
+      }).then((res) => {
+        if (res?.otp !== null && res?.otp !== "") {
+          editData(`/api/user/verifyAccount/emailVerify/${res.existingUserId}`, {
+            email: formfields.email,
+            otp: res?.otp,
+          }).then((res) => {
+            setTimeout(() => {
+              setIsLoading(true);
+              history("/verifyOTP");
+              //window.location.href="/signIn";
+            }, 2000);
+          });
+        }
+        console.log(res);
+      });
+    }
   };
 
   const signInWithGoogle = () => {
-    
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -113,53 +141,53 @@ const SignIn = () => {
         // The signed-in user info.
         const user = result.user;
 
-        const fields={
-            name:user.providerData[0].displayName,
-            email: user.providerData[0].email,
-            password: null,
-            images:user.providerData[0].photoURL,
-            phone:user.providerData[0].phoneNumber
-        }
+        const fields = {
+          name: user.providerData[0].displayName,
+          email: user.providerData[0].email,
+          password: null,
+          images: user.providerData[0].photoURL,
+          phone: user.providerData[0].phoneNumber,
+        };
 
         postData("/api/user/authWithGoogle", fields).then((res) => {
-            try {
-              if (res.error !== true) {
-                localStorage.setItem("token", res.token);
-      
-                const user = {
-                  name: res.user?.name,
-                  email: res.user?.email,
-                  userId: res.user?.id,
-                };
-      
-                localStorage.setItem("user", JSON.stringify(user));
-      
-                context.setAlertBox({
-                  open: true,
-                  error: false,
-                  msg: res.msg,
-                });
-      
-                setTimeout(() => {
-                  history("/");
-                  context.setIsLogin(true);
-                  setIsLoading(false);
-                  context.setisHeaderFooterShow(true);
-                  //window.location.href = "/";
-                }, 2000);
-              } else {
-                context.setAlertBox({
-                  open: true,
-                  error: true,
-                  msg: res.msg,
-                });
+          try {
+            if (res.error !== true) {
+              localStorage.setItem("token", res.token);
+
+              const user = {
+                name: res.user?.name,
+                email: res.user?.email,
+                userId: res.user?.id,
+              };
+
+              localStorage.setItem("user", JSON.stringify(user));
+
+              context.setAlertBox({
+                open: true,
+                error: false,
+                msg: res.msg,
+              });
+
+              setTimeout(() => {
+                history("/");
+                context.setIsLogin(true);
                 setIsLoading(false);
-              }
-            } catch (error) {
-              console.log(error);
+                context.setisHeaderFooterShow(true);
+                //window.location.href = "/";
+              }, 2000);
+            } else {
+              context.setAlertBox({
+                open: true,
+                error: true,
+                msg: res.msg,
+              });
               setIsLoading(false);
             }
-          });
+          } catch (error) {
+            console.log(error);
+            setIsLoading(false);
+          }
+        });
 
         context.setAlertBox({
           open: true,
@@ -167,7 +195,7 @@ const SignIn = () => {
           msg: "User authentication Successfully!",
         });
 
-       // window.location.href = "/";
+        // window.location.href = "/";
       })
       .catch((error) => {
         // Handle Errors here.
@@ -185,6 +213,25 @@ const SignIn = () => {
         // ...
       });
   };
+
+
+  const forgotPassword=()=>{
+    if(formfields.email===""){
+      context.setAlertBox({
+        open: true,
+        error: true,
+        msg: "Please enter your email",
+      });
+    }else{
+      localStorage.setItem("userEmail", formfields.email);
+      localStorage.setItem("actionType", "changePassword");
+      postData("/api/user/forgotPassword", {email:formfields.email}).then((res)=>{
+        if(res.status==="SUCCESS"){
+          history("/verifyOTP");
+        }
+      })
+    }
+  }
 
   return (
     <section className="section signInPage">
@@ -213,9 +260,11 @@ const SignIn = () => {
           </div>
 
           <form className="mt-3" onSubmit={login}>
-            <h2 className="mb-4">Sign In</h2>
+            <h2 className="mb-4">
+              {isOpenVerifyEmailBox === false ? "Sign In" : "Verify Email"}
+            </h2>
 
-            <div className="form-group">
+            <div className="form-group position-relative">
               <TextField
                 id="standard-basic"
                 label="Email"
@@ -227,55 +276,64 @@ const SignIn = () => {
                 onChange={onchangeInput}
               />
             </div>
-            <div className="form-group">
-              <TextField
-                id="standard-basic"
-                label="Password"
-                type="password"
-                required
-                variant="standard"
-                className="w-100"
-                name="password"
-                onChange={onchangeInput}
-              />
-            </div>
 
-            <a className="border-effect cursor txt">Forgot Password?</a>
+            {isOpenVerifyEmailBox === false ? (
+              <>
+                <div className="form-group">
+                  <TextField
+                    id="standard-basic"
+                    label="Password"
+                    type="password"
+                    required
+                    variant="standard"
+                    className="w-100"
+                    name="password"
+                    onChange={onchangeInput}
+                  />
+                </div>
 
-            <div className="d-flex align-items-center mt-3 mb-3 ">
-              <Button type="submit" className="btn-blue col btn-lg btn-big">
-                {isLoading === true ? <CircularProgress /> : "Sign In"}
-              </Button>
-              <Link to="/">
-                {" "}
+                <a className="border-effect cursor txt" onClick={forgotPassword}>Forgot Password?</a>
+
+                <div className="d-flex align-items-center mt-3 mb-3 ">
+                  <Button type="submit" className="btn-blue col btn-lg btn-big">
+                    {isLoading === true ? <CircularProgress /> : "Sign In"}
+                  </Button>
+                  <Link to="/">
+                    {" "}
+                    <Button
+                      className="btn-lg btn-big col ml-3"
+                      variant="outlined"
+                      onClick={() => context.setisHeaderFooterShow(true)}
+                    >
+                      Cancel
+                    </Button>
+                  </Link>
+                </div>
+
+                <p className="txt">
+                  Not Registered?{" "}
+                  <Link to="/signUp" className="border-effect">
+                    Sign Up
+                  </Link>
+                </p>
+
+                <h6 className="mt-4 text-center font-weight-bold">
+                  Or continue with social account
+                </h6>
+
                 <Button
-                  className="btn-lg btn-big col ml-3"
+                  className="loginWithGoogle mt-2"
                   variant="outlined"
-                  onClick={() => context.setisHeaderFooterShow(true)}
+                  onClick={signInWithGoogle}
                 >
-                  Cancel
+                  <img src={GoogleImg} /> Sign In with Google
                 </Button>
-              </Link>
-            </div>
-
-            <p className="txt">
-              Not Registered?{" "}
-              <Link to="/signUp" className="border-effect">
-                Sign Up
-              </Link>
-            </p>
-
-            <h6 className="mt-4 text-center font-weight-bold">
-              Or continue with social account
-            </h6>
-
-            <Button
-              className="loginWithGoogle mt-2"
-              variant="outlined"
-              onClick={signInWithGoogle}
-            >
-              <img src={GoogleImg} /> Sign In with Google
-            </Button>
+              </>
+            ) : (
+              <Button type="submit" className="btn-blue col btn-lg btn-big">
+                {isLoading === true ? <CircularProgress /> : "Verify Email"}
+              </Button>
+            )}
           </form>
         </div>
       </div>

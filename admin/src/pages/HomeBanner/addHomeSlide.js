@@ -114,7 +114,6 @@ const AddHomeSlide = () => {
     }
 
     uploadImage(apiEndPoint, formdata).then((res) => {
-      console.log(selectedImages);
       fetchDataFromApi("/api/imageUpload").then((response) => {
         if (
           response !== undefined &&
@@ -127,6 +126,7 @@ const AddHomeSlide = () => {
               item?.images.length !== 0 &&
                 item?.images?.map((img) => {
                   img_arr.push(img);
+
                   //console.log(img)
                 });
             });
@@ -134,19 +134,29 @@ const AddHomeSlide = () => {
           uniqueArray = img_arr.filter(
             (item, index) => img_arr.indexOf(item) === index
           );
+          const appendedArray = [...previews, ...uniqueArray];
 
-          // const appendedArray = [...previews, ...uniqueArray];
+          setPreviews(appendedArray);
 
-          setPreviews(uniqueArray);
           setTimeout(() => {
             setUploading(false);
             img_arr = [];
+            uniqueArray=[];
+            fetchDataFromApi("/api/imageUpload").then((res) => {
+              res?.map((item) => {
+                item?.images?.map((img) => {
+                  deleteImages(`/api/homeBanner/deleteImage?img=${img}`).then((res) => {
+                    deleteData("/api/imageUpload/deleteAllImages");
+                  });
+                });
+              });
+            });
             context.setAlertBox({
               open: true,
               error: false,
               msg: "Images Uploaded!",
             });
-          }, 200);
+          }, 500);
         }
       });
     });

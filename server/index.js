@@ -12,6 +12,7 @@ app.options('*', cors())
 app.use(bodyParser.json());
 app.use(express.json());
 
+
 //Routes
 const userRoutes = require('./routes/user.js');
 const categoryRoutes = require('./routes/categories');
@@ -30,8 +31,8 @@ const bannersSchema = require('./routes/banners.js');
 const homeSideBannerSchema = require('./routes/homeSideBanner.js');
 const homeBottomBannerSchema = require('./routes/homeBottomBanner.js');
 
-app.use("/api/user", userRoutes);
-app.use("/uploads", express.static("uploads"));
+app.use("/api/user",userRoutes);
+app.use("/uploads",express.static("uploads"));
 app.use(`/api/category`, categoryRoutes);
 app.use(`/api/products`, productRoutes);
 app.use(`/api/imageUpload`, imageUploadRoutes);
@@ -48,15 +49,20 @@ app.use(`/api/banners`, bannersSchema);
 app.use(`/api/homeSideBanners`, homeSideBannerSchema);
 app.use(`/api/homeBottomBanners`, homeBottomBannerSchema);
 
+
+
 //Database
-mongoose.connect(process.env.CONNECTION_STRING)
+mongoose.connect(process.env.CONNECTION_STRING, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
     .then(() => {
         console.log('Database Connection is ready...');
         //Server
         app.listen(process.env.PORT, () => {
             console.log(`server is running http://localhost:${process.env.PORT}`);
-        });
+        })
     })
     .catch((err) => {
         console.log(err);
-    });
+    })

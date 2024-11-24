@@ -17,11 +17,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { IoCloseSharp } from "react-icons/io5";
-import { MdOutlineEdit } from "react-icons/md";
 
 import { deleteData, editData, fetchDataFromApi } from "../../utils/api";
-import { GiConsoleController } from "react-icons/gi";
-import EditSubCatBox from "./editSubCatBox";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -49,7 +46,6 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
 const SubCategory = () => {
   const [catData, setCatData] = useState([]);
 
-
   const context = useContext(MyContext);
 
   useEffect(() => {
@@ -61,9 +57,37 @@ const SubCategory = () => {
     });
   }, []);
 
+  const deleteCat = (id) => {
+    context.setProgress(30);
+    deleteData(`/api/category/${id}`).then((res) => {
+      context.setProgress(100);
+      fetchDataFromApi("/api/category").then((res) => {
+        setCatData(res);
+        context.setProgress(100);
+        context.setProgress({
+          open: true,
+          error: false,
+          msg: "Category Deleted!",
+        });
+      });
+    });
+  };
 
-
-
+  const deleteSubCat = (id) => {
+    context.setProgress(30);
+    deleteData(`/api/category/${id}`).then((res) => {
+      context.setProgress(100);
+      fetchDataFromApi("/api/category").then((res) => {
+        setCatData(res);
+        context.setProgress(100);
+        context.setProgress({
+          open: true,
+          error: false,
+          msg: "Category Deleted!",
+        });
+      });
+    });
+  };
 
   return (
     <>
@@ -97,48 +121,65 @@ const SubCategory = () => {
           </div>
         </div>
 
-        <div className="card shadow border-0 p-3 mt-4 w-75 res-full">
-          <ul className="list list-inline list_">
-            {catData?.length !== 0 &&
-              catData?.map((item, index) => {
-                return (
-                  <li key={index} className="list-inline-item w-100 subCats mb-4">
-                    <h6>{item?.name}</h6>
-                    {item?.children?.length !== 0 && (
-                      <ul className="list list-inline w-100">
-                        {item?.children?.map((subCat, index_) => {
-                          return (
-                            <li key={index_} className="list-inline-item w-100 mb-2">
-                              <EditSubCatBox name={subCat.name} setCatData={setCatData} subCatId={subCat?._id} index={index_} catData={catData} catId={item?._id} />
+        <div className="card shadow border-0 p-3 mt-4">
+          <div className="table-responsive mt-3">
+            <table className="table table-bordered table-striped v-align">
+              <thead className="thead-dark">
+                <tr>
+                  <th style={{ width: "100px" }}>CATEGORY IMAGE</th>
+                  <th>CATEGORY</th>
+                  <th>SUB CATEGORY</th>
+                </tr>
+              </thead>
 
-                              {subCat?.children?.length !== 0 && (
-                                <ul className="list list-inline pl-4 pr-5 pt-2 pb-2">
-                                  {subCat?.children?.map(
-                                    (thirdLevel, index__) => {
-                                      return (
-                                        <li
-                                          key={index__}
-                                          className="list-inline-item w-100 mb-2"
-                                        >
-                                         <EditSubCatBox name={thirdLevel.name} setCatData={setCatData} subCatId={thirdLevel?._id} index={index__} catId={subCat?._id} catData={item?.children}/>
-                                         
-                                        </li>
-                                      );
-                                    }
-                                  )}
-                                </ul>
-                              )}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    )}
-                  </li>
-                );
-              })}
-          </ul>
-
-      
+              <tbody>
+                {catData?.categoryList?.length !== 0 &&
+                  catData?.categoryList?.map((item, index) => {
+                    if (item?.children?.length !== 0) {
+                      return (
+                        <tr key={index}>
+                          <td>
+                            <div
+                              className="d-flex align-items-center "
+                              style={{ width: "150px" }}
+                            >
+                              <div
+                                className="imgWrapper"
+                                style={{ width: "50px", flex: "0 0 50px" }}
+                              >
+                                <div className="img card shadow m-0">
+                                  <LazyLoadImage
+                                    alt={"image"}
+                                    effect="blur"
+                                    className="w-100"
+                                    src={item.images[0]}
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td>{item.name} </td>
+                          <td>
+                            {item?.children?.length !== 0 &&
+                              item?.children?.map((subCat, index) => {
+                                return (
+                                  <span className="badge badge-primary mx-1">
+                                    {subCat.name}{" "}
+                                    <IoCloseSharp
+                                      className="cursor"
+                                      onClick={() => deleteSubCat(subCat._id)}
+                                    />
+                                  </span>
+                                );
+                              })}
+                          </td>
+                        </tr>
+                      );
+                    }
+                  })}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </>

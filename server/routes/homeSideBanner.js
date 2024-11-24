@@ -93,9 +93,7 @@ router.post("/create", async (req, res) => {
     catId: req.body.catId,
     catName:req.body.catName,
     subCatId: req.body.subCatId,
-    subCatName:req.body.subCatName,
-    thirdSubCatId: req.body.thirdSubCatId,
-    thirdSubCatName: req.body.thirdSubCatName,
+    subCatName:req.body.subCatName
   });
 
   if (!newEntry) {
@@ -174,9 +172,7 @@ router.put("/:id", async (req, res) => {
       catId: req.body.catId,
       catName:req.body.catName,
       subCatId: req.body.subCatId,
-      subCatName:req.body.subCatName,
-      thirdSubCatId: req.body.thirdSubCatId,
-      thirdSubCatName: req.body.thirdSubCatName,
+      subCatName:req.body.subCatName
     },
     { new: true }
   );

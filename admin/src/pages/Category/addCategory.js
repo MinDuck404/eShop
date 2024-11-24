@@ -53,10 +53,9 @@ const AddCategory = () => {
     name: "",
     images: [],
     color: "",
-    parentId: null,
-    parentCatName:null
+    slug: "",
+    parentId: "",
   });
-
 
   const [previews, setPreviews] = useState([]);
 
@@ -76,9 +75,7 @@ const AddCategory = () => {
         });
       });
     });
-
   }, []);
-
 
   const changeInput = (e) => {
     setFormFields(() => ({
@@ -128,7 +125,6 @@ const AddCategory = () => {
     }
 
     uploadImage(apiEndPoint, formdata).then((res) => {
-      console.log(selectedImages);
       fetchDataFromApi("/api/imageUpload").then((response) => {
         if (
           response !== undefined &&
@@ -141,6 +137,7 @@ const AddCategory = () => {
               item?.images.length !== 0 &&
                 item?.images?.map((img) => {
                   img_arr.push(img);
+
                   //console.log(img)
                 });
             });
@@ -148,19 +145,29 @@ const AddCategory = () => {
           uniqueArray = img_arr.filter(
             (item, index) => img_arr.indexOf(item) === index
           );
+          const appendedArray = [...previews, ...uniqueArray];
 
-          //  const appendedArray = [...previews, ...uniqueArray];
+          setPreviews(appendedArray);
 
-          setPreviews(uniqueArray);
           setTimeout(() => {
             setUploading(false);
             img_arr = [];
+            uniqueArray=[];
+            fetchDataFromApi("/api/imageUpload").then((res) => {
+              res?.map((item) => {
+                item?.images?.map((img) => {
+                  deleteImages(`/api/category/deleteImage?img=${img}`).then((res) => {
+                    deleteData("/api/imageUpload/deleteAllImages");
+                  });
+                });
+              });
+            });
             context.setAlertBox({
               open: true,
               error: false,
               msg: "Images Uploaded!",
             });
-          }, 200);
+          }, 500);
         }
       });
     });
@@ -183,20 +190,24 @@ const AddCategory = () => {
     }
   };
 
- 
-
   const addCat = (e) => {
     e.preventDefault();
 
     const appendedArray = [...previews, ...uniqueArray];
 
     img_arr = [];
+    // formdata.append('name', formFields.name);
+    // formdata.append('color', formFields.color);
 
+    // formdata.append('images', appendedArray);
+
+    formFields.slug = formFields.name;
     formFields.images = appendedArray;
-    formFields.parentCatName = formFields.name;
 
     if (
-      formFields.name !== ""
+      formFields.name !== "" &&
+      formFields.color !== "" &&
+      previews.length !== 0
     ) {
       setIsLoading(true);
 
@@ -249,8 +260,6 @@ const AddCategory = () => {
           <div className="row">
             <div className="col-sm-9">
               <div className="card p-4 mt-0">
-         
-
                 <div className="form-group">
                   <h6>Category Name</h6>
                   <input

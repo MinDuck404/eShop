@@ -26,7 +26,6 @@ import { IoCloseSharp } from "react-icons/io5";
 
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-import SearchableSelect from "../../components/SearchableSelect";
 
 //breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -59,8 +58,6 @@ const AddBanner = () => {
     subCat: null,
     subCatId: null,
     subCatName: null,
-    thirdSubCatName:null,
-    thirdSubCatId:null
   });
 
   const [previews, setPreviews] = useState([]);
@@ -68,7 +65,6 @@ const AddBanner = () => {
   const [subCatVal, setSubCatVal] = useState(null);
   const [subCatData, setSubCatData] = useState([]);
 
-  const [thirdLevelCatData, setThirdLevelCatData] = useState([]);
   const formdata = new FormData();
 
   const history = useNavigate();
@@ -87,34 +83,10 @@ const AddBanner = () => {
     });
   }, []);
 
-  useEffect(() => {
-    fetchDataFromApi("/api/category/all").then((res) => {
-      const catArr = [];
-      const thirdLevelCatArr = [];
-
-      let cat;
-      res?.length !== 0 &&
-        res?.map((item) => {
-          if (item?.parentId === null) {
-            catArr.push(item);
-            cat = item.name;
-          }
-          if (item?.parentId !== null) {
-            //console.log(item)
-            thirdLevelCatArr.push(item);
-          }
-        });
-
-        console.log(thirdLevelCatArr)
-
-      setThirdLevelCatData(thirdLevelCatArr);
-    });
-  }, []);
-
   useEffect(()=>{
     const subCatArr=[];
 
-    context.catData?.length !== 0 && context.catData?.map((cat, index) => {
+    context.catData?.categoryList?.length !== 0 && context.catData?.categoryList?.map((cat, index) => {
             if(cat?.children.length!==0){
                 cat?.children?.map((subCat)=>{
                     subCatArr.push(subCat);
@@ -133,8 +105,6 @@ const AddBanner = () => {
   const onChangeFile = async (e, apiEndPoint) => {
     try {
       const files = e.target.files;
-
-      console.log(files);
       setUploading(true);
 
       //const fd = new FormData();
@@ -145,11 +115,10 @@ const AddBanner = () => {
           (files[i].type === "image/jpeg" ||
             files[i].type === "image/jpg" ||
             files[i].type === "image/png" ||
-            files[i].type === "image/webp" ||
-            files[i].type === "image/avif")
+            files[i].type === "image/webp")
         ) {
           const file = files[i];
-          selectedImages.push(file);
+
           formdata.append(`images`, file);
         } else {
           context.setAlertBox({
@@ -161,14 +130,11 @@ const AddBanner = () => {
           return false;
         }
       }
-
-      formFields.images = selectedImages;
     } catch (error) {
       console.log(error);
     }
 
     uploadImage(apiEndPoint, formdata).then((res) => {
-      console.log(selectedImages);
       fetchDataFromApi("/api/imageUpload").then((response) => {
         if (
           response !== undefined &&
@@ -181,6 +147,7 @@ const AddBanner = () => {
               item?.images.length !== 0 &&
                 item?.images?.map((img) => {
                   img_arr.push(img);
+
                   //console.log(img)
                 });
             });
@@ -188,19 +155,29 @@ const AddBanner = () => {
           uniqueArray = img_arr.filter(
             (item, index) => img_arr.indexOf(item) === index
           );
-
           const appendedArray = [...previews, ...uniqueArray];
 
-          setPreviews(uniqueArray);
+          setPreviews(appendedArray);
+
           setTimeout(() => {
             setUploading(false);
             img_arr = [];
+            uniqueArray=[];
+            fetchDataFromApi("/api/imageUpload").then((res) => {
+              res?.map((item) => {
+                item?.images?.map((img) => {
+                  deleteImages(`/api/homeBanner/deleteImage?img=${img}`).then((res) => {
+                    deleteData("/api/imageUpload/deleteAllImages");
+                  });
+                });
+              });
+            });
             context.setAlertBox({
               open: true,
               error: false,
               msg: "Images Uploaded!",
             });
-          }, 200);
+          }, 500);
         }
       });
     });
@@ -235,15 +212,6 @@ const AddBanner = () => {
     formFields.catName = cat;
     formFields.catId = id;
   };
-  const selectThirdSubCat = (subCat, id) => {
-    setFormFields(() => ({
-      ...formFields,
-      thirdsubCat: subCat,
-      thirdSubCatName: subCat,
-      thirdSubCatId: id,
-    }));
-  };
-
 
   const selectSubCat=(subCat, id)=>{
     setFormFields(() => ({
@@ -270,10 +238,11 @@ const AddBanner = () => {
 
     formFields.images = appendedArray;
 
-    console.log(formFields)
-
     if (previews.length !== 0) {
       setIsLoading(true);
+
+
+        console.log(formFields)
 
       postData(`/api/banners/create`, formFields).then((res) => {
         // console.log(res);
@@ -322,13 +291,10 @@ const AddBanner = () => {
 
         <form className="form" onSubmit={addHomeBanner}>
           <div className="row">
-            <div className="col-sm-12">
+            <div className="col-sm-9">
               <div className="card p-4 mt-0">
-
-              <p className="text-red">Please select only one Category</p>
-
                 <div className="row">
-                  <div className="col-md-4">
+                  <div className="col-md-6">
                     <div className="form-group">
                       <h6>CATEGORY</h6>
                       <Select
@@ -341,8 +307,8 @@ const AddBanner = () => {
                         <MenuItem value="">
                           <em value={null}>None</em>
                         </MenuItem>
-                        {context.catData?.length !== 0 &&
-                          context.catData?.map((cat, index) => {
+                        {context.catData?.categoryList?.length !== 0 &&
+                          context.catData?.categoryList?.map((cat, index) => {
                             return (
                               <MenuItem
                                 className="text-capitalize"
@@ -358,7 +324,7 @@ const AddBanner = () => {
                     </div>
                   </div>
 
-                  <div className="col-md-4">
+                  <div className="col-md-6">
                     <div className="form-group">
                       <h6>SUB CATEGORY</h6>
                       <Select
@@ -389,24 +355,6 @@ const AddBanner = () => {
                       </Select>
                     </div>
                   </div>
-
-                   <div className="col-md-4">
-                    <div className="form-group">
-                      <h6>THIRD LEVEL CATEGORY</h6>
-                      {
-                        thirdLevelCatData?.length > 0 &&
-                        <SearchableSelect
-                        options={thirdLevelCatData}
-                        label="Fruits"
-                        selectCat={selectThirdSubCat}
-                      />
-                      }
-
-                    
-                    </div>
-                  </div>
-
-
                 </div>
 
                 <div className="imagesUploadSec">

@@ -30,7 +30,6 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 import axios from "axios";
 import CountryDropdown from "../../components/CountryDropdown";
 import Select2 from "react-select";
-import SearchableSelect from "../../components/SearchableSelect";
 
 //breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -82,8 +81,6 @@ const ProductUpload = () => {
   const [catData, setCatData] = useState([]);
   const [subCatData, setSubCatData] = useState([]);
 
-  const [thirdSubCatData, setThirdSubCatData] = useState([]);
-
   const [isLoading, setIsLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
 
@@ -93,9 +90,6 @@ const ProductUpload = () => {
 
   const [selectedLocation, setSelectedLocation] = useState([]);
   const [countryList, setCountryList] = useState([]);
-
-  const [third_subCatVal, setthird_subCatVal] = useState("");
-  const [thirdLevelCatData, setThirdLevelCatData] = useState([]);
 
   const history = useNavigate();
 
@@ -111,9 +105,6 @@ const ProductUpload = () => {
     catName: "",
     catId: "",
     category: "",
-    thirdsubCat: "",
-    thirdsubCatName: "",
-    thirdsubCatId: "",
     countInStock: null,
     rating: 0,
     isFeatured: null,
@@ -132,36 +123,13 @@ const ProductUpload = () => {
 
   useEffect(() => {
     const newData = {
-      value: "All",
-      label: "All",
+      value:'All',
+      label:'All'
     };
     const updatedArray = [...context?.countryList]; // Clone the array to avoid direct mutation
     updatedArray.unshift(newData); // Prepend data
     setCountryList(updatedArray);
   }, [context?.countryList]);
-
-  useEffect(() => {
-    fetchDataFromApi("/api/category/all").then((res) => {
-      const catArr = [];
-      const thirdLevelCatArr = [];
-
-      let cat;
-      res?.length !== 0 &&
-        res?.map((item) => {
-          if (item?.parentId === null) {
-            catArr.push(item);
-            cat = item.name;
-          }
-          if (item?.parentId !== null) {
-            //console.log(item)
-            thirdLevelCatArr.push(item);
-          }
-        });
-
-      setCatData(catArr);
-      setThirdLevelCatData(thirdLevelCatArr);
-    });
-  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -170,7 +138,7 @@ const ProductUpload = () => {
     fetchDataFromApi("/api/imageUpload").then((res) => {
       res?.map((item) => {
         item?.images?.map((img) => {
-          deleteImages(`/api/category/deleteImage?img=${img}`).then((res) => {
+          deleteImages(`/api/products/deleteImage?img=${img}`).then((res) => {
             deleteData("/api/imageUpload/deleteAllImages");
           });
         });
@@ -194,25 +162,17 @@ const ProductUpload = () => {
 
   useEffect(() => {
     const subCatArr = [];
-    const thirdsubCatArr = [];
 
-    context.catData?.length !== 0 &&
-      context.catData?.map((cat, index) => {
+    context.catData?.categoryList?.length !== 0 &&
+      context.catData?.categoryList?.map((cat, index) => {
         if (cat?.children.length !== 0) {
           cat?.children?.map((subCat) => {
             subCatArr.push(subCat);
-
-            if (subCat?.children.length !== 0) {
-              subCat?.children?.map((thirdsubCat) => {
-                thirdsubCatArr.push(thirdsubCat);
-              });
-            }
           });
         }
       });
 
     setSubCatData(subCatArr);
-    setThirdSubCatData(thirdsubCatArr);
   }, [context.catData]);
 
   const handleChangeCategory = (event) => {
@@ -225,10 +185,6 @@ const ProductUpload = () => {
 
   const handleChangeSubCategory = (event) => {
     setSubCatVal(event.target.value);
-  };
-
-  const handleChangeThirdSubCategory = (event) => {
-    setthird_subCatVal(event.target.value);
   };
 
   const checkSubCatName = (subCatName) => {
@@ -318,15 +274,6 @@ const ProductUpload = () => {
     }));
   };
 
-  const selectThirdSubCat = (subCat, id) => {
-    setFormFields(() => ({
-      ...formFields,
-      thirdsubCat: subCat,
-      thirdsubCatName: subCat,
-      thirdsubCatId: id,
-    }));
-  };
-
   let img_arr = [];
   let uniqueArray = [];
 
@@ -384,14 +331,23 @@ const ProductUpload = () => {
           uniqueArray = img_arr.filter(
             (item, index) => img_arr.indexOf(item) === index
           );
+          const appendedArray = [...previews, ...uniqueArray];
 
-          //const appendedArray = [...previews, ...uniqueArray];
-
-          setPreviews(uniqueArray);
+          setPreviews(appendedArray);
 
           setTimeout(() => {
             setUploading(false);
             img_arr = [];
+            uniqueArray=[];
+            fetchDataFromApi("/api/imageUpload").then((res) => {
+              res?.map((item) => {
+                item?.images?.map((img) => {
+                  deleteImages(`/api/products/deleteImage?img=${img}`).then((res) => {
+                    deleteData("/api/imageUpload/deleteAllImages");
+                  });
+                });
+              });
+            });
             context.setAlertBox({
               open: true,
               error: false,
@@ -576,6 +532,7 @@ const ProductUpload = () => {
     });
   };
 
+
   const handleChangeLocation = (selectedOptions) => {
     setSelectedLocation(selectedOptions);
     console.log(selectedOptions);
@@ -637,7 +594,7 @@ const ProductUpload = () => {
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                      <h6>FIRST LEVEL CATEGORY</h6>
+                      <h6>CATEGORY</h6>
                       <Select
                         value={categoryVal}
                         onChange={handleChangeCategory}
@@ -648,20 +605,18 @@ const ProductUpload = () => {
                         <MenuItem value="">
                           <em value={null}>None</em>
                         </MenuItem>
-                        {context.catData?.length !== 0 &&
-                          context.catData?.map((cat, index) => {
-                            if (cat?.parentId === null) {
-                              return (
-                                <MenuItem
-                                  className="text-capitalize"
-                                  value={cat._id}
-                                  key={index}
-                                  onClick={() => selectCat(cat.name, cat._id)}
-                                >
-                                  {cat.name}
-                                </MenuItem>
-                              );
-                            }
+                        {context.catData?.categoryList?.length !== 0 &&
+                          context.catData?.categoryList?.map((cat, index) => {
+                            return (
+                              <MenuItem
+                                className="text-capitalize"
+                                value={cat._id}
+                                key={index}
+                                onClick={() => selectCat(cat.name, cat._id)}
+                              >
+                                {cat.name}
+                              </MenuItem>
+                            );
                           })}
                       </Select>
                     </div>
@@ -669,7 +624,7 @@ const ProductUpload = () => {
 
                   <div className="col">
                     <div className="form-group">
-                      <h6>SECOND LEVEL CATEGORY</h6>
+                      <h6>SUB CATEGORY</h6>
                       <Select
                         value={subCatVal}
                         onChange={handleChangeSubCategory}
@@ -701,17 +656,13 @@ const ProductUpload = () => {
 
                   <div className="col">
                     <div className="form-group">
-                      <h6>THIRD LEVEL CATEGORY</h6>
-                      {
-                        thirdLevelCatData?.length > 0 &&
-                        <SearchableSelect
-                        options={thirdLevelCatData}
-                        label="Fruits"
-                        selectCat={selectThirdSubCat}
+                      <h6>PRICE</h6>
+                      <input
+                        type="text"
+                        name="price"
+                        value={formFields.price}
+                        onChange={inputChange}
                       />
-                      }
-
-                    
                     </div>
                   </div>
                 </div>
@@ -719,21 +670,9 @@ const ProductUpload = () => {
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                      <h6>PRICE</h6>
-                      <input
-                        type="number"
-                        name="price"
-                        value={formFields.price}
-                        onChange={inputChange}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="col">
-                    <div className="form-group">
                       <h6>OLD PRICE </h6>
                       <input
-                        type="number"
+                        type="text"
                         name="oldPrice"
                         value={formFields.oldPrice}
                         onChange={inputChange}
@@ -759,21 +698,21 @@ const ProductUpload = () => {
                       </Select>
                     </div>
                   </div>
-                </div>
 
-                <div className="row">
-                  <div className="col-md-4">
+                  <div className="col">
                     <div className="form-group">
                       <h6>PRODUCT STOCK </h6>
                       <input
-                        type="number"
+                        type="text"
                         name="countInStock"
                         value={formFields.countInStock}
                         onChange={inputChange}
                       />
                     </div>
                   </div>
+                </div>
 
+                <div className="row">
                   <div className="col-md-4">
                     <div className="form-group">
                       <h6>BRAND</h6>
@@ -790,16 +729,14 @@ const ProductUpload = () => {
                     <div className="form-group">
                       <h6>DISCOUNT</h6>
                       <input
-                        type="number"
+                        type="text"
                         name="discount"
                         value={formFields.discount}
                         onChange={inputChange}
                       />
                     </div>
                   </div>
-                </div>
 
-                <div className="row">
                   <div className="col-md-4">
                     <div className="form-group">
                       <h6>PRODUCT RAMS</h6>
@@ -821,7 +758,9 @@ const ProductUpload = () => {
                       </Select>
                     </div>
                   </div>
+                </div>
 
+                <div className="row">
                   <div className="col-md-4">
                     <div className="form-group">
                       <h6>PRODUCT WEIGHT</h6>
@@ -863,9 +802,7 @@ const ProductUpload = () => {
                       </Select>
                     </div>
                   </div>
-                </div>
 
-                <div className="row">
                   <div className="col-md-4">
                     <div className="form-group">
                       <h6>RATINGS</h6>

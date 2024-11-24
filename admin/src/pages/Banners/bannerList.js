@@ -57,8 +57,6 @@ const BannersList = () => {
   }, []);
 
   const deleteSlide = (id) => {
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    if (userInfo?.email === "rinkuv37@gmail.com") {
     context.setProgress(30);
       deleteData(`/api/banners/${id}`).then((res) => {
         context.setProgress(100);
@@ -73,17 +71,6 @@ const BannersList = () => {
 
         });
       });
-
-    }
-
-    else{
-      context.setAlertBox({
-        open: true,
-        error: true,
-        msg: "Only Admin can delete Banner",
-      });
-     }
-    
    
   };
 
@@ -91,7 +78,7 @@ const BannersList = () => {
     <>
       <div className="right-content w-100">
         <div className="card shadow border-0 w-100 flex-row p-4 align-items-center">
-          <h5 className="mb-0">Banner List</h5>
+          <h5 className="mb-0">Banner Slide List</h5>
 
           <div className="ml-auto d-flex align-items-center">
             <Breadcrumbs

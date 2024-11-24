@@ -130,50 +130,63 @@ const Navigation = (props) => {
                   //   </Link>
                   // </li>
                 }
-                {Array.isArray(props.navData) &&
-                props.navData.filter((item, idx) => idx < 7).map((item, index) => {
-                  return (
-                    <li className="list-inline-item" key={index}>
-                      <Link to={`/products/category/${item?._id}`} onClick={props.closeNav}>
-                        <Button>
-                          <img src={item?.images[0]} width="20" className="mr-2" /> {item?.name}
-                        </Button>
-                      </Link>
-
-                      {item?.children?.length !== 0 && context.windowWidth < 992 && (
-                        <span
-                          className={`arrow ${
-                            isOpenSubMenuIndex === index && isOpenSubMenu_ === true && "rotate"
-                          }`}
-                          onClick={() => IsOpenSubMenu(index)}
+                {props.navData
+                  .filter((item, idx) => idx < 7)
+                  .map((item, index) => {
+                    return (
+                      <li className="list-inline-item">
+                        <Link
+                          to={`/products/category/${item?._id}`}
+                          onClick={props.closeNav}
                         >
-                          <FaAngleDown />
-                        </span>
-                      )}
+                          <Button>
+                            <img
+                              src={item?.images[0]}
+                              width="20"
+                              className="mr-2"
+                            />{" "}
+                            {item?.name}
+                          </Button>
+                        </Link>
 
-                      {item?.children?.length !== 0 && (
-                        <div
-                          className={`submenu ${
-                            isOpenSubMenuIndex === index && isOpenSubMenu_ === true && "open"
-                          }`}
-                        >
-                          {item?.children.map((subCat, key) => {
-                            return (
-                              <Link
-                                to={`/products/subCat/${subCat?._id}`}
-                                key={key}
-                                onClick={props.closeNav}
-                              >
-                                <Button>{subCat?.name}</Button>
-                              </Link>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </li>
-                  );
-                })}
+                        {item?.children?.length !== 0 &&
+                          context.windowWidth < 992 && (
+                            <span
+                              className={`arrow ${
+                                isOpenSubMenuIndex === index &&
+                                isOpenSubMenu_ === true &&
+                                "rotate"
+                              }`}
+                              onClick={() => IsOpenSubMenu(index)}
+                            >
+                              <FaAngleDown />
+                            </span>
+                          )}
 
+                        {item?.children?.length !== 0 && (
+                          <div
+                            className={`submenu ${
+                              isOpenSubMenuIndex === index &&
+                              isOpenSubMenu_ === true &&
+                              "open"
+                            }`}
+                          >
+                            {item?.children?.map((subCat, key) => {
+                              return (
+                                <Link
+                                  to={`/products/subCat/${subCat?._id}`}
+                                  key={key}
+                                  onClick={props.closeNav}
+                                >
+                                  <Button>{subCat?.name}</Button>
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
               </ul>
               {context.windowWidth < 992 && (
                 <>

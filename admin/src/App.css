@@ -24,8 +24,6 @@ body.dark .topLoadingBar{background: #ff4964   !important;}
 
 button .loader{width: 25px !important; height: 25px !important;}
 
-.text-red{color: red !important;}
-
 .btn-lg{padding:5px 25px !important ;}
 .btn-big{padding: 10px 25px !important; font-size: 16px !important;}
 .btn-big svg{font-size: 25px !important;}
@@ -430,6 +428,8 @@ z-index: 99; pointer-events: none;}
 .loginSection .loginBox{width: 350px; height: auto; margin:auto;}
 .loginSection .loginBox .wrapper{width: 100%; height: auto; background: #f0f0f0; position: relative; z-index: 100; padding: 35px;}
 
+.loginSection .loginBox .wrapper h2{font-size: 22px; font-weight: bold;}
+
 .loginSection .loginBox .wrapper .form-group{margin-bottom: 18px;}
 
 .loginSection .loginBox .wrapper .form-control{background: #fff; box-shadow: none !important; outline: none !important; border-radius: 8px !important; font-size: 14px; font-weight: 600; height: 45px; padding-left: 40px;}
@@ -790,22 +790,8 @@ body.dark .form .form-group input.select__input{border: 0px !important;}
 
 body.dark .select__menu *{color: #000 !important;}
 
-.subCats .btn1_{text-align: left !important; justify-content: flex-start !important;
-display: flex; align-items: center; justify-content: flex-start; padding: 10px 15px;
-background: #f1f1f1; font-size: 14px; font-weight: 600;}
-.subCats .btn1_ svg{font-size: 18px !important; cursor: pointer;}
 
-
-.subCats .btn2_{text-align: left !important; justify-content: flex-start !important;
-  display: flex; align-items: center; justify-content: flex-start; padding: 10px 15px;
-  background: #f1f1f1;  font-size: 14px; }
-  .subCats .btn2_ svg{font-size: 18px !important; cursor: pointer;}
-
-  .subCats .form input{border: 1px solid rgba(0,0,0,0.1) !important; outline:none !important;
-  padding: 5px !important;}
-  .subCats .form button{padding: 2px 15px !important; font-size: 12px !important;}
-
-  .otpBox input{border: 1px solid rgba(0,0,0,0.3) !important; outline: none !important;
-    border-radius: 4px;}
-    .otpBox input:focus{border: 1px solid rgba(0,0,0,0.7) !important;}
-    
+.otpBox input{border: 1px solid rgba(0,0,0,0.3) !important; outline: none !important;
+  border-radius: 4px;}
+  .otpBox input:focus{border: 1px solid rgba(0,0,0,0.7) !important;}
+  

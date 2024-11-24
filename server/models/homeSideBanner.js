@@ -18,12 +18,6 @@ const homeSideBannersSchema = mongoose.Schema({
   },
   subCatName:{
     type: String,
-  },
-  thirdSubCatId:{
-    type: String,
-  },
-  thirdSubCatName:{
-    type: String,
   }
 });
 

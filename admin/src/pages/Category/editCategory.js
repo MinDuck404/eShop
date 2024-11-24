@@ -54,7 +54,6 @@ const EditCategory = () => {
     name: "",
     images: [],
     color: "",
-    parentId:null
   });
 
   const [previews, setPreviews] = useState([]);
@@ -82,13 +81,11 @@ const EditCategory = () => {
     });
 
     fetchDataFromApi(`/api/category/${id}`).then((res) => {
-      setcategory(res?.category);
-      setPreviews(res?.category?.images);
+      setcategory(res?.categoryData[0]);
+      setPreviews(res?.categoryData[0]?.images);
       setFormFields({
-        name: res?.category?.name,
-        color: res?.category?.color,
-        parentId: res?.category?.parentId,
-        parentCatName : res?.category?.name
+        name: res?.categoryData[0]?.name,
+        color: res?.categoryData[0]?.color,
       });
       context.setProgress(100);
     });
@@ -149,6 +146,7 @@ const EditCategory = () => {
               item?.images.length !== 0 &&
                 item?.images?.map((img) => {
                   img_arr.push(img);
+
                   //console.log(img)
                 });
             });
@@ -156,15 +154,23 @@ const EditCategory = () => {
           uniqueArray = img_arr.filter(
             (item, index) => img_arr.indexOf(item) === index
           );
+          const appendedArray = [...previews, ...uniqueArray];
 
-          // const appendedArray = [...previews, ...uniqueArray];
+          setPreviews(appendedArray);
 
-          //   console.log(appendedArray)
-
-          setPreviews(uniqueArray);
           setTimeout(() => {
             setUploading(false);
             img_arr = [];
+            uniqueArray=[];
+            fetchDataFromApi("/api/imageUpload").then((res) => {
+              res?.map((item) => {
+                item?.images?.map((img) => {
+                  deleteImages(`/api/category/deleteImage?img=${img}`).then((res) => {
+                    deleteData("/api/imageUpload/deleteAllImages");
+                  });
+                });
+              });
+            });
             context.setAlertBox({
               open: true,
               error: false,
@@ -177,19 +183,28 @@ const EditCategory = () => {
   };
 
   const removeImg = async (index, imgUrl) => {
-    const imgIndex = previews.indexOf(imgUrl);
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    if (userInfo?.email === "admin9643@gmail.com") {
+      const imgIndex = previews.indexOf(imgUrl);
 
-    deleteImages(`/api/category/deleteImage?img=${imgUrl}`).then((res) => {
+      deleteImages(`/api/category/deleteImage?img=${imgUrl}`).then((res) => {
+        context.setAlertBox({
+          open: true,
+          error: false,
+          msg: "Image Deleted!",
+        });
+      });
+
+      if (imgIndex > -1) {
+        // only splice array when item is found
+        previews.splice(index, 1); // 2nd parameter means remove one item only
+      }
+    } else {
       context.setAlertBox({
         open: true,
-        error: false,
-        msg: "Image Deleted!",
+        error: true,
+        msg: "Only Admin can delete Category Image",
       });
-    });
-
-    if (imgIndex > -1) {
-      // only splice array when item is found
-      previews.splice(index, 1); // 2nd parameter means remove one item only
     }
   };
 

@@ -131,6 +131,7 @@ const EditHomeSlide = () => {
               item?.images.length !== 0 &&
                 item?.images?.map((img) => {
                   img_arr.push(img);
+
                   //console.log(img)
                 });
             });
@@ -138,15 +139,23 @@ const EditHomeSlide = () => {
           uniqueArray = img_arr.filter(
             (item, index) => img_arr.indexOf(item) === index
           );
+          const appendedArray = [...previews, ...uniqueArray];
 
-          // const appendedArray = [...previews, ...uniqueArray];
+          setPreviews(appendedArray);
 
-          // console.log(appendedArray)
-
-          setPreviews(uniqueArray);
           setTimeout(() => {
             setUploading(false);
             img_arr = [];
+            uniqueArray=[];
+            fetchDataFromApi("/api/imageUpload").then((res) => {
+              res?.map((item) => {
+                item?.images?.map((img) => {
+                  deleteImages(`/api/homeBanner/deleteImage?img=${img}`).then((res) => {
+                    deleteData("/api/imageUpload/deleteAllImages");
+                  });
+                });
+              });
+            });
             context.setAlertBox({
               open: true,
               error: false,
@@ -159,8 +168,6 @@ const EditHomeSlide = () => {
   };
 
   const removeImg = async (index, imgUrl) => {
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    if (userInfo?.email === "rinkuv37@gmail.com") {
     const imgIndex = previews.indexOf(imgUrl);
 
     deleteImages(`/api/homeBanner/deleteImage?img=${imgUrl}`).then((res) => {
@@ -175,15 +182,6 @@ const EditHomeSlide = () => {
       // only splice array when item is found
       previews.splice(index, 1); // 2nd parameter means remove one item only
     }
-  }
-  else{
-    context.setAlertBox({
-      open: true,
-      error: true,
-      msg: "Only Admin can delete Banner",
-    });
-   }
-   
   };
 
   const editSlide = (e) => {

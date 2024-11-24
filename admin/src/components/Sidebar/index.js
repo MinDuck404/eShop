@@ -25,24 +25,22 @@ const Sidebar = () => {
 
   const isOpenSubmenu = (index) => {
     setActiveTab(index);
-    if (activeTab === index) {
+    if(activeTab===index){
       setIsToggleSubmenu(!isToggleSubmenu);
-    } else {
+    }else{
       setIsToggleSubmenu(false);
       setIsToggleSubmenu(true);
     }
+   
   };
   const history = useNavigate();
 
   useEffect(() => {
-    let url = window.location.href;
     const token = localStorage.getItem("token");
-    if (!url.includes("verify-account")) {
-      if (token !== "" && token !== undefined && token !== null) {
-        setIsLogin(true);
-      } else {
-        history("/login");
-      }
+    if (token !== "" && token !== undefined && token !== null) {
+      setIsLogin(true);
+    } else {
+      history("/login");
     }
   }, []);
 

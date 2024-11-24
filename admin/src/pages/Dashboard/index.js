@@ -227,27 +227,18 @@ const Dashboard = () => {
   }, []);
 
   const deleteProduct = (id) => {
-    const userInfo = JSON.parse(localStorage.getItem("user"));
-    if (userInfo?.email === "rinkuv37@gmail.com") {
-      context.setProgress(40);
-      deleteData(`/api/products/${id}`).then((res) => {
-        context.setProgress(100);
-        context.setAlertBox({
-          open: true,
-          error: false,
-          msg: "Product Deleted!",
-        });
-        fetchDataFromApi(`/api/products`).then((res) => {
-          setProductList(res);
-        });
-      });
-    } else {
+    context.setProgress(40);
+    deleteData(`/api/products/${id}`).then((res) => {
+      context.setProgress(100);
       context.setAlertBox({
         open: true,
-        error: true,
-        msg: "Only Admin can delete Product",
+        error: false,
+        msg: "Product Deleted!",
       });
-    }
+      fetchDataFromApi(`/api/products`).then((res) => {
+        setProductList(res);
+      });
+    });
   };
 
   const handleChangeCategory = (event) => {
@@ -346,19 +337,17 @@ const Dashboard = () => {
                   <MenuItem value="all">
                     <em>All</em>
                   </MenuItem>
-                  {context.catData?.length !== 0 &&
-                    context.catData?.map((cat, index) => {
-                      if (cat?.parentId === null) {
-                        return (
-                          <MenuItem
-                            className="text-capitalize"
-                            value={cat._id}
-                            key={index}
-                          >
-                            {cat.name}
-                          </MenuItem>
-                        );
-                      }
+                  {context.catData?.categoryList?.length !== 0 &&
+                    context.catData?.categoryList?.map((cat, index) => {
+                      return (
+                        <MenuItem
+                          className="text-capitalize"
+                          value={cat._id}
+                          key={index}
+                        >
+                          {cat.name}
+                        </MenuItem>
+                      );
                     })}
                 </Select>
               </FormControl>

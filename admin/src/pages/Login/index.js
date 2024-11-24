@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 
 import googleIcon from "../../assets/images/googleIcon.png";
 import { useNavigate } from "react-router-dom";
-import { postData } from "../../utils/api";
+import { editData, postData } from "../../utils/api";
 import CircularProgress from "@mui/material/CircularProgress";
 
 import { initializeApp } from "firebase/app";
@@ -26,6 +26,7 @@ const Login = () => {
   const [isShowPassword, setisShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  const [isOpenVerifyEmailBox, setIsOpenVerifyEmailBox] = useState(false);
 
   const history = useNavigate();
   const context = useContext(MyContext);
@@ -71,65 +72,97 @@ const Login = () => {
       return false;
     }
 
-    if (formfields.password === "") {
-      context.setAlertBox({
-        open: true,
-        error: true,
-        msg: "password can not be blank!",
-      });
-      return false;
-    }
+    if (isOpenVerifyEmailBox === false) {
+      if (formfields.password === "") {
+        context.setAlertBox({
+          open: true,
+          error: true,
+          msg: "password can not be blank!",
+        });
+        return false;
+      }
 
-    setIsLoading(true);
-    postData("/api/user/signin", formfields).then((res) => {
-      try {
-        if (res.error !== true) {
-          localStorage.setItem("token", res.token);
+      setIsLoading(true);
+      postData("/api/user/signin", formfields).then((res) => {
+        try {
+          if (res.error !== true) {
+            localStorage.setItem("token", res.token);
 
-          if (res.user?.isAdmin === true) {
-            const user = {
-              name: res.user?.name,
-              email: res.user?.email,
-              userId: res.user?.id,
-              isAdmin: res.user?.isAdmin,
-            };
+            if (res.user?.isAdmin === true) {
+              const user = {
+                name: res.user?.name,
+                email: res.user?.email,
+                userId: res.user?.id,
+                isAdmin: res.user?.isAdmin,
+              };
 
-            localStorage.removeItem("user");
-            localStorage.setItem("user", JSON.stringify(user));
+              localStorage.removeItem("user");
+              localStorage.setItem("user", JSON.stringify(user));
 
-            context.setAlertBox({
-              open: true,
-              error: false,
-              msg: "User Login Successfully!",
-            });
+              context.setAlertBox({
+                open: true,
+                error: false,
+                msg: "User Login Successfully!",
+              });
 
-            setTimeout(() => {
-              context.setIsLogin(true);
-              history("/dashboard");
+              setTimeout(() => {
+                context.setIsLogin(true);
+                history("/dashboard");
+                setIsLoading(false);
+                // window.location.href = "/dashboard";
+              }, 2000);
+            } else {
+              context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "you are not a admin",
+              });
               setIsLoading(false);
-              // window.location.href = "/dashboard";
-            }, 2000);
-          } else {
+            }
+          }
+          else {
+            if (res?.isVerify === false) {
+              setIsLoading(true);
+              setIsOpenVerifyEmailBox(true);
+            }
+
             context.setAlertBox({
               open: true,
               error: true,
-              msg: "you are not a admin",
+              msg: res.msg,
             });
             setIsLoading(false);
           }
-        } else {
-          context.setAlertBox({
-            open: true,
-            error: true,
-            msg: res.msg,
-          });
+        } catch (error) {
+          console.log(error);
           setIsLoading(false);
         }
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
-      }
-    });
+      });
+    }
+
+    if (isOpenVerifyEmailBox === true) {
+      localStorage.setItem("userEmail", formfields.email);
+      postData("/api/user/verifyAccount/resendOtp", {
+        email: formfields.email,
+      }).then((res) => {
+        if (res?.otp !== null && res?.otp !== "") {
+          editData(
+            `/api/user/verifyAccount/emailVerify/${res.existingUserId}`,
+            {
+              email: formfields.email,
+              otp: res?.otp,
+            }
+          ).then((res) => {
+            setTimeout(() => {
+              setIsLoading(true);
+              history("/verify-account");
+              //window.location.href="/signIn";
+            }, 2000);
+          });
+        }
+        console.log(res);
+      });
+    }
   };
 
   const signInWithGoogle = () => {
@@ -221,6 +254,10 @@ const Login = () => {
             <span className="ml-2">ECOMMERCE</span>
           </Link>
           <div className="wrapper mt-3 card border">
+            {isOpenVerifyEmailBox === true && (
+              <h2 className="mb-4">Verify Email</h2>
+            )}
+
             <form onSubmit={signIn}>
               <div
                 className={`form-group position-relative ${
@@ -242,68 +279,81 @@ const Login = () => {
                 />
               </div>
 
-              <div
-                className={`form-group position-relative ${
-                  inputIndex === 1 && "focus"
-                }`}
-              >
-                <span className="icon">
-                  <RiLockPasswordFill />
-                </span>
-                <input
-                  type={`${isShowPassword === true ? "text" : "password"}`}
-                  className="form-control"
-                  placeholder="enter your password"
-                  onFocus={() => focusInput(1)}
-                  onBlur={() => setInputIndex(null)}
-                  name="password"
-                  onChange={onchangeInput}
-                />
+              {isOpenVerifyEmailBox === false ? (
+                <>
+                  <div
+                    className={`form-group position-relative ${
+                      inputIndex === 1 && "focus"
+                    }`}
+                  >
+                    <span className="icon">
+                      <RiLockPasswordFill />
+                    </span>
+                    <input
+                      type={`${isShowPassword === true ? "text" : "password"}`}
+                      className="form-control"
+                      placeholder="enter your password"
+                      onFocus={() => focusInput(1)}
+                      onBlur={() => setInputIndex(null)}
+                      name="password"
+                      onChange={onchangeInput}
+                    />
 
-                <span
-                  className="toggleShowPassword"
-                  onClick={() => setisShowPassword(!isShowPassword)}
-                >
-                  {isShowPassword === true ? <IoMdEyeOff /> : <IoMdEye />}
-                </span>
-              </div>
+                    <span
+                      className="toggleShowPassword"
+                      onClick={() => setisShowPassword(!isShowPassword)}
+                    >
+                      {isShowPassword === true ? <IoMdEyeOff /> : <IoMdEye />}
+                    </span>
+                  </div>
 
-              <div className="form-group">
+                  <div className="form-group">
+                    <Button
+                      type="submit"
+                      className="btn-blue btn-lg w-100 btn-big"
+                    >
+                      {isLoading === true ? <CircularProgress /> : "Sign In "}
+                    </Button>
+                  </div>
+
+                  <div className="form-group text-center mb-0">
+                    <Link to={"/forgot-password"} className="link">
+                      FORGOT PASSWORD
+                    </Link>
+                    <div className="d-flex align-items-center justify-content-center or mt-3 mb-3">
+                      <span className="line"></span>
+                      <span className="txt">or</span>
+                      <span className="line"></span>
+                    </div>
+
+                    <Button
+                      variant="outlined"
+                      className="w-100 btn-lg btn-big loginWithGoogle"
+                      onClick={signInWithGoogle}
+                    >
+                      <img src={googleIcon} width="25px" /> &nbsp; Sign In with
+                      Google
+                    </Button>
+                  </div>
+                </>
+              ) : (
                 <Button type="submit" className="btn-blue btn-lg w-100 btn-big">
-                  {isLoading === true ? <CircularProgress /> : "Sign In "}
+                  {isLoading === true ? <CircularProgress /> : "Verify Email "}
                 </Button>
-              </div>
-
-              <div className="form-group text-center mb-0">
-                <Link to={"/forgot-password"} className="link">
-                  FORGOT PASSWORD
-                </Link>
-                <div className="d-flex align-items-center justify-content-center or mt-3 mb-3">
-                  <span className="line"></span>
-                  <span className="txt">or</span>
-                  <span className="line"></span>
-                </div>
-
-                <Button
-                  variant="outlined"
-                  className="w-100 btn-lg btn-big loginWithGoogle"
-                  onClick={signInWithGoogle}
-                >
-                  <img src={googleIcon} width="25px" /> &nbsp; Sign In with
-                  Google
-                </Button>
-              </div>
+              )}
             </form>
           </div>
 
-          <div className="wrapper mt-3 card border footer p-3">
-            <span className="text-center">
-              Don't have an account?
-              <Link to={"/signUp"} className="link color ml-2">
-                Register
-              </Link>
-            </span>
-          </div>
+          {isOpenVerifyEmailBox === false && (
+            <div className="wrapper mt-3 card border footer p-3">
+              <span className="text-center">
+                Don't have an account?
+                <Link to={"/signUp"} className="link color ml-2">
+                  Register
+                </Link>
+              </span>
+            </div>
+          )}
         </div>
       </section>
     </>

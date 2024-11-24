@@ -61,83 +61,55 @@ router.post(`/upload`, upload.array("images"), async (req, res) => {
   }
 });
 
+const createCategories = (categories, parentId=null) => {
 
+  const categoryList = [];
+  let category;
 
-
-// Create a category
-router.post('/create', async (req, res) => {
-  try {
-    
-    let category = new Category({
-      name: req.body.name,
-      images: imagesArr,
-      color: req.body.color,
-      parentId: req.body.parentId,
-      parentCatName: req.body.parentCatName,
+  if (parentId == null) {
+    category = categories.filter((cat) => cat.parentId == undefined);
+  } else {
+    category = categories.filter((cat) => cat.parentId == parentId);
+  }
+  
+  for (let cat of category) {
+ 
+    categoryList.push({
+      _id: cat._id,
+      id: cat._id,
+      name: cat.name,
+      images:cat.images,
+      color:cat.color,
+      slug: cat.slug,
+      children: createCategories(categories, cat._id)
     });
+  }
 
-    if (!category) {
-      res.status(500).json({
-        error: err,
-        success: false,
+  return categoryList;
+};
+
+router.get(`/`, async (req, res) => {
+  try {
+  
+    const categoryList = await Category.find();
+
+      if (!categoryList) {
+        res.status(500).json({ success: false });
+      }
+
+    if (categoryList) {
+      const categoryData = createCategories(categoryList);
+
+      return res.status(200).json({
+        categoryList: categoryData
       });
     }
-  
-    category = await category.save();
-  
-    imagesArr = [];
-  
-    res.status(201).json(category);
+
 
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false });
   }
 });
-
-// Get all categories with hierarchy
-router.get('/', async (req, res) => {
-  try {
-    const categories = await Category.find();
-    const categoryMap = {};
-
-    categories.forEach(cat => {
-      categoryMap[cat._id] = { ...cat._doc, children: [] };
-    });
-
-    const rootCategories = [];
-
-    categories.forEach(cat => {
-      if (cat.parentId) {
-        categoryMap[cat.parentId].children.push(categoryMap[cat._id]);
-      } else {
-        rootCategories.push(categoryMap[cat._id]);
-      }
-    });
-
-    res.json(rootCategories);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// Get all categories with hierarchy
-router.get('/all', async (req, res) => {
-  try {
-    const categories = await Category.find();
-    const categoryMap = {};
-
-   if(!categories){
-    res.status(500).json({
-      categories
-    })
-   }
-
-    res.json(categories);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
 
 router.get(`/get/count`, async (req, res) => {
   const categoryCount = await Category.countDocuments({parentId:undefined});
@@ -174,6 +146,30 @@ router.get(`/subCat/get/count`, async (req, res) => {
 });
 
 
+const createCat = (categories, parentId=null,cat) => {
+
+  const categoryList = [];
+  let category;
+
+  if (parentId == null) {
+    category = categories.filter((cat) => cat.parentId == undefined);
+  } else {
+    category = categories.filter((cat) => cat.parentId == parentId);
+
+  }
+  categoryList.push({
+    _id: cat._id,
+    id: cat._id,
+    name: cat.name,
+    images:cat.images,
+    color:cat.color,
+    slug: cat.slug,
+    children: category
+  });
+
+  return categoryList;
+
+};
 
 router.get("/:id", async (req, res) => {
 
@@ -188,9 +184,14 @@ router.get("/:id", async (req, res) => {
         .json({ message: "The category with the given ID was not found." });
     }
 
-    return res.status(200).json({
-      category
-    });
+    if (category) {
+      const categoryData = createCat(categoryList, category._id, category);
+
+      return res.status(200).json({
+        categoryData
+      });
+    }
+
 
   } catch (error) {
     res.status(500).json({ success: false });
@@ -200,9 +201,42 @@ router.get("/:id", async (req, res) => {
 
 });
 
+router.post("/create", async (req, res) => {
+  let catObj = {};
 
+  if (imagesArr.length > 0) {
+    catObj = {
+      name: req.body.name,
+      images: imagesArr,
+      color: req.body.color,
+      slug: req.body.name,
+    };
+  } else {
+    catObj = {
+      name: req.body.name,
+      slug: req.body.name,
+    };
+  }
 
+  if (req.body.parentId) {
+    catObj.parentId = req.body.parentId;
+  }
 
+  let category = new Category(catObj);
+
+  if (!category) {
+    res.status(500).json({
+      error: err,
+      success: false,
+    });
+  }
+
+  category = await category.save();
+
+  imagesArr = [];
+
+  res.status(201).json(category);
+});
 
 router.delete("/deleteImage", async (req, res) => {
   const imgUrl = req.query.img;
@@ -243,30 +277,9 @@ router.delete("/:id", async (req, res) => {
     //  console.log(imageName)
   }
 
-  const subCategory = await Category.find({
-    parentId:req.params.id
-  });
+  const deletedUser = await Category.findByIdAndDelete(req.params.id);
 
-
-
-  for(let i=0; i<subCategory.length; i++){
-    console.log(subCategory[i]._id);
-
-    const thirdsubCategory = await Category.find({
-      parentId:subCategory[i]._id
-    });
-
-    for(let i=0; i<thirdsubCategory.length; i++){
-      const deletedThirdSubCat = await Category.findByIdAndDelete(thirdsubCategory[i]._id);
-    }
-
-    const deletedSubCat = await Category.findByIdAndDelete(subCategory[i]._id);
-  }
-
-
-  const deletedCat = await Category.findByIdAndDelete(req.params.id);
-
-  if (!deletedCat) {
+  if (!deletedUser) {
     res.status(404).json({
       message: "Category not found!",
       success: false,
@@ -288,8 +301,6 @@ router.put("/:id", async (req, res) => {
       name: req.body.name,
       images: req.body.images,
       color: req.body.color,
-      parentId:req.body.parentId,
-      parentCatName: req.body.parentCatName
     },
     { new: true }
   );

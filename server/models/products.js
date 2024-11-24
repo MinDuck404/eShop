@@ -47,18 +47,6 @@ const productSchema = mongoose.Schema({
         type:String,
         default:''
     },
-    thirdsubCat:{
-        type:String,
-        default:''
-    },
-    thirdsubCatName:{
-        type:String,
-        default:''
-    },
-    thirdsubCatId:{
-        type:String,
-        default:''
-    },
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',

@@ -88,15 +88,12 @@ const SignUp = () => {
       postData("/api/user/signup", formfields)
         .then((res) => {
           if (res.status !== 'FAILED') {
-            context.setAlertBox({
-              open: true,
-              error: false,
-              msg: res?.msg,
-            });
+
+            localStorage.setItem("userEmail", formfields.email);
 
             setTimeout(() => {
               setIsLoading(true);
-              history("/signIn");
+              history("/verifyOTP");
               //window.location.href="/signIn";
             }, 2000);
           } else {

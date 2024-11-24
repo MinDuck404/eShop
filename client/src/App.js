@@ -18,6 +18,9 @@ import Checkout from "./Pages/Checkout";
 import Orders from "./Pages/Orders";
 import MyAccount from "./Pages/MyAccount";
 import SearchPage from "./Pages/Search";
+import VerifyOTP from "./Pages/VerifyOTP";
+import ChangePassword from "./Pages/ChangePassword";
+
 
 import { fetchDataFromApi, postData } from "./utils/api";
 import Snackbar from "@mui/material/Snackbar";
@@ -57,8 +60,7 @@ function App() {
     userId: "",
   });
 
-
-  useEffect(()=>{
+  useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (
       user?.userId !== "" &&
@@ -69,7 +71,7 @@ function App() {
         setCartData(res);
       });
     }
-  },[isLogin]);
+  }, [isLogin]);
 
   useEffect(() => {
     getCountry("https://countriesnow.space/api/v0.1/countries/");
@@ -77,22 +79,19 @@ function App() {
     fetchDataFromApi("/api/category").then((res) => {
       setCategoryData(res.categoryList);
 
- const subCatArr=[];
+      const subCatArr = [];
 
-        res.categoryList?.length !== 0 && res.categoryList?.map((cat, index) => {
-                if(cat?.children.length!==0){
-                    cat?.children?.map((subCat)=>{
-                        subCatArr.push(subCat);
-                    })
-                }
+      res.categoryList?.length !== 0 &&
+        res.categoryList?.map((cat, index) => {
+          if (cat?.children.length !== 0) {
+            cat?.children?.map((subCat) => {
+              subCatArr.push(subCat);
+            });
+          }
         });
 
-       setsubCategoryData(subCatArr);
-
-
+      setsubCategoryData(subCatArr);
     });
-
-  
 
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -226,7 +225,7 @@ function App() {
     setIsOpenFilters,
     isOpenFilters,
     setIsBottomShow,
-    isBottomShow
+    isBottomShow,
   };
 
   return (
@@ -276,6 +275,8 @@ function App() {
           <Route exact={true} path="/orders" element={<Orders />} />
           <Route exact={true} path="/my-account" element={<MyAccount />} />
           <Route exact={true} path="/search" element={<SearchPage />} />
+          <Route exact={true} path="/verifyOTP" element={<VerifyOTP />} />
+          <Route exact={true} path="/changePassword" element={<ChangePassword />} />
         </Routes>
         {isHeaderFooterShow === true && <Footer />}
 

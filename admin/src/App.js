@@ -344,7 +344,6 @@ function App() {
               />
               <Route exact={true} path="/my-account" element={<MyAccount />} />
               <Route exact={true} path="/verify-account" element={<VerifyAccount />} />
-
             </Routes>
           </div>
         </div>
