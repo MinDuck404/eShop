@@ -26,7 +26,7 @@ const Checkout = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    
+
     context.setEnableFilterTab(false);
     const user = JSON.parse(localStorage.getItem("user"));
     fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
@@ -54,9 +54,7 @@ const Checkout = () => {
   const checkout = (e) => {
     e.preventDefault();
 
-    console.log(cartData);
-
-    console.log(formFields);
+    // Kiểm tra thông tin form
     if (formFields.fullName === "") {
       context.setAlertBox({
         open: true,
@@ -150,59 +148,34 @@ const Checkout = () => {
       }),
     };
 
-    var options = {
-      key: process.env.REACT_APP_RAZORPAY_KEY_ID,
-      key_secret: process.env.REACT_APP_RAZORPAY_KEY_SECRET,
-      amount: parseInt(totalAmount * 100),
-      currency: "INR",
-      order_receipt: "order_rcptid_" + formFields.fullName,
-      name: "E-Bharat",
-      description: "for testing purpose",
-      handler: function (response) {
-        console.log(response);
+    const user = JSON.parse(localStorage.getItem("user"));
 
-        const paymentId = response.razorpay_payment_id;
-
-        const user = JSON.parse(localStorage.getItem("user"));
-
-        const payLoad = {
-          name: addressInfo.name,
-          phoneNumber: formFields.phoneNumber,
-          address: addressInfo.address,
-          pincode: addressInfo.pincode,
-          amount: parseInt(totalAmount),
-          paymentId: paymentId,
-          email: user.email,
-          userid: user.userId,
-          products: cartData,
-          date:addressInfo?.date
-        };
-
-        console.log(payLoad)
-          
-
-        postData(`/api/orders/create`, payLoad).then((res) => {
-             fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
-            res?.length!==0 && res?.map((item)=>{
-                deleteData(`/api/cart/${item?.id}`).then((res) => {
-                })    
-            })
-                setTimeout(()=>{
-                    context.getCartData();
-                },1000);
-                history("/orders");
-          });
-         
-        });
-      },
-
-      theme: {
-        color: "#3399cc",
-      },
+    const payLoad = {
+      name: addressInfo.name,
+      phoneNumber: formFields.phoneNumber,
+      address: addressInfo.address,
+      pincode: addressInfo.pincode,
+      amount: parseInt(totalAmount),
+      email: user.email,
+      userid: user.userId,
+      products: cartData,
+      date: addressInfo?.date,
     };
 
-    var pay = new window.Razorpay(options);
-    pay.open();
+    // Gửi yêu cầu thanh toán tới MoMo
+    postData(`/api/payment/pay`, payLoad).then((res) => {
+      if (res.success) {
+        // Nếu nhận được URL thanh toán từ MoMo, chuyển hướng đến trang thanh toán
+        window.location.href = res.payUrl;
+      } else {
+        // Hiển thị lỗi nếu không thành công
+        context.setAlertBox({
+          open: true,
+          error: true,
+          msg: "Payment failed, please try again.",
+        });
+      }
+    });
   };
 
   return (
@@ -360,54 +333,31 @@ const Checkout = () => {
                         <th>Subtotal</th>
                       </tr>
                     </thead>
-
                     <tbody>
-                      {cartData?.length !== 0 &&
-                        cartData?.map((item, index) => {
-                          return (
-                            <tr>
-                              <td>
-                                {item?.productTitle?.substr(0, 20) + "..."}{" "}
-                                <b>× {item?.quantity}</b>
-                              </td>
-
-                              <td>
-                                {item?.subTotal?.toLocaleString("en-US", {
-                                  style: "currency",
-                                  currency: "INR",
-                                })}
-                              </td>
-                            </tr>
-                          );
-                        })}
-
-                      <tr>
-                        <td>Subtotal </td>
-
-                        <td>
-                          {(cartData?.length !== 0
-                            ? cartData
-                                ?.map(
-                                  (item) => parseInt(item.price) * item.quantity
-                                )
-                                .reduce((total, value) => total + value, 0)
-                            : 0
-                          )?.toLocaleString("en-US", {
-                            style: "currency",
-                            currency: "INR",
-                          })}
-                        </td>
-                      </tr>
+                      {cartData.map((item, index) => (
+                        <tr key={index}>
+                          <td>{item.name}</td>
+                          <td>{parseInt(item.price) * item.quantity}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
-                </div>
 
-                <Button
-                  type="submit"
-                  className="btn-blue bg-red btn-lg btn-big"
-                >
-                  <IoBagCheckOutline /> &nbsp; Checkout
-                </Button>
+                  <div className="total">
+                    <h6>Total: {totalAmount}</h6>
+                  </div>
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    fullWidth
+                    size="large"
+                    startIcon={<IoBagCheckOutline />}
+                  >
+                    Place Order
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
