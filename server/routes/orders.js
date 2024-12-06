@@ -228,12 +228,13 @@ router.post('/create', async (req, res) => {
         address: req.body.address,
         pincode: req.body.pincode,
         amount: req.body.amount,
-        paymentId: req.body.paymentId,
+        paymentId: req.body.paymentId,  // Thêm paymentId vào đây
         email: req.body.email,
         userid: req.body.userid,
         products: req.body.products,
         date:req.body.date
     });
+    
 
     let order1 = {
         name: req.body.name,
