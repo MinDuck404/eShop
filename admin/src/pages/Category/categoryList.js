@@ -99,7 +99,7 @@ const Category = () => {
             </Breadcrumbs>
 
             <Link to="/category/add">
-              <Button className="btn-blue  ml-3 pl-3 pr-3">Add Category</Button>
+              <Button className="btn-blue  ml-3 pl-3 pr-3">Thêm Categoryyyy</Button>
             </Link>
           </div>
         </div>
