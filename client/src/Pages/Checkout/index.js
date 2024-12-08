@@ -147,9 +147,9 @@ const Checkout = () => {
         year: "numeric",
       }),
     };
-
+  
     const user = JSON.parse(localStorage.getItem("user"));
-
+  
     const payLoad = {
       name: addressInfo.name,
       phoneNumber: formFields.phoneNumber,
@@ -159,16 +159,15 @@ const Checkout = () => {
       email: user.email,
       userid: user.userId,
       products: cartData,
-      date: addressInfo?.date,
+      date: addressInfo.date,
     };
-
+  
     // Gửi yêu cầu thanh toán tới MoMo
     postData(`/api/payment/pay`, payLoad).then((res) => {
       if (res.success) {
-        // Nếu nhận được URL thanh toán từ MoMo, chuyển hướng đến trang thanh toán
+        // Chuyển hướng tới URL thanh toán MoMo
         window.location.href = res.payUrl;
       } else {
-        // Hiển thị lỗi nếu không thành công
         context.setAlertBox({
           open: true,
           error: true,

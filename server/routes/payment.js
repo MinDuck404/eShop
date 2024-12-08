@@ -100,47 +100,44 @@ router.post('/pay', (req, res) => {
 router.post('/notify', async (req, res) => {
     const secretKey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
     const { orderId, amount, resultCode, signature } = req.body;
-
+  
     // Xác thực chữ ký
     if (!verifySignature(req.body, signature, secretKey)) {
-        console.error(`Chữ ký không hợp lệ: Order ID ${orderId}`);
-        return res.status(400).send('Chữ ký không hợp lệ');
+      console.error(`Chữ ký không hợp lệ: Order ID ${orderId}`);
+      return res.status(400).send('Chữ ký không hợp lệ');
     }
-
-    // Kiểm tra trạng thái giao dịch
-    if (resultCode === 0) {
-        console.log(`Thanh toán thành công: Order ID ${orderId}, Số tiền: ${amount}`);
-        
-        // Tìm đơn hàng trong cơ sở dữ liệu (MongoDB)
-        const order = await Orders.findOne({ paymentId: orderId });  // Cập nhật tìm theo `paymentId` nếu cần
-        
-        if (order) {
-            // Cập nhật trạng thái đơn hàng thành 'paid' và lưu thời gian thanh toán
-            await Orders.findByIdAndUpdate(order._id, {
-                status: 'paid',
-                paymentDate: new Date()
-            });
-
-            // Lặp qua danh sách sản phẩm trong đơn hàng và xóa sản phẩm khỏi kho
-            for (let product of order.products) {
-                await Product.findByIdAndDelete(product.productId); // Xóa sản phẩm khỏi kho
-            }
-
-            // Cập nhật giỏ hàng: xóa các sản phẩm trong giỏ hàng của người dùng
-            await Cart.deleteMany({ userId: order.userId }); // Xóa tất cả sản phẩm trong giỏ hàng của user
-
-            console.log(`Đơn hàng ${orderId} đã được thanh toán và giỏ hàng đã được cập nhật.`);
-        } else {
-            console.log(`Không tìm thấy đơn hàng với Order ID ${orderId}`);
-            return res.status(404).send('Đơn hàng không tồn tại');
+  
+    if (resultCode === 0) { // Thanh toán thành công
+      try {
+        // Tìm đơn hàng trong cơ sở dữ liệu bằng paymentId
+        const order = await Orders.findOne({ paymentId: orderId });
+  
+        if (!order) {
+          console.error(`Không tìm thấy đơn hàng: ${orderId}`);
+          return res.status(404).send('Đơn hàng không tồn tại');
         }
-        
+  
+        // Cập nhật trạng thái đơn hàng thành 'paid'
+        order.status = 'paid';
+        order.paymentDate = new Date();
+        await order.save();
+  
+        // Xóa sản phẩm trong giỏ hàng
+        await Cart.deleteMany({ userId: order.userid });
+  
+        console.log(`Đơn hàng ${orderId} đã được thanh toán và giỏ hàng đã được xóa.`);
         res.status(200).send('OK');
+      } catch (err) {
+        console.error(`Lỗi cập nhật đơn hàng: ${err.message}`);
+        res.status(500).send('Lỗi hệ thống');
+      }
     } else {
-        console.log(`Thanh toán thất bại: Order ID ${orderId}, Result Code: ${resultCode}`);
-        res.status(400).send('Lỗi thanh toán');
+      console.error(`Thanh toán thất bại: Order ID ${orderId}`);
+      res.status(400).send('Lỗi thanh toán');
     }
-});
+  });
+  
+  
 
 
 
