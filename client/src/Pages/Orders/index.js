@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { fetchDataFromApi } from '../../utils/api';
-import Pagination from '@mui/material/Pagination';
-import Dialog from '@mui/material/Dialog';
-import { MdClose } from "react-icons/md";
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import React, { useContext, useEffect, useState } from 'react';
+import { MdClose } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { MyContext } from "../../App";
+import { fetchDataFromApi } from '../../utils/api';
 
 const Orders = () => {
 
@@ -25,10 +24,10 @@ const Orders = () => {
 
         const token = localStorage.getItem("token");
         if(token!=="" && token!==undefined  && token!==null){
-          setIsLogin(true);
+setIsLogin(true);
         }
         else{
-          history("/signIn");
+history("/signIn");
         }
 
         const user = JSON.parse(localStorage.getItem("user"));
@@ -41,9 +40,6 @@ const Orders = () => {
 
     }, []);
 
-
-
-
     const showProducts = (id) => {
         fetchDataFromApi(`/api/orders/${id}`).then((res) => {
             setIsOpenModal(true);
@@ -51,29 +47,26 @@ const Orders = () => {
         })
     }
 
-
     return (
         <>
             <section className="section">
                 <div className='container'>
-                    <h2 className='hd'>Orders</h2>
+                    <h2 className='hd'>Đơn Hàng</h2>
 
                     <div className='table-responsive orderTable'>
                         <table className='table table-striped table-bordered'>
                             <thead className='thead-light'>
                                 <tr>
-                                    <th>Order Id</th>
-                                    <th>Paymant Id</th>
-                                    <th>Products</th>
-                                    <th>Name</th>
-                                    <th>Phone Number</th>
-                                    <th>Address</th>
-                                    <th>Pincode</th>
-                                    <th>Total Amount</th>
+                                    <th>Mã đơn hàng</th>
+                                    <th>Mã thanh toán</th>
+                                    <th>Sản phẩm</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Số lượng</th>
                                     <th>Email</th>
                                     <th>User Id</th>
-                                    <th>Order Status</th>
-                                    <th>Date</th>
+                                    <th>Trang thái đơn hàng</th>
+                                    <th>Ngày đặt hàng</th>
                                 </tr>
                             </thead>
 
@@ -83,7 +76,7 @@ const Orders = () => {
                                         return (
                                             <>
                                                 <tr key={index}>
-                                                 <td><span className='text-blue fonmt-weight-bold'>{order?.id}</span></td>
+<td><span className='text-blue fonmt-weight-bold'>{order?.id}</span></td>
                                                     <td><span className='text-blue fonmt-weight-bold'>{order?.paymentId}</span></td>
                                                     <td><span className='text-blue fonmt-weight-bold cursor' onClick={() => showProducts(order?._id)}>Click here to view</span>
                                                     </td>
@@ -114,9 +107,6 @@ const Orders = () => {
 
                         </table>
                     </div>
-
-
-                   
 
                 </div>
             </section>

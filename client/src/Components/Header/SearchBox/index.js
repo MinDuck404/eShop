@@ -1,13 +1,11 @@
-import Button from "@mui/material/Button";
-import { IoIosSearch } from "react-icons/io";
-import { fetchDataFromApi } from "../../../utils/api";
-import { useContext, useEffect, useState } from "react";
-import { MyContext } from "../../../App";
-
-import { Link, useNavigate } from "react-router-dom";
-import CircularProgress from "@mui/material/CircularProgress";
 import { ClickAwayListener } from "@mui/base";
-
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useContext, useState } from "react";
+import { IoIosSearch } from "react-icons/io";
+import { Link, useNavigate } from "react-router-dom";
+import { MyContext } from "../../../App";
+import { fetchDataFromApi } from "../../../utils/api";
 const SearchBox = (props) => {
   const [searchFields, setSearchFields] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -53,7 +51,7 @@ const SearchBox = (props) => {
       <div className="headerSearch ml-3 mr-3">
         <input
           type="text"
-          placeholder="Search for products..."
+          placeholder="Tìm kiếm sản phẩm..."
           onChange={onChangeValue}
         />
         <Button onClick={searchProducts}>

@@ -1,13 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
-import { IoCloseSharp } from "react-icons/io5";
-import { MdOutlineEdit } from "react-icons/md";
-import { deleteData, editData, fetchDataFromApi } from "../../utils/api";
-import { MyContext } from "../../App";
 import Button from "@mui/material/Button";
+import FormControl from '@mui/material/FormControl';
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
+import React, { useContext, useState } from "react";
+import { IoCloseSharp } from "react-icons/io5";
+import { MdOutlineEdit } from "react-icons/md";
+import { MyContext } from "../../App";
+import { deleteData, editData, fetchDataFromApi } from "../../utils/api";
 
 const EditSubCatBox = (props) => {
   const [editCatValue, setEditCatValue] = useState("");
@@ -22,19 +21,15 @@ const EditSubCatBox = (props) => {
     parentId: null,
     parentCatName:null
   });
-
   const context = useContext(MyContext);
-
 
   const handleChangeCategory = (event) => {
     setcategoryVal(event.target.value);
   };
   
-
   const selectCat = (cat, id) => {
     formFields.parentId = id;
   };
-
   const onChangeInput = (e) => {
     setEditCatValue(e.target.value);
     setFormFields({
@@ -50,7 +45,7 @@ const EditSubCatBox = (props) => {
       context.setProgress({
         open: true,
         error: false,
-        msg: "Category Updated!",
+        msg: "Danh mục đã được cập nhật!",
       });
 
       fetchDataFromApi("/api/category").then((res) => {
@@ -84,7 +79,7 @@ const EditSubCatBox = (props) => {
 
   const deleteSubCat = (id) => {
     const userInfo = JSON.parse(localStorage.getItem("user"));
-    if (userInfo?.email === "rinkuv37@gmail.com") {
+    if (userInfo?.email ) {
     context.setProgress(30);
     deleteData(`/api/category/${id}`).then((res) => {
       context.setProgress(100);
@@ -94,7 +89,7 @@ const EditSubCatBox = (props) => {
         context.setProgress({
           open: true,
           error: false,
-          msg: "Category Deleted!",
+          msg: "Danh mục đã được xoá!",
         });
       });
     });
@@ -103,9 +98,9 @@ const EditSubCatBox = (props) => {
     context.setAlertBox({
       open: true,
       error: true,
-      msg: "Only Admin can delete Sub Category",
+      msg: "Chỉ quản trị viên mới có thể xóa danh mục phụ",
     });
-   }
+  }
   };
 
   return (
@@ -127,7 +122,7 @@ const EditSubCatBox = (props) => {
               className="w-100"
             >
               <MenuItem value="">
-                <em value={null}>None</em>
+                <em value={null}>Không có</em>
               </MenuItem>
               {props.catData?.length !== 0 &&
                 props.catData?.map((cat, index) => {
@@ -144,10 +139,9 @@ const EditSubCatBox = (props) => {
                 })}
             </Select>
           </FormControl>
-
           <input type="text" value={editCatValue} onChange={onChangeInput} />
           <Button className="btn-blue" type="submit">
-            Edit
+            Chỉnh Sửa
           </Button>
           <Button
             variant="text"

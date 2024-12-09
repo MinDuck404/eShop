@@ -2,60 +2,59 @@
 
 *{margin: 0px; padding: 0px;}
 
-body{ font-family: "Open Sans", sans-serif !important; background: #ebe9e9; overflow-x: hidden;}
-body.dark{background: #071739 !important;}
-
+body{ font-family: "Open Sans", sans-serif !important; background: #f5f5f5; overflow-x: hidden;}
+body.dark{background: #000000 !important;}
 
 ::-webkit-scrollbar{width: 5px !important; height: 5px !important;}
-::-webkit-scrollbar-thumb{background: #0858f7 !important;}
+::-webkit-scrollbar-thumb{background: #d32f2f !important;}
 ::-webkit-scrollbar-track{background: transparent !important;}
 
 .list_ li{vertical-align: top !important;}
 .list_ li.w-15{width: 15%;}
 
-h1,h2,h3,h4,h5,h6,p{color: #403e57;}
+h1,h2,h3,h4,h5,h6,p{color: #333;}
 
 h4{line-height: 32px;}
 
-.topLoadingBar{height: 4px !important;background: #1866ee  !important;}
-body.dark .topLoadingBar{background: #ff4964   !important;}
+.topLoadingBar{height: 4px !important;background: #d32f2f !important;}
+body.dark .topLoadingBar{background: #ff5252 !important;}
 
-.btn-blue{background: #0858f7 !important; font-size: 14px !important; font-weight: 600 !important; color: #fff !important; text-transform: capitalize !important; border-radius: 5px !important; border-radius: 8px !important;}
+.btn-blue{background: #d32f2f !important; font-size: 14px !important; font-weight: 600 !important; color: black !important; text-transform: capitalize !important; border-radius: 8px !important;}
 
 button .loader{width: 25px !important; height: 25px !important;}
 
-.btn-lg{padding:5px 25px !important ;}
+.btn-lg{padding:5px 25px !important;}
 .btn-big{padding: 10px 25px !important; font-size: 16px !important;}
 .btn-big svg{font-size: 25px !important;}
 
 .btn-round{border-radius: 30px !important;}
 
-.full{max-width: 100% !important; flex: 0 0 100% !important ; width: 100% !important;}
+.full{max-width: 100% !important; flex: 0 0 100% !important; width: 100% !important;}
 
 .checkbox {
     display: block;
     margin-bottom: 15px;
-  }
-  
-  .checkbox input {
+}
+
+.checkbox input {
     padding: 0;
     height: initial;
     width: initial;
     margin-bottom: 0;
     display: none;
     cursor: pointer;
-  }
-  
-  .checkbox label {
+}
+
+.checkbox label {
     position: relative;
     cursor: pointer;
-  }
-  
-  .checkbox label:before {
+}
+
+.checkbox label:before {
     content:'';
     -webkit-appearance: none;
     background-color: transparent;
-    border: 2px solid #0079bf;
+    border: 2px solid #d32f2f;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
     padding: 10px;
     display: inline-block;
@@ -63,9 +62,9 @@ button .loader{width: 25px !important; height: 25px !important;}
     vertical-align: middle;
     cursor: pointer;
     margin-right: 5px;
-  }
-  
-  .checkboxp input:checked + label:after {
+}
+
+.checkboxp input:checked + label:after {
     content: '';
     display: block;
     position: absolute;
@@ -73,70 +72,62 @@ button .loader{width: 25px !important; height: 25px !important;}
     left: 9px;
     width: 6px;
     height: 14px;
-    border: solid #0079bf;
+    border: solid #d32f2f;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
-  }
+}
 
-
-
-.link{color: #5e5d72; font-weight: 800;}
+.link{color: #d32f2f; font-weight: 800;}
 body.dark{color: rgba(255,255,255,0.7);}
-body.dark .link{color: rgba(255,255,255,0.6) ;}
+body.dark .link{color: rgba(255,255,255,0.6);}
 
-.link:hover{color: #0858f7 !important; text-decoration: none;}
+.link:hover{color: #d32f2f !important; text-decoration: none;}
 
-.link.color{color: #0858f7 !important; text-decoration: none;}
-
-
+.link.color{color: #d32f2f !important; text-decoration: none;}
 
 header{width: 100%; height: 70px; background: rgba(255,255,255,0.9); position: fixed; top: 0px; left: 0px; z-index: 1000;  -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(5px);}
 
-body.dark header{background: #112143 !important;}
+body.dark header{background: #d32f2f !important;}
 
 .logo{text-decoration: none;}
 .logo:hover{text-decoration: none;}
 .logo img{width: 45px;}
- .logo span{color: #292929; font-weight: 800; font-size: 24px;}
+.logo span{color: #333; font-weight: 800; font-size: 24px;}
 body.dark header .logo span{color: #fff !important; opacity: 0.9;}
 
-header button.rounded-circle{min-width: 40px !important; width: 40px !important; height: 40px !important; background: #f0f5ff !important; color: #0858f7;} 
-header button.rounded-circle svg{color: #292929; font-size: 18px !important; transition: all 0.2s ease-in-out;}
+header button.rounded-circle{min-width: 40px !important; width: 40px !important; height: 40px !important; background: #f5f5f5 !important; color: #d32f2f;} 
+header button.rounded-circle svg{color: #333; font-size: 18px !important; transition: all 0.2s ease-in-out;}
 
-header button.rounded-circle:hover svg{color: #0858f7 !important;}
+header button.rounded-circle:hover svg{color: #d32f2f !important;}
 
-body.dark header button.rounded-circle{background:#112755 !important ;}
+body.dark header button.rounded-circle{background: #333 !important;}
 body.dark header button.rounded-circle svg{color: #fff !important;}
-
 
 header .part2{padding-left: 50px;}
 
-.searchBox{width: 300px; height: 40px; background: #f0f5ff; border-radius: 6px; padding: 3px 15px; align-self: flex-end;}
+.searchBox{width: 300px; height: 40px; background: #f5f5f5; border-radius: 6px; padding: 3px 15px; align-self: flex-end;}
 
-body.dark .searchBox{background: #12254e;}
+body.dark .searchBox{background: #1e1e1e;}
 
 .searchBox input{background: transparent; border: 0px; outline: none; padding-left: 0px;
-font-size: 14px; color: #292929;}
+font-size: 14px; color: #333;}
 .searchBox input::-webkit-input-placeholder{color: rgba(0,0,0,0.6);}
 
-body.dark .searchBox input,body.dark .searchBox input::-webkit-input-placeholder,body.dark .searchBox svg{color:rgba(255,255,255,0.7) ;}
+body.dark .searchBox input,body.dark .searchBox input::-webkit-input-placeholder,body.dark .searchBox svg{color: rgba(255,255,255,0.7);}
 
-.searchBox svg{font-size: 18px; color: #292929;}
+.searchBox svg{font-size: 18px; color: #333;}
 
-.myAcc{text-align: left !important; color: #0858f7 !important; text-transform: capitalize !important;}
+.myAcc{text-align: left !important; color: #d32f2f !important; text-transform: capitalize !important;}
 .userImg{display: flex; align-items: center; justify-content: center; overflow: hidden;
-    width: 40px; height: 40px; border: 1px solid #0858f7; padding: 2px; border-radius: 100%;  background: #0858f7 !important; color: #fff !important;}
-.userImg .rounded-circle{display: flex; align-items: center; justify-content: center; overflow: hidden; width: 100%px; height: 100%px; cursor: pointer; position: relative;}
+    width: 40px; height: 40px; border: 1px solid #d32f2f; padding: 2px; border-radius: 100%;  background: #d32f2f !important; color: #fff !important;}
 .userImg .rounded-circle img{object-fit: cover; width: 100%; height: 100%;}
 
-.userImg.lg{  width: 60px !important; height: 60px !important; }
+.userImg.lg{width: 60px !important; height: 60px !important;}
 
-.myAcc .userInfo{padding-left: 10px;}
-.myAcc .userInfo h4{font-size: 15px; line-height: 15px; font-weight: 600; margin-bottom: 0px; color: #292929;}
-.myAcc .userInfo p{margin-top: 0px; font-size: 12px; color: #000; opacity: 0.7;}
-
+.myAcc .userInfo h4{color: #333;}
 body.dark .myAcc .userInfo *{color: rgba(255,255,255,0.8) !important;}
+
 body.dark .css-1t1j96h-MuiPaper-root-MuiDialog-paper{background-color: #12254e !important;}
 body.dark .MuiPaper-elevation li *,body.dark .MuiPaper-elevation li{color: rgba(255,255,255,0.8) !important;}
 
@@ -152,21 +143,20 @@ body.dark .MuiPaper-elevation li *,body.dark .MuiPaper-elevation li{color: rgba(
 .dropdown_list .head h4{font-size: 17px; font-weight: 600;}
 body.dark .dropdown_list .head h4{color: rgba(255,255,255,0.9) !important;}
 .dropdown_list li.MuiButtonBase-root{background: #ebf6ff !important;
-     color: #000 !important; padding: 10px 15px !important;}
+color: #000 !important; padding: 10px 15px !important;}
 
-     body.dark .dropdown_list li.MuiButtonBase-root{background-color: #12254e !important; background: #12254e !important;}
+body.dark .dropdown_list li.MuiButtonBase-root{background-color: #d32f2f !important; background: #d32f2f !important;}
 
-     .dropdown_list li.MunotificationsiButtonBase-root:hover{background: #e2e8ed !important;}
+.dropdown_list li.MunotificationsiButtonBase-root:hover{background: #e2e8ed !important;}
 
 .dropdownInfo {padding-left: 15px;}
 .dropdownInfo h4{font-size: 13px; font-weight: 500; white-space: break-spaces; line-height: 20px; margin-top: 0px; margin-bottom: 0px;}
 .dropdownInfo h4 b{font-weight: 600; margin-right: 5px;}
 .dropdownInfo p{font-size: 12px; font-weight: 500; margin-top: 0px;}
 
-.text-sky{color: #0858f7 !important; font-weight: 500 !important;}
+.text-sky{color: #d32f2f !important; font-weight: 500 !important;}
 
 .dropdown_list .scroll{max-height: 300px; overflow-y: scroll; overflow-x: hidden;}
-
 
 
 .main .sidebarWrapper{width: 20%; flex: 0 0 20%; transition: all 0.3s;}
@@ -174,13 +164,13 @@ body.dark .dropdown_list .head h4{color: rgba(255,255,255,0.9) !important;}
 
 .main .sidebarWrapper .sidebar{width: 20%; height: 100vh; max-height:calc(100% - 70px); position: fixed; top: 70px; left: 0px; background: #fff; overflow-y: scroll; overflow-x: hidden; padding-bottom: 40px; transition: all 0.3s;}
 
-body.dark .main .sidebarWrapper .sidebar{background: #112143 !important;}
+body.dark .main .sidebarWrapper .sidebar{background: #d32f2f !important;}
 
 .main .sidebarWrapper.toggle .sidebar{left: -100%;}
 
 .main .sidebarWrapper .sidebar::-webkit-scrollbar{width: 3px !important;}
 .main .sidebarWrapper .sidebar::-webkit-scrollbar-thumb{background: transparent !important;}
-.main .sidebarWrapper:hover  .sidebar::-webkit-scrollbar{background: #0858f7 !important;}
+.main .sidebarWrapper:hover  .sidebar::-webkit-scrollbar{background: #d32f2f !important;}
 
 .main .sidebarWrapper .sidebar ul{margin-bottom: 0px; padding: 10px 15px;}
 .main .sidebarWrapper .sidebar ul li{list-style: none; margin-bottom: 5px;}
@@ -294,7 +284,7 @@ line-height: 45px;}
 
 
 .card{margin: 20px 0px; border-radius: 10px;}
-.card .hd{font-size: 18px; font-weight: bold; color: #403e57;} 
+.card .hd{font-size: 18px; font-weight: bold; color: #403e57;}
 
 body.dark .card{background: #1b2b4d !important; border: 1px solid #10214b !important;}
 body.dark .card .hd{font-size: 18px; font-weight: bold; color: rgba(255,255,255,0.8);} 
@@ -385,28 +375,28 @@ td .info h6{overflow: hidden;
     font-weight: 600;
     margin-bottom: 0px;}
 
-   td .info p{font-size: 13px;
+  td .info p{font-size: 13px;
         line-height: 18px; overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap;  color: #5e5d72; margin-bottom: 0px;}    
+        white-space: nowrap;  color: #5e5d72; margin-bottom: 0px;}
 
 
- table.v-align td .productBox{width: 270px;}  
+table.v-align td .productBox{width: 270px;}
 
- body.dark .MuiTablePagination-root{background: #223661   !important;}
+body.dark .MuiTablePagination-root{background: #223661   !important;}
 
 
- .tableFooter{padding-bottom: 20px;}
- .tableFooter p{margin-bottom: 0px; font-size: 14px; font-weight: 500;}
- .tableFooter .pagination{margin-left: auto;}
+.tableFooter{padding-bottom: 20px;}
+.tableFooter p{margin-bottom: 0px; font-size: 14px; font-weight: 500;}
+.tableFooter .pagination{margin-left: auto;}
 
- .tableFooter p{ font-size: 14px; font-weight: 500; margin-bottom: 0px;}
+.tableFooter p{ font-size: 14px; font-weight: 500; margin-bottom: 0px;}
 
- body.dark table td{color: rgba(255,255,255,0.5) !important;}
+body.dark table td{color: rgba(255,255,255,0.5) !important;}
 
- .css-1to7aaw-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected{background-color: #0858f7 !important;}
+.css-1to7aaw-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected{background-color: #0858f7 !important;}
 
- body.dark .table-bordered td, .table-bordered th{border: 1px solid rgba(255,255,255,0.1) 
+body.dark .table-bordered td, .table-bordered th{border: 1px solid rgba(255,255,255,0.1) 
     !important;}
 
     body.dark .css-1to7aaw-MuiButtonBase-root-MuiPaginationItem-root:hover{background: rgba(255,255,255,0.2) !important; color: #fff !important;}   
@@ -414,7 +404,7 @@ td .info h6{overflow: hidden;
     body.dark .css-1to7aaw-MuiButtonBase-root-MuiPaginationItem-root{color: rgba(255,255,255,0.8) !important;}
 
 
- .loginSection{width: 100%; height: 100vh; padding: 35px 25px; background:#fff; position: relative; }
+.loginSection{width: 100%; height: 100vh; padding: 35px 25px; background:#fff; position: relative; }
 
 body.dark  .loginSection{background: #112142 !important;}
 body.dark form .form-control{background: #071739 !important; border: 1px solid rgba(255,255,255,0.1) !important; color: rgba(255,255,255,0.7) !important;}
@@ -422,7 +412,7 @@ body.dark form .form-control{background: #071739 !important; border: 1px solid r
 body.dark form .form-control::-webkit-input-placeholder{color: rgba(255,255,255,0.5) !important;}
 
 
- .loginPatern{width: 100%; height: 100%; opacity: 0.1; position: fixed; top: 0px; left: 0px;
+.loginPatern{width: 100%; height: 100%; opacity: 0.1; position: fixed; top: 0px; left: 0px;
 z-index: 99; pointer-events: none;}
 
 .loginSection .loginBox{width: 350px; height: auto; margin:auto;}
@@ -459,18 +449,52 @@ body.dark .css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root{color: rgba(255,255,2
 
 body.dark .css-1c99szj-MuiRating-icon{color:rgba(255,255,255, 0.6) !important;}
 
-.signUpSection{background: #f1f1f1 !important; padding: 0px 0px; height: auto !important; }
-.signUpSection .loginBox{background: #e4e4e4 !important; position: relative; z-index: 100;
-width: 100% !important; padding: 25px 5px !important;}
-.signUpSection .loginBox .wrapper{border: 0px !important; background: transparent !important;
-padding-top: 10px !important;}
+.signUpSection {
+  background: #000000 !important; /* Đổi nền sang đen */
+  padding: 0px 0px;
+  height: auto !important;
+}
 
-body.dark .signUpSection .loginBox{background: #1b2b4d !important;}
+.signUpSection .loginBox {
+  background: #ffffff !important; /* Đổi nền hộp đăng nhập sang trắng */
+  position: relative;
+  z-index: 100;
+  width: 100% !important;
+  padding: 25px 5px !important;
+}
 
-.signUpSection .part1{padding-left: 100px; padding-right: 100px;}
-.signUpSection .part1 h1{font-size: 50px; font-weight: 800;}
-.signUpSection .part1 h1 span{font-weight: 800 !important;}
-.signUpSection .part1 p{font-size: 18px; font-weight: 500;}
+.signUpSection .loginBox .wrapper {
+  border: 0px !important;
+  background: transparent !important;
+  padding-top: 10px !important;
+}
+
+body.dark .signUpSection .loginBox {
+  background: #ff0000 !important; /* Đổi nền hộp đăng nhập khi dark mode sang đỏ */
+}
+
+.signUpSection .part1 {
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+.signUpSection .part1 h1 {
+  font-size: 50px;
+  font-weight: 800;
+  color: #ffffff; /* Đổi màu chữ sang trắng */
+}
+
+.signUpSection .part1 h1 span {
+  font-weight: 800 !important;
+  color: #ff0000; /* Đổi màu chữ trong span sang đỏ */
+}
+
+.signUpSection .part1 p {
+  font-size: 18px;
+  font-weight: 500;
+  color: #ffffff; /* Đổi màu chữ đoạn mô tả sang trắng */
+}
+
 
 
 .breadcrumbs_  a:hover{text-decoration: none !important;}
@@ -583,7 +607,7 @@ form .form-group h6{font-weight: 600;}
 
 .imgUploadBox{width: 100%; flex-wrap: nowrap; gap: 10px;}
 .imgUploadBox .uploadBox{width: 150px; height: 150px !important; padding: 0px; border-radius: 10px; border: 1px dashed  rgba(0,0,0,0.3); position:relative ; display: flex; align-items: center; justify-content: center; cursor: pointer; background: #fafafa; transition: all 0.3s;}
- 
+
 .imgUploadBox .uploadBox .box{width: 100%; height: 150px !important; overflow: hidden; border-radius: 7px;}
 .imgUploadBox .uploadBox .box .lazy-load-image-background{height: 100% !important; width: 100% !important;}
 
@@ -622,7 +646,7 @@ body.dark .imgUploadBox .uploadBox{border: 1px dashed  rgba(255,255,255,0.2);}
   .badge{ padding: 4px; font-size: 13px; font-weight: 400;}
 
 button .MuiCircularProgress-root{width: 30px !important; height: 30px !important;}
- body.dark button svg{color: #fff !important;}
+body.dark button svg{color: #fff !important;}
 
   
  .productModal .actions button{opacity:  1 !important;}

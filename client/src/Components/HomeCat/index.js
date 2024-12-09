@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from 'swiper/react';
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
-import { Link } from "react-router-dom";
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { MyContext } from "../../App";
 
@@ -14,7 +14,7 @@ const HomeCat = (props) => {
     return (
         <section className="homeCat pb-2">
             <div className="container">
-                <h3 className="mb-3 hd">Featured Categories</h3>
+                <h3 className="mb-3 hd">Danh mục Nổi Bật</h3>
                 <Swiper
                     slidesPerView={8}
                     spaceBetween={0}
@@ -27,16 +27,16 @@ const HomeCat = (props) => {
                         320: {
                             slidesPerView: 3,
                             spaceBetween: 10,
-                          },
+                        },
                         500: {
-                          slidesPerView: 5,
-                          spaceBetween: 10,
+                        slidesPerView: 5,
+                        spaceBetween: 10,
                         },
                         768: {
-                          slidesPerView: 8,
-                          spaceBetween: 10,
+                        slidesPerView: 8,
+                        spaceBetween: 10,
                         }
-                      }}
+                    }}
                 >
 
 
@@ -55,9 +55,6 @@ const HomeCat = (props) => {
                             )
                         })
                     }
-
-
-
                 </Swiper>
             </div>
         </section>

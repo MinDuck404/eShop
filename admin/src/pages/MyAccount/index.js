@@ -1,26 +1,24 @@
-import React, { useContext, useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { IoMdCloudUpload } from "react-icons/io";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import PropTypes from "prop-types";
+import React, { useContext, useEffect, useState } from "react";
+import { IoMdCloudUpload } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import {
   deleteData,
-  deleteImages,
   editData,
   fetchDataFromApi,
-  postData,
-  uploadImage,
+  uploadImage
 } from "../../utils/api";
 
 import { MyContext } from "../../App";
 
-import NoUserImg from "../../assets/images/no-user.jpg";
 import CircularProgress from "@mui/material/CircularProgress";
+import NoUserImg from "../../assets/images/no-user.jpg";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -160,7 +158,7 @@ const MyAccount = () => {
           context.setAlertBox({
             open: true,
             error: true,
-            msg: "Please select a valid JPG or PNG image file.",
+            msg: "Vui lòng chọn một tệp hình ảnh hợp lệ ở định dạng JPG hoặc PNG.",
           });
 
           return false;
@@ -186,7 +184,6 @@ const MyAccount = () => {
               item?.images.length !== 0 &&
                 item?.images?.map((img) => {
                   img_arr.push(img);
-                  //console.log(img)
                 });
             });
 
@@ -203,7 +200,7 @@ const MyAccount = () => {
             context.setAlertBox({
               open: true,
               error: false,
-              msg: "Images Uploaded!",
+              msg: "Ảnh đã được tải lên!",
             });
           }, 200);
         }
@@ -235,7 +232,6 @@ const MyAccount = () => {
       const user = JSON.parse(localStorage.getItem("user"));
 
       editData(`/api/user/${user?.userId}`, formFields).then((res) => {
-        // console.log(res);
         setIsLoading(false);
 
         deleteData("/api/imageUpload/deleteAllImages");
@@ -243,14 +239,14 @@ const MyAccount = () => {
         context.setAlertBox({
           open: true,
           error: false,
-          msg: "user updated",
+          msg: "User đã được cập nhật",
         });
       });
     } else {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please fill all the details",
+        msg: "Vui lòng điền đầy đủ thông tin",
       });
       return false;
     }
@@ -269,7 +265,7 @@ const MyAccount = () => {
         context.setAlertBox({
           open: true,
           error: true,
-          msg: "Password and confirm password not match",
+          msg: "Mật khẩu và xác nhận mật khẩu không khớp",
         });
       } else {
         const user = JSON.parse(localStorage.getItem("user"));
@@ -293,7 +289,7 @@ const MyAccount = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please fill all the details",
+        msg: "Vui lòng điền đầy đủ thông tin",
       });
       return false;
     }
@@ -302,7 +298,7 @@ const MyAccount = () => {
   return (
     <section className="section myAccountPage right-content w-100">
       <div className="card shadow border-0 w-100 flex-row p-4 align-items-center">
-          <h5 className="mb-0">My Account</h5>
+          <h5 className="mb-0">Tài Khoản Người Dùng</h5>
         </div>
 
         <Box sx={{ width: "100%" }} className="myAccBox card border-0 pl-3 pr-3">
@@ -451,7 +447,7 @@ const MyAccount = () => {
                       className="btn-blue bg-red btn-lg btn-big"
                     >
                       {" "}
-                      Save
+                      Lưu
                     </Button>
                   </div>
                 </div>

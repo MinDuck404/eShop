@@ -1,36 +1,9 @@
-import DashboardBox from "./components/dashboardBox";
-import { HiDotsVertical } from "react-icons/hi";
-import { FaUserCircle } from "react-icons/fa";
-import { IoMdCart } from "react-icons/io";
-import { MdShoppingBag } from "react-icons/md";
-import { GiStarsStack } from "react-icons/gi";
-import Menu from "@mui/material/Menu";
-import SearchBox from "../../components/SearchBox";
-import MenuItem from "@mui/material/MenuItem";
-import { useContext, useEffect, useState } from "react";
-import { IoIosTimer } from "react-icons/io";
 import Button from "@mui/material/Button";
-import { Chart } from "react-google-charts";
-
-import InputLabel from "@mui/material/InputLabel";
-import FormHelperText from "@mui/material/FormHelperText";
 import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-
-import { Link } from "react-router-dom";
-import { FaEye } from "react-icons/fa";
-import { FaPencilAlt } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import Pagination from "@mui/material/Pagination";
-import { MyContext } from "../../App";
-
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import "react-lazy-load-image-component/src/effects/blur.css";
-
-import Rating from "@mui/material/Rating";
-import { deleteData, fetchDataFromApi } from "../../utils/api";
-
+import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
+import Rating from "@mui/material/Rating";
+import Select from "@mui/material/Select";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -38,18 +11,28 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import { useContext, useEffect, useState } from "react";
+import { FaEye, FaPencilAlt, FaUserCircle } from "react-icons/fa";
+import { GiStarsStack } from "react-icons/gi";
+import { IoMdCart } from "react-icons/io";
+import { MdDelete, MdShoppingBag } from "react-icons/md";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+import { Link } from "react-router-dom";
+import { MyContext } from "../../App";
+import SearchBox from "../../components/SearchBox";
+import { deleteData, fetchDataFromApi } from "../../utils/api";
+import DashboardBox from "./components/dashboardBox";
 
-import { PieChart, Pie, Sector, Cell } from "recharts";
 
 import {
-  BarChart,
   Bar,
-  XAxis,
-  YAxis,
+  BarChart,
   CartesianGrid,
-  Tooltip,
   Legend,
-  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
 } from "recharts";
 
 export const options = {
@@ -295,25 +278,25 @@ const Dashboard = () => {
                 color={["#1da256", "#48d483"]}
                 icon={<FaUserCircle />}
                 grow={true}
-                title="Total Users"
+                title="Khách Hàng"
                 count={totalUsers}
               />
               <DashboardBox
                 color={["#c012e2", "#eb64fe"]}
                 icon={<IoMdCart />}
-                title="Total Orders"
+                title="Đơn Hàng"
                 count={totalOrders}
               />
               <DashboardBox
                 color={["#2c78e5", "#60aff5"]}
                 icon={<MdShoppingBag />}
-                title="Total Products"
+                title="Sản Phẩm"
                 count={totalProducts}
               />
               <DashboardBox
                 color={["#e1950e", "#f3cd29"]}
                 icon={<GiStarsStack />}
-                title="Total Reviews"
+                title="Đánh Giá"
                 count={totalProductsReviews}
               />
             </div>
@@ -321,11 +304,11 @@ const Dashboard = () => {
         </div>
 
         <div className="card shadow border-0 p-3 mt-4">
-          <h3 className="hd">Best Selling Products</h3>
+          <h3 className="hd">Sản Phẩm Bán Chạy Nhất</h3>
 
           <div className="row cardFilters mt-2 mb-3">
             <div className="col-md-3">
-              <h4>CATEGORY BY</h4>
+              <h4>DANH MỤC</h4>
               <FormControl size="small" className="w-100">
                 <Select
                   value={categoryVal}
@@ -422,9 +405,9 @@ const Dashboard = () => {
                             </TableCell>
                             <TableCell style={{ minWidth: columns.minWidth }}>
                               <div style={{ width: "70px" }}>
-                                <del className="old">Rs {item?.oldPrice}</del>
+                                <del className="old"> {item?.oldPrice}</del>
                                 <span className="new text-danger d-block w-100">
-                                  Rs {item?.price}
+                                  {item?.price}
                                 </span>
                               </div>
                             </TableCell>
@@ -582,7 +565,7 @@ const Dashboard = () => {
         </div>
 
         <div className="card p-3">
-          <h3 class="hd">Total Sales</h3>
+          <h3 class="hd">Tổng Lượt Bán</h3>
           <br />
 
           <div className="chartWrapper">
@@ -617,10 +600,10 @@ const Dashboard = () => {
                   contentStyle={{
                     backgroundColor: "#071739  ",
                     color: "white",
-                  }} // Set tooltip background and text color
-                  labelStyle={{ color: "yellow" }} // Label text color
-                  itemStyle={{ color: "cyan" }} // Set color for individual items in the tooltip
-                  cursor={{ fill: "white" }} // Customize the tooltip cursor background on hover
+                  }}
+                  labelStyle={{ color: "yellow" }}
+                  itemStyle={{ color: "cyan" }}
+                  cursor={{ fill: "white" }}
                 />
                 <Legend />
                 <CartesianGrid

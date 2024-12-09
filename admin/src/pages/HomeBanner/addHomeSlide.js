@@ -1,31 +1,25 @@
-import React from "react";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import HomeIcon from "@mui/icons-material/Home";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { emphasize, styled } from "@mui/material/styles";
-import Chip from "@mui/material/Chip";
-import { useContext, useEffect, useState } from "react";
-import { FaCloudUploadAlt } from "react-icons/fa";
+import HomeIcon from "@mui/icons-material/Home";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import CircularProgress from "@mui/material/CircularProgress";
+import { emphasize, styled } from "@mui/material/styles";
+import React, { useContext, useEffect, useState } from "react";
+import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
+import { IoCloseSharp } from "react-icons/io5";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+import { useNavigate } from "react-router-dom";
+import { MyContext } from "../../App";
 import {
   deleteData,
   deleteImages,
-  editData,
   fetchDataFromApi,
   postData,
-  uploadImage,
+  uploadImage
 } from "../../utils/api";
-import { useNavigate } from "react-router-dom";
-import { FaRegImages } from "react-icons/fa";
-import { MyContext } from "../../App";
 
-import CircularProgress from "@mui/material/CircularProgress";
-import { IoCloseSharp } from "react-icons/io5";
-
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import "react-lazy-load-image-component/src/effects/blur.css";
-
-//breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
     theme.palette.mode === "light"
@@ -86,7 +80,6 @@ const AddHomeSlide = () => {
 
       //const fd = new FormData();
       for (var i = 0; i < files.length; i++) {
-        // Validate file type
         if (
           files[i] &&
           (files[i].type === "image/jpeg" ||
@@ -101,7 +94,7 @@ const AddHomeSlide = () => {
           context.setAlertBox({
             open: true,
             error: true,
-            msg: "Please select a valid JPG or PNG image file.",
+            msg: "Vui lòng chọn một tệp hình ảnh hợp lệ ở định dạng JPG hoặc PNG.",
           });
 
           return false;
@@ -126,8 +119,6 @@ const AddHomeSlide = () => {
               item?.images.length !== 0 &&
                 item?.images?.map((img) => {
                   img_arr.push(img);
-
-                  //console.log(img)
                 });
             });
 
@@ -154,7 +145,7 @@ const AddHomeSlide = () => {
             context.setAlertBox({
               open: true,
               error: false,
-              msg: "Images Uploaded!",
+              msg: "Hình ảnh đã được tải lên!",
             });
           }, 500);
         }
@@ -169,13 +160,12 @@ const AddHomeSlide = () => {
         context.setAlertBox({
           open: true,
           error: false,
-          msg: "Image Deleted!",
+          msg: "Hình ảnh đã bị xóa!",
         });
       });
 
       if (imgIndex > -1) {
-        // only splice array when item is found
-        previews.splice(index, 1); // 2nd parameter means remove one item only
+        previews.splice(index, 1);
       }
   };
 
@@ -194,7 +184,6 @@ const AddHomeSlide = () => {
       setIsLoading(true);
 
       postData(`/api/homeBanner/create`, formFields).then((res) => {
-        // console.log(res);
         setIsLoading(false);
         context.fetchCategory();
 
@@ -206,7 +195,7 @@ const AddHomeSlide = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please fill all the details",
+        msg: "Vui lòng điền đầy đủ thông tin",
       });
       return false;
     }
@@ -216,7 +205,7 @@ const AddHomeSlide = () => {
     <>
       <div className="right-content w-100">
         <div className="card shadow border-0 w-100 flex-row p-4 mt-2">
-          <h5 className="mb-0">Add Home Slide</h5>
+          <h5 className="mb-0">Thêm Slide</h5>
           <Breadcrumbs aria-label="breadcrumb" className="ml-auto breadcrumbs_">
             <StyledBreadcrumb
               component="a"
@@ -243,7 +232,7 @@ const AddHomeSlide = () => {
             <div className="col-sm-9">
               <div className="card p-4 mt-0">
                 <div className="imagesUploadSec">
-                  <h5 class="mb-4">Media And Published</h5>
+                  <h5 class="mb-4">Đăng Tải</h5>
 
                   <div className="imgUploadBox d-flex align-items-center">
                     {previews?.length !== 0 &&
@@ -272,7 +261,7 @@ const AddHomeSlide = () => {
                       {uploading === true ? (
                         <div className="progressBar text-center d-flex align-items-center justify-content-center flex-column">
                           <CircularProgress />
-                          <span>Uploading...</span>
+                          <span>Đang tải lên...</span>
                         </div>
                       ) : (
                         <>
@@ -286,7 +275,7 @@ const AddHomeSlide = () => {
                           />
                           <div className="info">
                             <FaRegImages />
-                            <h5>image upload</h5>
+                            <h5>Ảnh đã được tải lên</h5>
                           </div>
                         </>
                       )}
@@ -303,7 +292,7 @@ const AddHomeSlide = () => {
                     {isLoading === true ? (
                       <CircularProgress color="inherit" className="loader" />
                     ) : (
-                      "PUBLISH AND VIEW"
+                      "TẢI LÊN VÀ XEM"
                     )}{" "}
                   </Button>
                 </div>

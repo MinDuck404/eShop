@@ -1,19 +1,17 @@
-import ProductZoom from "../../Components/ProductZoom";
-import Rating from "@mui/material/Rating";
-import QuantityBox from "../../Components/QuantityBox";
 import Button from "@mui/material/Button";
-import { BsCartFill } from "react-icons/bs";
-import { useContext, useEffect, useState } from "react";
-import { FaRegHeart } from "react-icons/fa";
-import { MdOutlineCompareArrows } from "react-icons/md";
-import Tooltip from "@mui/material/Tooltip";
-import RelatedProducts from "./RelatedProducts";
-
-import { useParams } from "react-router-dom";
-import { fetchDataFromApi, postData } from "../../utils/api";
 import CircularProgress from "@mui/material/CircularProgress";
+import Rating from "@mui/material/Rating";
+import Tooltip from "@mui/material/Tooltip";
+import { useContext, useEffect, useState } from "react";
+import { BsCartFill } from "react-icons/bs";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { MdOutlineCompareArrows } from "react-icons/md";
+import { useParams } from "react-router-dom";
 import { MyContext } from "../../App";
-import { FaHeart } from "react-icons/fa";
+import ProductZoom from "../../Components/ProductZoom";
+import QuantityBox from "../../Components/QuantityBox";
+import { fetchDataFromApi, postData } from "../../utils/api";
+import RelatedProducts from "./RelatedProducts";
 
 
 const ProductDetails = () => {
@@ -134,7 +132,7 @@ const ProductDetails = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please add a Review",
+        msg: "Vui lòng thêm đánh giá.",
       });
       }
 
@@ -142,7 +140,7 @@ const ProductDetails = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please Login first",
+        msg: "Vui lòng đăng nhập trước!",
       });
     }
   };
@@ -198,7 +196,7 @@ const ProductDetails = () => {
           context.setAlertBox({
             open: true,
             error: false,
-            msg: "the product added in my list",
+            msg: "Sản phẩm đã được thêm vào danh sách.",
           });
 
           fetchDataFromApi(
@@ -220,7 +218,7 @@ const ProductDetails = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please Login to continue",
+        msg: "Vui lòng đăng nhập để tiếp tục.",
       });
     }
   };
@@ -250,7 +248,7 @@ const ProductDetails = () => {
                 <ul className="list list-inline d-flex align-items-center">
                   <li className="list-inline-item">
                     <div className="d-flex align-items-center">
-                      <span className="text-light mr-2">Brands : </span>
+                      <span className="text-light mr-2">Thương hiệu: </span>
                       <span>{productData?.brand}</span>
                     </div>
                   </li>
@@ -283,9 +281,9 @@ const ProductDetails = () => {
                 </div>
 
                 {productData?.countInStock >= 1 ? (
-                  <span className="badge badge-success">IN STOCK</span>
+                  <span className="badge badge-success">CÒN HÀNG</span>
                 ) : (
-                  <span className="badge badge-danger">OUT OF STOCK</span>
+                  <span className="badge badge-danger">HẾT HÀNG</span>
                 )}
 
                 <p className="mt-3">Rs: {productData?.description}</p>

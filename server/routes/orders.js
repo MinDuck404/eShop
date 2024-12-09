@@ -228,13 +228,12 @@ router.post('/create', async (req, res) => {
         address: req.body.address,
         pincode: req.body.pincode,
         amount: req.body.amount,
-        paymentId: req.body.paymentId,  // Lưu paymentId từ MoMo
+        paymentId: req.body.paymentId,
         email: req.body.email,
-        userid: req.body.userid,       // Lưu userid để liên kết với giỏ hàng
+        userid: req.body.userid,
         products: req.body.products,
-        date: req.body.date
+        date:req.body.date
     });
-    
 
     let order1 = {
         name: req.body.name,

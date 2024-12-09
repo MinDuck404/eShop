@@ -1,11 +1,10 @@
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { useRef, useState } from 'react';
+import InnerImageZoom from 'react-inner-image-zoom';
+import 'react-inner-image-zoom/lib/InnerImageZoom/styles.css';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
-
-import InnerImageZoom from 'react-inner-image-zoom';
-import 'react-inner-image-zoom/lib/InnerImageZoom/styles.css';
-import { useRef, useState } from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 const ProductZoom = (props) => {
     const [slideIndex, setSlideIndex] = useState(0);
@@ -45,13 +44,8 @@ const ProductZoom = (props) => {
                             )
                         })
                     }
-
-
                 </Swiper>
-
             </div>
-
-
             <Swiper
                 slidesPerView={5}
                 spaceBetween={0}
@@ -72,9 +66,6 @@ const ProductZoom = (props) => {
                     )
                 })
             }
-
-               
-
             </Swiper>
         </div>
     )

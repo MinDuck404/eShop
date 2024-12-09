@@ -1,20 +1,13 @@
 import Button from "@mui/material/Button";
-import { MdDashboard } from "react-icons/md";
-import { FaAngleRight } from "react-icons/fa6";
-import { FaProductHunt } from "react-icons/fa";
-import { FaCartArrowDown } from "react-icons/fa6";
-import { MdMessage } from "react-icons/md";
-import { FaBell } from "react-icons/fa6";
-import { IoIosSettings } from "react-icons/io";
-import { Link, NavLink } from "react-router-dom";
-import { useContext, useState } from "react";
-import { IoMdLogOut } from "react-icons/io";
-import { MyContext } from "../../App";
-import { FaClipboardCheck } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BiSolidCategory } from "react-icons/bi";
+import { FaClipboardCheck, FaProductHunt } from "react-icons/fa";
+import { FaAngleRight } from "react-icons/fa6";
+import { IoMdLogOut } from "react-icons/io";
+import { MdDashboard } from "react-icons/md";
 import { TbSlideshow } from "react-icons/tb";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { MyContext } from "../../App";
 
 const Sidebar = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -31,7 +24,6 @@ const Sidebar = () => {
       setIsToggleSubmenu(false);
       setIsToggleSubmenu(true);
     }
-   
   };
   const history = useNavigate();
 
@@ -50,7 +42,7 @@ const Sidebar = () => {
     context.setAlertBox({
       open: true,
       error: false,
-      msg: "Logout successfull",
+      msg: "Đăng xuất thành công",
     });
 
     setTimeout(() => {
@@ -136,7 +128,7 @@ const Sidebar = () => {
               <span className="icon">
                 <BiSolidCategory />
               </span>
-              Category
+              Danh Mục
               <span className="arrow">
                 <FaAngleRight />
               </span>
@@ -154,7 +146,7 @@ const Sidebar = () => {
                     to="/category"
                     onClick={() => context.setIsOpenNav(false)}
                   >
-                    Category List
+                    Quản Lý Danh Mục
                   </Link>
                 </li>
                 <li>
@@ -162,7 +154,7 @@ const Sidebar = () => {
                     to="/category/add"
                     onClick={() => context.setIsOpenNav(false)}
                   >
-                    Add a category
+                    Thêm Danh Mục
                   </Link>
                 </li>
                 <li>
@@ -170,7 +162,7 @@ const Sidebar = () => {
                     to="/subCategory"
                     onClick={() => context.setIsOpenNav(false)}
                   >
-                    Sub Category List
+                    Quản Lý Danh Mục Phụ
                   </Link>
                 </li>
                 <li>
@@ -178,7 +170,7 @@ const Sidebar = () => {
                     to="/subCategory/add"
                     onClick={() => context.setIsOpenNav(false)}
                   >
-                    Add a sub category
+                    Thêm Danh Mục Phụ
                   </Link>
                 </li>
               </ul>
@@ -195,7 +187,7 @@ const Sidebar = () => {
               <span className="icon">
                 <FaProductHunt />
               </span>
-              Products
+              Sản Phẩm
               <span className="arrow">
                 <FaAngleRight />
               </span>
@@ -215,7 +207,7 @@ const Sidebar = () => {
                     to="/products"
                     onClick={() => context.setIsOpenNav(false)}
                   >
-                    Product List
+                    Quản Lý Sản Phẩm
                   </NavLink>
                 </li>
 
@@ -226,7 +218,7 @@ const Sidebar = () => {
                     to="/product/upload"
                     onClick={() => context.setIsOpenNav(false)}
                   >
-                    Product Upload
+                    Thêm Sản Phẩm
                   </NavLink>
                 </li>
                 <li>
@@ -278,7 +270,7 @@ const Sidebar = () => {
                   {" "}
                   <FaClipboardCheck fontSize="small" />
                 </span>
-                Orders
+                Đơn Hàng
               </Button>
             </NavLink>
           </li>
@@ -313,7 +305,7 @@ const Sidebar = () => {
                     to="/banners"
                     onClick={() => context.setIsOpenNav(false)}
                   >
-                    Banners List
+                    Quản Lý Banner
                   </NavLink>
                 </li>
 
@@ -324,7 +316,7 @@ const Sidebar = () => {
                     to="/banners/add"
                     onClick={() => context.setIsOpenNav(false)}
                   >
-                    Banner Upload
+                    Thêm Banner
                   </NavLink>
                 </li>
               </ul>
@@ -361,7 +353,7 @@ const Sidebar = () => {
                     to="/homeSideBanners"
                     onClick={() => context.setIsOpenNav(false)}
                   >
-                    Banners List
+                    Quản Lý Banner
                   </NavLink>
                 </li>
 
@@ -372,7 +364,7 @@ const Sidebar = () => {
                     to="/homeSideBanners/add"
                     onClick={() => context.setIsOpenNav(false)}
                   >
-                    Banner Upload
+                    Thêm Banner
                   </NavLink>
                 </li>
               </ul>
@@ -409,7 +401,7 @@ const Sidebar = () => {
                     to="/homeBottomBanners"
                     onClick={() => context.setIsOpenNav(false)}
                   >
-                    Banners List
+                    Quản Lý Banner
                   </NavLink>
                 </li>
 
@@ -420,7 +412,7 @@ const Sidebar = () => {
                     to="/homeBottomBanners/add"
                     onClick={() => context.setIsOpenNav(false)}
                   >
-                    Banner Upload
+                    Thêm Banner
                   </NavLink>
                 </li>
               </ul>
@@ -437,7 +429,7 @@ const Sidebar = () => {
                 context.setIsOpenNav(false);
               }}
             >
-              <IoMdLogOut /> Logout
+              <IoMdLogOut /> ĐĂNG XUẤT
             </Button>
           </div>
         </div>

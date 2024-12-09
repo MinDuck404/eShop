@@ -1,26 +1,22 @@
-import React from "react";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import HomeIcon from "@mui/icons-material/Home";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { emphasize, styled } from "@mui/material/styles";
-import Chip from "@mui/material/Chip";
-import { useContext, useEffect, useState } from "react";
-import { FaCloudUploadAlt } from "react-icons/fa";
+import HomeIcon from "@mui/icons-material/Home";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+import { emphasize, styled } from "@mui/material/styles";
+import React, { useContext, useEffect, useState } from "react";
+import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
+import { MyContext } from "../../App";
 import {
   deleteData,
   deleteImages,
   editData,
   fetchDataFromApi,
-  postData,
-  uploadImage,
+  uploadImage
 } from "../../utils/api";
-import { useNavigate } from "react-router-dom";
-import { FaRegImages } from "react-icons/fa";
-import { MyContext } from "../../App";
-import { useParams } from "react-router-dom";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import { IoCloseSharp } from "react-icons/io5";
@@ -28,7 +24,6 @@ import { IoCloseSharp } from "react-icons/io5";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 
-//breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
     theme.palette.mode === "light"
@@ -87,7 +82,6 @@ const EditBanner = () => {
     });
 
     fetchDataFromApi(`/api/banners/${id}`).then((res) => {
-      // setcategory(res);
       console.log(res);
       setPreviews(res.images);
       setcategoryVal(res?.catId);
@@ -122,9 +116,7 @@ const EditBanner = () => {
 
       setUploading(true);
 
-      //const fd = new FormData();
       for (var i = 0; i < files.length; i++) {
-        // Validate file type
         if (
           files[i] &&
           (files[i].type === "image/jpeg" ||
@@ -138,7 +130,7 @@ const EditBanner = () => {
           context.setAlertBox({
             open: true,
             error: true,
-            msg: "Please select a valid JPG or PNG image file.",
+            msg: "Vui lòng chọn tệp hình ảnh hợp lệ định dạng JPG hoặc PNG.",
           });
 
           return false;
@@ -161,8 +153,6 @@ const EditBanner = () => {
               item?.images.length !== 0 &&
                 item?.images?.map((img) => {
                   img_arr.push(img);
-
-                  //console.log(img)
                 });
             });
 
@@ -189,7 +179,7 @@ const EditBanner = () => {
             context.setAlertBox({
               open: true,
               error: false,
-              msg: "Images Uploaded!",
+              msg: "Hình ảnh đã được tải lên!",
             });
           }, 500);
         }
@@ -204,13 +194,12 @@ const EditBanner = () => {
         context.setAlertBox({
           open: true,
           error: false,
-          msg: "Image Deleted!",
+          msg: "Hình ảnh đã bị xóa!",
         });
       });
 
       if (imgIndex > -1) {
-        // only splice array when item is found
-        previews.splice(index, 1); // 2nd parameter means remove one item only
+        previews.splice(index, 1);
       }
   };
 
@@ -261,7 +250,6 @@ const EditBanner = () => {
       setIsLoading(true);
 
       editData(`/api/banners/${id}`, formFields).then((res) => {
-        // console.log(res);
         setIsLoading(false);
         context.fetchCategory();
 
@@ -273,7 +261,7 @@ const EditBanner = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please fill all the details",
+        msg: "Vui lòng điền đầy đủ thông tin",
       });
       return false;
     }
@@ -308,7 +296,7 @@ const EditBanner = () => {
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group">
-                      <h6>CATEGORY</h6>
+                      <h6>DANH MỤC</h6>
                       <Select
                         value={categoryVal}
                         onChange={handleChangeCategory}
@@ -317,7 +305,7 @@ const EditBanner = () => {
                         className="w-100"
                       >
                         <MenuItem value="">
-                          <em value={null}>None</em>
+                          <em value={null}>Không có</em>
                         </MenuItem>
                         {context.catData?.categoryList?.length !== 0 &&
                           context.catData?.categoryList?.map((cat, index) => {
@@ -338,7 +326,7 @@ const EditBanner = () => {
 
                   <div className="col-md-6">
                     <div className="form-group">
-                      <h6>SUB CATEGORY</h6>
+                      <h6>DANH MỤC PHỤ</h6>
                       <Select
                         value={subCatVal}
                         onChange={handleChangeSubCategory}
@@ -347,7 +335,7 @@ const EditBanner = () => {
                         className="w-100"
                       >
                         <MenuItem value="">
-                          <em value={null}>None</em>
+                          <em value={null}>Không có</em>
                         </MenuItem>
                         {subCatData?.length !== 0 &&
                           subCatData?.map((subCat, index) => {
@@ -370,7 +358,7 @@ const EditBanner = () => {
                 </div>
 
                 <div className="imagesUploadSec">
-                  <h5 className="mb-4">Media And Published</h5>
+                  <h5 className="mb-4">Đăng Tải</h5>
 
                   <div className="imgUploadBox d-flex align-items-center">
                     {previews?.length !== 0 &&
@@ -399,7 +387,7 @@ const EditBanner = () => {
                       {uploading === true ? (
                         <div className="progressBar text-center d-flex align-items-center justify-content-center flex-column">
                           <CircularProgress />
-                          <span>Uploading...</span>
+                          <span>Đang tải lên...</span>
                         </div>
                       ) : (
                         <>
@@ -413,7 +401,7 @@ const EditBanner = () => {
                           />
                           <div className="info">
                             <FaRegImages />
-                            <h5>image upload</h5>
+                            <h5>Hình ảnh đã được tải lên!</h5>
                           </div>
                         </>
                       )}
@@ -430,7 +418,7 @@ const EditBanner = () => {
                     {isLoading === true ? (
                       <CircularProgress color="inherit" className="loader" />
                     ) : (
-                      "PUBLISH AND VIEW"
+                      "TẢI LÊN VÀ XEM"
                     )}{" "}
                   </Button>
                 </div>

@@ -1,17 +1,16 @@
-import { Link } from "react-router-dom";
-import Rating from '@mui/material/Rating';
-import QuantityBox from "../../Components/QuantityBox";
-import { IoIosClose } from "react-icons/io";
 import Button from '@mui/material/Button';
+import Rating from '@mui/material/Rating';
+import { IoIosClose } from "react-icons/io";
+import { Link } from "react-router-dom";
+import QuantityBox from "../../Components/QuantityBox";
 
-import emprtCart from '../../assets/images/emptyCart.png';
-import { MyContext } from "../../App";
 import { useContext, useEffect, useState } from "react";
-import { deleteData, editData, fetchDataFromApi } from "../../utils/api";
-import { IoBagCheckOutline } from "react-icons/io5";
 import { FaHome } from "react-icons/fa";
-import { loadStripe } from '@stripe/stripe-js';
+import { IoBagCheckOutline } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
+import { MyContext } from "../../App";
+import emprtCart from '../../assets/images/emptyCart.png';
+import { deleteData, editData, fetchDataFromApi } from "../../utils/api";
 
 const Cart = () => {
 
@@ -32,10 +31,10 @@ const Cart = () => {
     context.setEnableFilterTab(false);
         const token = localStorage.getItem("token");
         if(token!=="" && token!==undefined  && token!==null){
-          setIsLogin(true);
+setIsLogin(true);
         }
         else{
-          history("/signIn");
+history("/signIn");
         }
 
         const user = JSON.parse(localStorage.getItem("user"));
@@ -65,8 +64,6 @@ const Cart = () => {
             cartFields.productId = item?.id
             cartFields.userId = user?.userId
 
-            //console.log(item?._id)
-
             editData(`/api/cart/${item?._id}`, cartFields).then((res) => {
                 setTimeout(() => {
                     setIsLoading(false);
@@ -87,7 +84,7 @@ const Cart = () => {
             context.setAlertBox({
                 open: true,
                 error: false,
-                msg: "item removed from cart!"
+                msg: "Sản phẩm đã được xóa khỏi giỏ hàng!"
             })
 
             const user = JSON.parse(localStorage.getItem("user"));
@@ -106,8 +103,8 @@ const Cart = () => {
 
             <section className="section cartPage">
                 <div className="container">
-                    <h2 className="hd mb-1">Your Cart</h2>
-                    <p>There are <b className="text-red">{cartData?.length}</b> products in your cart</p>
+                    <h2 className="hd mb-1">Giỏ Hàng Của Bạn</h2>
+                    <p>Có <b className="text-red">{cartData?.length}</b>sản phẩm trong giỏ hàng</p>
 
                     {
                         cartData?.length !== 0 ?
@@ -119,11 +116,11 @@ const Cart = () => {
                                         <table className="table">
                                             <thead>
                                                 <tr>
-                                                    <th width="35%">Product</th>
-                                                    <th width="15%">Unit Price</th>
-                                                    <th width="25%">Quantity</th>
-                                                    <th width="15%">Subtotal</th>
-                                                    <th width="10%">Remove</th>
+                                                    <th width="35%">Sản phẩm</th>
+                                                    <th width="15%">Đơn Giá</th>
+                                                    <th width="25%">Số Lượng</th>
+                                                    <th width="15%">Tạm Tính</th>
+                                                    <th width="10%">Xóa</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -169,10 +166,10 @@ const Cart = () => {
 
                                 <div className="col-md-3">
                                     <div className="card border p-3 cartDetails">
-                                        <h4>CART TOTALS</h4>
+                                        <h4>TỔNG GIỎ HÀNG</h4>
 
                                         <div className="d-flex align-items-center mb-3">
-                                            <span>Subtotal</span>
+                                            <span>Tạm Tính</span>
                                             <span className="ml-auto text-red font-weight-bold">
                                             {
                                                 (context.cartData?.length !== 0 ?
@@ -187,12 +184,12 @@ const Cart = () => {
                                         </div>
 
                                         <div className="d-flex align-items-center mb-3">
-                                            <span>Estimate for</span>
+                                            <span>Ước tính cho</span>
                                             <span className="ml-auto"><b>United Kingdom</b></span>
                                         </div>
 
                                         <div className="d-flex align-items-center">
-                                            <span>Total</span>
+                                            <span>Tổng Cộng</span>
                                             <span className="ml-auto text-red font-weight-bold">
                                             {
                                                 (context.cartData?.length !== 0 ?
@@ -204,7 +201,7 @@ const Cart = () => {
 
                                         <br />
                                         <Link to="/checkout">
-                                            <Button className='btn-blue bg-red btn-lg btn-big'><IoBagCheckOutline /> &nbsp; Checkout</Button>
+                                            <Button className='btn-blue bg-red btn-lg btn-big'><IoBagCheckOutline /> &nbsp; Thanh Toán</Button>
                                         </Link>
 
                                     </div>
@@ -216,9 +213,9 @@ const Cart = () => {
 
                             <div className="empty d-flex align-items-center justify-content-center flex-column">
                                 <img src={emprtCart} width="150" />
-                                <h3>Your Cart is currently empty</h3>
+                                <h3>Giỏ hàng hiện tại đang trống</h3>
                                 <br />
-                                <Link to="/"> <Button className='btn-blue bg-red btn-lg btn-big btn-round'><FaHome /> &nbsp; Continue Shopping</Button></Link>
+                                <Link to="/"> <Button className='btn-blue bg-red btn-lg btn-big btn-round'><FaHome /> &nbsp; Tiếp Tục Mua Sắm</Button></Link>
                             </div>
 
 

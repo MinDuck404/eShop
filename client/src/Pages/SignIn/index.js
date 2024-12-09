@@ -1,16 +1,14 @@
-import { useContext, useEffect, useState } from "react";
-import Logo from "../../assets/images/logo.jpg";
-import { MyContext } from "../../App";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { Link, useNavigate } from "react-router-dom";
-
-import GoogleImg from "../../assets/images/googleImg.png";
 import CircularProgress from "@mui/material/CircularProgress";
-import { editData, postData } from "../../utils/api";
-
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import TextField from "@mui/material/TextField";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { MyContext } from "../../App";
+import GoogleImg from "../../assets/images/googleImg.png";
+import Logo from "../../assets/images/logo.jpg";
 import { firebaseApp } from "../../firebase";
+import { editData, postData } from "../../utils/api";
 
 const auth = getAuth(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
@@ -46,7 +44,7 @@ const SignIn = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "email can not be blank!",
+        msg: "Email không được để trống!",
       });
       return false;
     }
@@ -56,7 +54,7 @@ const SignIn = () => {
         context.setAlertBox({
           open: true,
           error: true,
-          msg: "password can not be blank!",
+          msg: "Mật khẩu không được để trống!",
         });
         return false;
       }
@@ -90,7 +88,7 @@ const SignIn = () => {
               context.setisHeaderFooterShow(true);
               //window.location.href = "/";
             }, 2000);
-          } 
+          }
           else {
             if (res?.isVerify === false) {
               setIsLoading(true);
@@ -220,7 +218,7 @@ const SignIn = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please enter your email",
+        msg: "Vui lòng nhập email của bạn",
       });
     }else{
       localStorage.setItem("userEmail", formfields.email);
@@ -292,7 +290,7 @@ const SignIn = () => {
                   />
                 </div>
 
-                <a className="border-effect cursor txt" onClick={forgotPassword}>Forgot Password?</a>
+                <a className="border-effect cursor txt" onClick={forgotPassword}>Quên mật khẩu?</a>
 
                 <div className="d-flex align-items-center mt-3 mb-3 ">
                   <Button type="submit" className="btn-blue col btn-lg btn-big">
@@ -305,20 +303,20 @@ const SignIn = () => {
                       variant="outlined"
                       onClick={() => context.setisHeaderFooterShow(true)}
                     >
-                      Cancel
+                      Hủy
                     </Button>
                   </Link>
                 </div>
 
                 <p className="txt">
-                  Not Registered?{" "}
+                  Chưa đăng ký?{" "}
                   <Link to="/signUp" className="border-effect">
-                    Sign Up
+                    Đăng Ký
                   </Link>
                 </p>
 
                 <h6 className="mt-4 text-center font-weight-bold">
-                  Or continue with social account
+                  Hoặc tiếp tục với tài khoản mạng xã hội
                 </h6>
 
                 <Button
@@ -326,7 +324,7 @@ const SignIn = () => {
                   variant="outlined"
                   onClick={signInWithGoogle}
                 >
-                  <img src={GoogleImg} /> Sign In with Google
+                  <img src={GoogleImg} /> Đăng nhập với Google
                 </Button>
               </>
             ) : (

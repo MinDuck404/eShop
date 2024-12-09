@@ -1,15 +1,21 @@
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import HomeIcon from "@mui/icons-material/Home";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { emphasize, styled } from "@mui/material/styles";
-import Chip from "@mui/material/Chip";
-
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import { useContext, useEffect, useRef, useState } from "react";
-import Rating from "@mui/material/Rating";
-import { FaCloudUploadAlt } from "react-icons/fa";
+import HomeIcon from "@mui/icons-material/Home";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import CircularProgress from "@mui/material/CircularProgress";
+import MenuItem from "@mui/material/MenuItem";
+import Rating from "@mui/material/Rating";
+import Select from "@mui/material/Select";
+import { emphasize, styled } from "@mui/material/styles";
+import { useContext, useEffect, useRef, useState } from "react";
+import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
+import { IoCloseSharp } from "react-icons/io5";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+import { useNavigate } from "react-router-dom";
+import Select2 from "react-select";
+import { MyContext } from "../../App";
 import {
   deleteData,
   deleteImages,
@@ -17,19 +23,6 @@ import {
   postData,
   uploadImage,
 } from "../../utils/api";
-import { MyContext } from "../../App";
-import CircularProgress from "@mui/material/CircularProgress";
-import { FaRegImages } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { IoCloseSharp } from "react-icons/io5";
-import OutlinedInput from "@mui/material/OutlinedInput";
-
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import "react-lazy-load-image-component/src/effects/blur.css";
-
-import axios from "axios";
-import CountryDropdown from "../../components/CountryDropdown";
-import Select2 from "react-select";
 
 //breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -126,8 +119,8 @@ const ProductUpload = () => {
       value:'All',
       label:'All'
     };
-    const updatedArray = [...context?.countryList]; // Clone the array to avoid direct mutation
-    updatedArray.unshift(newData); // Prepend data
+    const updatedArray = [...context?.countryList];
+    updatedArray.unshift(newData);
     setCountryList(updatedArray);
   }, [context?.countryList]);
 
@@ -202,7 +195,6 @@ const ProductUpload = () => {
       target: { value },
     } = event;
     setProductRAMS(
-      // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
 
@@ -220,7 +212,6 @@ const ProductUpload = () => {
       target: { value },
     } = event;
     setProductWeight(
-      // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
 
@@ -238,7 +229,6 @@ const ProductUpload = () => {
       target: { value },
     } = event;
     setProductSize(
-      // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
 
@@ -299,7 +289,7 @@ const ProductUpload = () => {
           context.setAlertBox({
             open: true,
             error: true,
-            msg: "Please select a valid JPG or PNG image file.",
+            msg: "Vui lòng chọn một tệp hình ảnh hợp lệ ở định dạng JPG hoặc PNG.",
           });
 
           setUploading(false);
@@ -323,8 +313,6 @@ const ProductUpload = () => {
               item?.images.length !== 0 &&
                 item?.images?.map((img) => {
                   img_arr.push(img);
-
-                  //console.log(img)
                 });
             });
 
@@ -351,7 +339,7 @@ const ProductUpload = () => {
             context.setAlertBox({
               open: true,
               error: false,
-              msg: "Images Uploaded!",
+              msg: "Ảnh đã được tải lên!",
             });
           }, 500);
         }
@@ -366,13 +354,12 @@ const ProductUpload = () => {
       context.setAlertBox({
         open: true,
         error: false,
-        msg: "Image Deleted!",
+        msg: "Ảnh đã được xoá!",
       });
     });
 
     if (imgIndex > -1) {
-      // only splice array when item is found
-      previews.splice(index, 1); // 2nd parameter means remove one item only
+      previews.splice(index, 1);
     }
   };
 
@@ -411,7 +398,7 @@ const ProductUpload = () => {
     if (formFields.name === "") {
       context.setAlertBox({
         open: true,
-        msg: "please add product name",
+        msg: "Vui lòng thêm tên sản phẩm",
         error: true,
       });
       return false;
@@ -420,7 +407,7 @@ const ProductUpload = () => {
     if (formFields.description === "") {
       context.setAlertBox({
         open: true,
-        msg: "please add product description",
+        msg: "Vui lòng thêm mô tả sản phẩm",
         error: true,
       });
       return false;
@@ -429,7 +416,7 @@ const ProductUpload = () => {
     if (formFields.brand === "") {
       context.setAlertBox({
         open: true,
-        msg: "please add product brand",
+        msg: "Vui lòng thêm thương hiệu sản phẩm",
         error: true,
       });
       return false;
@@ -438,7 +425,7 @@ const ProductUpload = () => {
     if (formFields.price === null) {
       context.setAlertBox({
         open: true,
-        msg: "please add product price",
+        msg: "Vui lòng thêm giá sản phẩm",
         error: true,
       });
       return false;
@@ -447,7 +434,7 @@ const ProductUpload = () => {
     if (formFields.oldPrice === null) {
       context.setAlertBox({
         open: true,
-        msg: "please add product oldPrice",
+        msg: "Vui lòng thêm giá cũ của sản phẩm",
         error: true,
       });
       return false;
@@ -456,7 +443,7 @@ const ProductUpload = () => {
     if (formFields.category === "") {
       context.setAlertBox({
         open: true,
-        msg: "please select a category",
+        msg: "Vui lòng chọn một danh mục",
         error: true,
       });
       return false;
@@ -474,7 +461,7 @@ const ProductUpload = () => {
     if (formFields.countInStock === null) {
       context.setAlertBox({
         open: true,
-        msg: "please add product count in stock",
+        msg: "Vui lòng thêm số lượng sản phẩm trong kho",
         error: true,
       });
       return false;
@@ -483,7 +470,7 @@ const ProductUpload = () => {
     if (formFields.rating === 0) {
       context.setAlertBox({
         open: true,
-        msg: "please select product rating",
+        msg: "Vui lòng chọn đánh giá sản phẩm",
         error: true,
       });
       return false;
@@ -492,7 +479,7 @@ const ProductUpload = () => {
     if (formFields.isFeatured === null) {
       context.setAlertBox({
         open: true,
-        msg: "please select the product is a featured or not",
+        msg: "Vui lòng chọn xem sản phẩm có phải là sản phẩm nổi bật hay không?",
         error: true,
       });
       return false;
@@ -501,7 +488,7 @@ const ProductUpload = () => {
     if (formFields.discount === null) {
       context.setAlertBox({
         open: true,
-        msg: "please select the product discount",
+        msg: "Vui lòng chọn giảm giá sản phẩm",
         error: true,
       });
       return false;
@@ -510,7 +497,7 @@ const ProductUpload = () => {
     if (previews.length === 0) {
       context.setAlertBox({
         open: true,
-        msg: "please select images",
+        msg: "Vui lòng chọn hình ảnh",
         error: true,
       });
       return false;
@@ -521,7 +508,7 @@ const ProductUpload = () => {
     postData("/api/products/create", formFields).then((res) => {
       context.setAlertBox({
         open: true,
-        msg: "The product is created!",
+        msg: "Sản phẩm đã được tạo!",
         error: false,
       });
 
@@ -542,7 +529,7 @@ const ProductUpload = () => {
     <>
       <div className="right-content w-100">
         <div className="card shadow border-0 w-100 flex-row p-4">
-          <h5 className="mb-0">Product Upload</h5>
+          <h5 className="mb-0">Tải Lên Sản Phẩm</h5>
           <Breadcrumbs aria-label="breadcrumb" className="ml-auto breadcrumbs_">
             <StyledBreadcrumb
               component="a"
@@ -568,10 +555,10 @@ const ProductUpload = () => {
           <div className="row">
             <div className="col-md-12">
               <div className="card p-4 mt-0">
-                <h5 className="mb-4">Basic Information</h5>
+                <h5 className="mb-4">Thông Tin Cơ Bản</h5>
 
                 <div className="form-group">
-                  <h6>PRODUCT NAME</h6>
+                  <h6>TÊN SẢN PHẨM</h6>
                   <input
                     type="text"
                     name="name"
@@ -581,7 +568,7 @@ const ProductUpload = () => {
                 </div>
 
                 <div className="form-group">
-                  <h6>DESCRIPTION</h6>
+                  <h6>MÔ TẢ</h6>
                   <textarea
                     rows={5}
                     cols={10}
@@ -594,7 +581,7 @@ const ProductUpload = () => {
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                      <h6>CATEGORY</h6>
+                      <h6>DANH MỤC</h6>
                       <Select
                         value={categoryVal}
                         onChange={handleChangeCategory}
@@ -603,7 +590,7 @@ const ProductUpload = () => {
                         className="w-100"
                       >
                         <MenuItem value="">
-                          <em value={null}>None</em>
+                          <em value={null}>Không có</em>
                         </MenuItem>
                         {context.catData?.categoryList?.length !== 0 &&
                           context.catData?.categoryList?.map((cat, index) => {
@@ -624,7 +611,7 @@ const ProductUpload = () => {
 
                   <div className="col">
                     <div className="form-group">
-                      <h6>SUB CATEGORY</h6>
+                      <h6>DANH MỤC PHỤ</h6>
                       <Select
                         value={subCatVal}
                         onChange={handleChangeSubCategory}
@@ -633,7 +620,7 @@ const ProductUpload = () => {
                         className="w-100"
                       >
                         <MenuItem value="">
-                          <em value={null}>None</em>
+                          <em value={null}>Không có</em>
                         </MenuItem>
                         {subCatData?.length !== 0 &&
                           subCatData?.map((subCat, index) => {
@@ -656,7 +643,7 @@ const ProductUpload = () => {
 
                   <div className="col">
                     <div className="form-group">
-                      <h6>PRICE</h6>
+                      <h6>GIÁ</h6>
                       <input
                         type="text"
                         name="price"
@@ -670,7 +657,7 @@ const ProductUpload = () => {
                 <div className="row">
                   <div className="col">
                     <div className="form-group">
-                      <h6>OLD PRICE </h6>
+                      <h6>GIÁ CŨ</h6>
                       <input
                         type="text"
                         name="oldPrice"
@@ -682,7 +669,7 @@ const ProductUpload = () => {
 
                   <div className="col">
                     <div className="form-group">
-                      <h6 className="text-uppercase">is Featured </h6>
+                      <h6 className="text-uppercase">NỔI BẬT</h6>
                       <Select
                         value={isFeaturedValue}
                         onChange={handleChangeisFeaturedValue}
@@ -691,17 +678,17 @@ const ProductUpload = () => {
                         className="w-100"
                       >
                         <MenuItem value="">
-                          <em value={null}>None</em>
+                          <em value={null}>Không</em>
                         </MenuItem>
-                        <MenuItem value={true}>True</MenuItem>
-                        <MenuItem value={false}>False</MenuItem>
+                        <MenuItem value={true}>YES</MenuItem>
+                        <MenuItem value={false}>NO</MenuItem>
                       </Select>
                     </div>
                   </div>
 
                   <div className="col">
                     <div className="form-group">
-                      <h6>PRODUCT STOCK </h6>
+                      <h6>SỐ LƯỢNG SẢN PHẨM</h6>
                       <input
                         type="text"
                         name="countInStock"
@@ -715,7 +702,7 @@ const ProductUpload = () => {
                 <div className="row">
                   <div className="col-md-4">
                     <div className="form-group">
-                      <h6>BRAND</h6>
+                      <h6>THƯƠNG HIỆU</h6>
                       <input
                         type="text"
                         name="brand"
@@ -727,7 +714,7 @@ const ProductUpload = () => {
 
                   <div className="col-md-4">
                     <div className="form-group">
-                      <h6>DISCOUNT</h6>
+                      <h6>GIẢM GIÁ</h6>
                       <input
                         type="text"
                         name="discount"
@@ -805,7 +792,7 @@ const ProductUpload = () => {
 
                   <div className="col-md-4">
                     <div className="form-group">
-                      <h6>RATINGS</h6>
+                      <h6>ĐÁNH GIÁ</h6>
                       <Rating
                         name="simple-controlled"
                         value={ratingsValue}
@@ -824,7 +811,7 @@ const ProductUpload = () => {
                 <div className="row">
                   <div className="col-md-12">
                     <div className="form-group">
-                      <h6>LOCATION</h6>
+                      <h6>VỊ TRÍ</h6>
 
                       <Select2
                         isMulti
@@ -843,7 +830,7 @@ const ProductUpload = () => {
 
           <div className="card p-4 mt-0">
             <div className="imagesUploadSec">
-              <h5 class="mb-4">Media And Published</h5>
+              <h5 class="mb-4">ĐĂNG TẢI</h5>
 
               <div className="imgUploadBox d-flex align-items-center">
                 {previews?.length !== 0 &&
@@ -872,7 +859,7 @@ const ProductUpload = () => {
                   {uploading === true ? (
                     <div className="progressBar text-center d-flex align-items-center justify-content-center flex-column">
                       <CircularProgress />
-                      <span>Uploading...</span>
+                      <span>Đang tải lên...</span>
                     </div>
                   ) : (
                     <>
@@ -886,7 +873,7 @@ const ProductUpload = () => {
                       />
                       <div className="info">
                         <FaRegImages />
-                        <h5>image upload</h5>
+                        <h5>Ảnh đã tải lên</h5>
                       </div>
                     </>
                   )}
@@ -904,7 +891,7 @@ const ProductUpload = () => {
                 {isLoading === true ? (
                   <CircularProgress color="inherit" className="loader" />
                 ) : (
-                  "PUBLISH AND VIEW"
+                  "TẢI LÊN VÀ XEM"
                 )}{" "}
               </Button>
             </div>

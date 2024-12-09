@@ -1,27 +1,13 @@
-import React, { useContext } from "react";
-import { editData, fetchDataFromApi } from "../../utils/api";
-import { useState } from "react";
-import { useEffect } from "react";
-
-import { emphasize, styled } from "@mui/material/styles";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Chip from "@mui/material/Chip";
-import HomeIcon from "@mui/icons-material/Home";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Pagination from "@mui/material/Pagination";
-import Dialog from "@mui/material/Dialog";
-import { MdClose } from "react-icons/md";
+import HomeIcon from "@mui/icons-material/Home";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Button from "@mui/material/Button";
-import { MdOutlineEmail } from "react-icons/md";
-import { FaPhoneAlt } from "react-icons/fa";
-import { MdOutlineCurrencyRupee } from "react-icons/md";
-import { MdOutlineDateRange } from "react-icons/md";
-
+import Chip from "@mui/material/Chip";
+import Dialog from "@mui/material/Dialog";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import { MyContext } from "../../App";
-
 import Paper from "@mui/material/Paper";
+import Select from "@mui/material/Select";
+import { emphasize, styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -29,10 +15,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
+import React, { useContext, useEffect, useState } from "react";
+import { FaPhoneAlt } from "react-icons/fa";
+import { MdClose, MdOutlineCurrencyRupee, MdOutlineDateRange, MdOutlineEmail } from "react-icons/md";
+import { MyContext } from "../../App";
+import { editData, fetchDataFromApi } from "../../utils/api";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-//breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
     theme.palette.mode === "light"
@@ -54,36 +44,36 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
 });
 
 const columns = [
-  { id: "orderId", label: "Order Id", minWidth: 150 },
-  { id: "paymantId", label: "Paymant Id", minWidth: 100 },
+  { id: "orderId", label: "Mã đơn hàng", minWidth: 150 },
+  { id: "paymantId", label: "Mã thanh toán", minWidth: 100 },
   {
     id: "products",
-    label: "Products",
+    label: "Sản phẩm",
     minWidth: 150,
   },
   {
     id: "name",
-    label: "Name",
+    label: "Tên sản phẩm",
     minWidth: 130,
   },
   {
     id: "phoneNumber",
-    label: "Phone Number",
+    label: "Số điện thoại",
     minWidth: 150,
   },
   {
     id: "address",
-    label: "Address",
+    label: "Địa chỉ",
     minWidth: 200,
   },
   {
     id: "pincode",
-    label: "Pincode",
+    label: "Mã bưu điện",
     minWidth: 120,
   },
   {
     id: "totalAmount",
-    label: "Total Amount",
+    label: "Số lượng",
     minWidth: 120,
   },
   {
@@ -93,17 +83,17 @@ const columns = [
   },
   {
     id: "userId",
-    label: "User Id",
+    label: "Mã khách hàng",
     minWidth: 120,
   },
   {
     id: "orderStatus",
-    label: "Order Status",
+    label: "Trạng thái đơn hàng",
     minWidth: 120,
   },
   {
     id: "dateCreated",
-    label: "Date Created",
+    label: "Ngày nhận",
     minWidth: 150,
   },
 ];
@@ -213,7 +203,7 @@ const Orders = () => {
     <>
       <div className="right-content w-100">
         <div className="card shadow border-0 w-100 flex-row p-4 align-items-center">
-          <h5 className="mb-0">Orders List</h5>
+          <h5 className="mb-0">Danh Sách Đặt Hàng</h5>
 
           <div className="ml-auto d-flex align-items-center">
             <Breadcrumbs
@@ -252,9 +242,7 @@ const Orders = () => {
                     ))}
                   </TableRow>
                 </TableHead>
-
                 <TableBody>
-               
                   {orders?.length !== 0 &&
                     orders
                       ?.slice(
@@ -280,7 +268,7 @@ const Orders = () => {
                                 className="text-blue fonmt-weight-bold cursor"
                                 onClick={() => showProducts(order?._id)}
                               >
-                                Click here to view
+                                Nhấp để xem
                               </span>
                             </TableCell>
                             <TableCell style={{ minWidth: columns.minWidth }}>
@@ -317,14 +305,14 @@ const Orders = () => {
                                 className="w-100"
                               >
                                 <MenuItem value={null}>
-                                  <em value={null}>None</em>
+                                  <em value={null}>Không có</em>
                                 </MenuItem>
 
-                                <MenuItem value="pending">Pending</MenuItem>
+                                <MenuItem value="pending">Đang chờ</MenuItem>
 
-                                <MenuItem value="confirm">Confirm</MenuItem>
+                                <MenuItem value="confirm">Đã xác nhận</MenuItem>
 
-                                <MenuItem value="delivered">Delivered</MenuItem>
+                                <MenuItem value="delivered">Đã giao</MenuItem>
                               </Select>
                             </TableCell>
                             <TableCell style={{ minWidth: columns.minWidth }}>
@@ -348,7 +336,6 @@ const Orders = () => {
             />
           </Paper>
 
-         
         </div>
       </div>
 
@@ -356,18 +343,18 @@ const Orders = () => {
         <Button className="close_" onClick={() => setIsOpenModal(false)}>
           <MdClose />
         </Button>
-        <h4 class="mb-1 font-weight-bold pr-5 mb-4">Products</h4>
+        <h4 class="mb-1 font-weight-bold pr-5 mb-4">Sản phẩm</h4>
 
         <div className="table-responsive orderTable">
           <table className="table table-striped table-bordered">
             <thead className="thead-dark">
               <tr>
-                <th>Product Id</th>
-                <th>Product Title</th>
-                <th>Image</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>SubTotal</th>
+                <th>Mã sản phẩm</th>
+                <th>Tên sản phẩm</th>
+                <th>Ảnh</th>
+                <th>Số lượng</th>
+                <th>Giá</th>
+                <th>Tạm tính</th>
               </tr>
             </thead>
 

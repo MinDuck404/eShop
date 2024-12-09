@@ -1,12 +1,10 @@
-import { useContext, useEffect, useState } from "react";
-import Logo from "../../assets/images/logo.jpg";
-import { MyContext } from "../../App";
 import Button from "@mui/material/Button";
-import { Link, useNavigate } from "react-router-dom";
-
 import CircularProgress from "@mui/material/CircularProgress";
-import { postData } from "../../utils/api";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { MyContext } from "../../App";
 import OtpBox from "../../Components/OtpBox";
+import { postData } from "../../utils/api";
 
 const VerifyOTP = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -64,7 +62,7 @@ const VerifyOTP = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please enter OTP",
+        msg: "Vui lòng nhập mã OTP",
       });
     }
   };
@@ -87,29 +85,24 @@ const VerifyOTP = () => {
           ></path>{" "}
         </svg>
       </div>
-
       <div className="container">
         <div className="box card p-3 shadow border-0">
           <div className="text-center">
             <img src={"/shield.png"} width={"100px"} />
           </div>
-
           <form className="mt-3" onSubmit={verify}>
-            <h2 className="mb-1 text-center">OTP Verification</h2>
+            <h2 className="mb-1 text-center">Xác Minh OTP</h2>
             <p className="text-center text-light">
-              OTP has been sent to <b>{localStorage.getItem("userEmail")}</b>
+              Mã OTP đã được gửi đến <b>{localStorage.getItem("userEmail")}</b>
             </p>
-
             <OtpBox length={6} onChange={handleOtpChange} />
-
             <div className="d-flex align-items-center mt-3 mb-3 ">
               <Button type="submit" className="btn-blue col btn-lg btn-big">
                 {isLoading === true ? <CircularProgress /> : "Verify OTP"}
               </Button>
             </div>
-
             <p className="text-center">
-              <a className="border-effect cursor txt">Rend OTP</a>
+              <a className="border-effect cursor txt">Gửi lại mã OTP</a>
             </p>
           </form>
         </div>

@@ -1,18 +1,14 @@
+import Button from "@mui/material/Button";
 import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { MyContext } from "../../App";
 import Logo from "../../assets/images/logo.png";
 import patern from "../../assets/images/pattern.webp";
-import { MyContext } from "../../App";
-import { MdEmail } from "react-icons/md";
-import { RiLockPasswordFill } from "react-icons/ri";
-import { IoMdEye } from "react-icons/io";
-import { IoMdEyeOff } from "react-icons/io";
-import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
 
-import { useNavigate } from "react-router-dom";
-import { postData } from "../../utils/api";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useNavigate } from "react-router-dom";
 import OtpBox from "../../components/OtpBox";
+import { postData } from "../../utils/api";
 
 const VerifyAccount = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -64,17 +60,15 @@ const VerifyAccount = () => {
         <div className="loginBox">
           <Link to={"/"} className="d-flex align-items-center flex-column logo">
             <img src={Logo} />
-            <span className="ml-2">ECOMMERCE</span>
+            <span className="ml-2">GearZone</span>
           </Link>
           <div className="wrapper mt-3 card border text-center">
             <form  onSubmit={verify}>
               <img src={"/shield.png"} width="80px"/>
               <p className="text-center mt-3">
-                OTP has been sent to <b>{localStorage.getItem("userEmail")}</b>
+                Mã OTP đã được gửi đến <b>{localStorage.getItem("userEmail")}</b>
               </p>
-
               <OtpBox length={6} onChange={handleOtpChange} />
-
               <div className="form-group mt-3 row">
                 <Button type="submit" className="btn-blue btn-lg w-100 btn-big">
                   {isLoading === true ? <CircularProgress /> : "Verify OTP "}
@@ -86,7 +80,7 @@ const VerifyAccount = () => {
           <div className="wrapper mt-3 card border footer p-3">
             <span className="text-center">
               <Link to={"/"} className="link color ml-2">
-                Resend OTP
+                Gửi lại mã OTP
               </Link>
             </span>
           </div>

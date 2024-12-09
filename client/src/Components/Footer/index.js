@@ -1,17 +1,12 @@
-import { LuShirt } from "react-icons/lu";
-import { TbTruckDelivery } from "react-icons/tb";
-import { TbDiscount2 } from "react-icons/tb";
-import { CiBadgeDollar } from "react-icons/ci";
-import { Link } from "react-router-dom";
-import { FaFacebookF } from "react-icons/fa";
-import { FaTwitter } from "react-icons/fa";
-import { FaInstagram } from "react-icons/fa";
-import newsLetterImg from "../../assets/images/newsletter.png";
 import Button from "@mui/material/Button";
+import { useState } from "react";
+import { CiBadgeDollar } from "react-icons/ci";
+import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
+import { FaComputer } from "react-icons/fa6";
 import { IoMailOutline } from "react-icons/io5";
-import Banners from "../banners/index";
-import { useEffect, useState } from "react";
-import { fetchDataFromApi } from "../../utils/api";
+import { TbDiscount2, TbTruckDelivery } from "react-icons/tb";
+import { Link } from "react-router-dom";
+import newsLetterImg from "../../assets/images/newsletter.png";
 
 const Footer = () => {
   const [bannerList, setBannerList] = useState([]);
@@ -24,18 +19,18 @@ const Footer = () => {
           <div className="row">
             <div className="col-md-6">
               <p className="text-white mb-1">
-                $20 discount for your first order
+              Giảm 10% cho đơn hàng đầu tiên của bạn
               </p>
-              <h3 className="text-white">Join our newsletter and get...</h3>
+              <h3 className="text-white">Tham gia cùng GearZone để nhận nhiều ưu đãi</h3>
               <p className="text-light">
-                Join our email subscription now to get updates on
-                <br /> promotions and coupons.
+              Tham gia đăng ký email của chúng tôi ngay bây giờ để nhận cập nhật về
+                <br /> Khuyến mãi và mã giảm giá.
               </p>
 
               <form className="mt-4">
                 <IoMailOutline />
-                <input type="text" placeholder="Your Email Address" />
-                <Button>Subscribe</Button>
+                <input type="text" placeholder="Nhập Địa Chỉ Email Của Bạn" />
+                <Button>Đăng Ký</Button>
               </form>
             </div>
 
@@ -50,165 +45,171 @@ const Footer = () => {
           <div className="topInfo row">
             <div className="col d-flex align-items-center">
               <span>
-                <LuShirt />
+                <FaComputer />
               </span>
-              <span className="ml-2">Everyday fresh products</span>
+              <span className="ml-2">Sản phẩm công nghệ</span>
             </div>
 
             <div className="col d-flex align-items-center">
               <span>
                 <TbTruckDelivery />
               </span>
-              <span className="ml-2">Free delivery for order over $70</span>
+              <span className="ml-2">Miễn phí giao hàng cho đơn hàng trên 100$</span>
             </div>
 
             <div className="col d-flex align-items-center">
               <span>
                 <TbDiscount2 />
               </span>
-              <span className="ml-2">Daily Mega Discounts</span>
+              <span className="ml-2">Siêu Giảm Giá Mỗi Tháng</span>
             </div>
 
             <div className="col d-flex align-items-center">
               <span>
                 <CiBadgeDollar />
               </span>
-              <span className="ml-2">Best price on the market</span>
+              <span className="ml-2">Giá tốt nhất trên thị trường</span>
             </div>
           </div>
 
           <div className="row mt-5 linksWrap">
             <div className="col">
-              <h5>FRUIT & VEGETABLES</h5>
+              <h5>LAPTOP</h5>
               <ul>
                 <li>
-                  <Link to="#">Fresh Vegetables</Link>
+                  <Link to="#">Laptop Mới Ra Mắt</Link>
                 </li>
                 <li>
-                  <Link to="#">Herbs & Seasonings</Link>
+                  <Link to="#">Phụ Kiện Laptop</Link>
                 </li>
                 <li>
-                  <Link to="#">Fresh Fruits</Link>
+                  <Link to="#">Laptop Chính Hãng</Link>
                 </li>
                 <li>
-                  <Link to="#">Cuts & Sprouts</Link>
+                  <Link to="#">Laptop Gaming</Link>
                 </li>
                 <li>
-                  <Link to="#">Exotic Fruits & Veggies</Link>
+                  <Link to="#">Laptop Cao Cấp</Link>
                 </li>
                 <li>
-                  <Link to="#">Packaged Produce</Link>
+                  <Link to="#">Laptop Văn Phòng</Link>
                 </li>
                 <li>
-                  <Link to="#">Party Trays</Link>
+                  <Link to="#">Laptop Khuyến Mãi</Link>
                 </li>
               </ul>
             </div>
 
             <div className="col">
-              <h5>BREAKFAST & DAIRY</h5>
+              <h5>MÁY ẢNH</h5>
               <ul>
                 <li>
-                  <Link to="#">Fresh Vegetables</Link>
+                  <Link to="#">Máy Ảnh Mới Ra Mắt</Link>
                 </li>
                 <li>
-                  <Link to="#">Herbs & Seasonings</Link>
+                  <Link to="#">Máy Ảnh Chính Hãng</Link>
                 </li>
                 <li>
-                  <Link to="#">Fresh Fruits</Link>
+                  <Link to="#">Máy Ảnh DSLR</Link>
                 </li>
                 <li>
-                  <Link to="#">Cuts & Sprouts</Link>
+                  <Link to="#">Máy Ảnh Mirrorless</Link>
                 </li>
                 <li>
-                  <Link to="#">Exotic Fruits & Veggies</Link>
+                  <Link to="#">Máy Ảnh Compact</Link>
                 </li>
                 <li>
-                  <Link to="#">Packaged Produce</Link>
+                  <Link to="#">Máy Ảnh Action Camera</Link>
                 </li>
                 <li>
-                  <Link to="#">Party Trays</Link>
+                  <Link to="#">Máy Ảnh Độ Phân Giải Cao</Link>
+                </li>
+                <li>
+                  <Link to="#">Máy Ảnh Chống Rung</Link>
+                </li>
+                <li>
+                  <Link to="#">Phụ Kiện Máy Ảnh</Link>
                 </li>
               </ul>
             </div>
 
             <div className="col">
-              <h5>MEAT & SEAFOOD</h5>
+              <h5>XÂY DỰNG CẤU HÌNH PC</h5>
               <ul>
                 <li>
-                  <Link to="#">Fresh Vegetables</Link>
+                  <Link to="#">PC Gaming</Link>
                 </li>
                 <li>
-                  <Link to="#">Herbs & Seasonings</Link>
+                  <Link to="#">PC Làm việc</Link>
                 </li>
                 <li>
-                  <Link to="#">Fresh Fruits</Link>
+                  <Link to="#">PC Học tập</Link>
                 </li>
                 <li>
-                  <Link to="#">Cuts & Sprouts</Link>
+                  <Link to="#">PC Stream</Link>
                 </li>
                 <li>
-                  <Link to="#">Exotic Fruits & Veggies</Link>
+                  <Link to="#">PC Giá Rẻ</Link>
                 </li>
                 <li>
-                  <Link to="#">Packaged Produce</Link>
+                  <Link to="#">PC Tầm Trung</Link>
                 </li>
                 <li>
-                  <Link to="#">Party Trays</Link>
+                  <Link to="#">PC Cao Cấp</Link>
                 </li>
               </ul>
             </div>
 
             <div className="col">
-              <h5>BEVERAGES</h5>
+              <h5>MÀN HÌNH</h5>
               <ul>
                 <li>
-                  <Link to="#">Fresh Vegetables</Link>
+                  <Link to="#">Màn Hình Gaming</Link>
                 </li>
                 <li>
-                  <Link to="#">Herbs & Seasonings</Link>
+                  <Link to="#">Màn Hình Đồ Hoạ</Link>
                 </li>
                 <li>
-                  <Link to="#">Fresh Fruits</Link>
+                  <Link to="#">Màn Hình Văn Phòng</Link>
                 </li>
                 <li>
-                  <Link to="#">Cuts & Sprouts</Link>
+                  <Link to="#">Màn Hình Cong</Link>
                 </li>
                 <li>
-                  <Link to="#">Exotic Fruits & Veggies</Link>
+                  <Link to="#">Màn Hình 4K</Link>
                 </li>
                 <li>
-                  <Link to="#">Packaged Produce</Link>
+                  <Link to="#">Màn hình OLED</Link>
                 </li>
                 <li>
-                  <Link to="#">Party Trays</Link>
+                  <Link to="#">Màn hình IPS</Link>
                 </li>
               </ul>
             </div>
 
             <div className="col">
-              <h5>BREADS & BAKERY</h5>
+              <h5>PHỤ KIỆN</h5>
               <ul>
                 <li>
-                  <Link to="#">Fresh Vegetables</Link>
+                  <Link to="#">Bàn Phím</Link>
                 </li>
                 <li>
-                  <Link to="#">Herbs & Seasonings</Link>
+                  <Link to="#">Chuột</Link>
                 </li>
                 <li>
-                  <Link to="#">Fresh Fruits</Link>
+                  <Link to="#">Tai Nghe</Link>
                 </li>
                 <li>
-                  <Link to="#">Cuts & Sprouts</Link>
+                  <Link to="#">Loa</Link>
                 </li>
                 <li>
-                  <Link to="#">Exotic Fruits & Veggies</Link>
+                  <Link to="#">Cáp Sạc & Cổng Kết Nối</Link>
                 </li>
                 <li>
-                  <Link to="#">Packaged Produce</Link>
+                  <Link to="#">Mic</Link>
                 </li>
                 <li>
-                  <Link to="#">Party Trays</Link>
+                  <Link to="#">Bàn & Ghế</Link>
                 </li>
               </ul>
             </div>

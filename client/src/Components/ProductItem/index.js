@@ -1,16 +1,13 @@
-import Rating from "@mui/material/Rating";
-import { TfiFullscreen } from "react-icons/tfi";
 import Button from "@mui/material/Button";
-import { IoMdHeartEmpty } from "react-icons/io";
-import { useContext, useEffect, useRef, useState } from "react";
-import { MyContext } from "../../App";
-import { Link } from "react-router-dom";
-
-import Slider from "react-slick";
+import Rating from "@mui/material/Rating";
 import Skeleton from "@mui/material/Skeleton";
-import { IoIosImages } from "react-icons/io";
-import { fetchDataFromApi, postData } from "../../utils/api";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FaHeart } from "react-icons/fa";
+import { IoIosImages, IoMdHeartEmpty } from "react-icons/io";
+import { TfiFullscreen } from "react-icons/tfi";
+import { Link } from "react-router-dom";
+import { MyContext } from "../../App";
+import { fetchDataFromApi, postData } from "../../utils/api";
 
 const ProductItem = (props) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -89,7 +86,7 @@ const ProductItem = (props) => {
           context.setAlertBox({
             open: true,
             error: false,
-            msg: "the product added in my list",
+            msg: "Sản phẩm đã được thêm vào danh sách",
           });
 
           fetchDataFromApi(
@@ -111,7 +108,7 @@ const ProductItem = (props) => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please Login to continue",
+        msg: "Vui lòng đăng nhập để tiếp tục",
       });
     }
   };
@@ -217,9 +214,9 @@ const ProductItem = (props) => {
           </Link>
 
           {props?.item?.countInStock >= 1 ? (
-            <span className="text-success d-block">In Stock</span>
+            <span className="text-success d-block">Còn Hàng</span>
           ) : (
-            <span className="text-danger d-block">Out of Stock</span>
+            <span className="text-danger d-block">Hết Hàng</span>
           )}
 
           <Rating
@@ -232,15 +229,15 @@ const ProductItem = (props) => {
           />
 
           <div className="d-flex">
-            <span className="oldPrice">Rs {props?.item?.oldPrice}</span>
+            <span className="oldPrice"> {props?.item?.oldPrice}</span>
             <span className="netPrice text-danger ml-2">
-              Rs {props?.item?.price}
+              {props?.item?.price}
             </span>
           </div>
         </div>
       </div>
 
-      {/*<ProductModal/> */}
+      {/*<ProductModel/> */}
     </>
   );
 };

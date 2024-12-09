@@ -1,26 +1,19 @@
-import React, { useEffect } from "react";
-import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import RangeSlider from "react-range-slider-input";
-import "react-range-slider-input/dist/style.css";
-import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
-
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-
-import { useParams } from "react-router-dom";
 import Rating from "@mui/material/Rating";
-import { MyContext } from "../../App";
+import React, { useContext, useEffect, useState } from "react";
 import { IoMdCloseCircle } from "react-icons/io";
-
-import { fetchDataFromApi } from "../../utils/api";
-import { Swiper, SwiperSlide } from "swiper/react";
+import RangeSlider from "react-range-slider-input";
+import "react-range-slider-input/dist/style.css";
+import { Link, useParams } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { MyContext } from "../../App";
 import ProductItem from "../../Components/ProductItem";
+import { fetchDataFromApi } from "../../utils/api";
 
 const Sidebar = (props) => {
   const [value, setValue] = useState([100, 100000]);
@@ -92,7 +85,7 @@ const Sidebar = (props) => {
         )}
 
         <div className="filterBox">
-          <h6>PRODUCT CATEGORIES</h6>
+          <h6>DANH MỤC SẢN PHẨM</h6>
 
           <div className="scroll">
             <RadioGroup
@@ -116,7 +109,7 @@ const Sidebar = (props) => {
         </div>
 
         <div className="filterBox">
-          <h6>FILTER BY PRICE</h6>
+          <h6>LỌC THEO GIÁ</h6>
 
           <RangeSlider
             value={value}
@@ -137,7 +130,7 @@ const Sidebar = (props) => {
         </div>
 
         <div className="filterBox">
-          <h6>FILTER BY RATING</h6>
+          <h6>LỌC THEO ĐÁNH GIÁ</h6>
 
           <div className="scroll pl-0">
             {
@@ -185,7 +178,7 @@ const Sidebar = (props) => {
         {featuredProducts?.length !== 0 && (
             
           <div className="w-100 res-hide">
-            <h6 className="mb-3">FEATURED PRODUCTS</h6>
+            <h6 className="mb-3">SẢN PHẨM NỔI BẬT</h6>
             <Swiper
               slidesPerView={1}
               spaceBetween={0}

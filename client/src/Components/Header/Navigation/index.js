@@ -1,13 +1,12 @@
 import Button from "@mui/material/Button";
-import { IoIosMenu } from "react-icons/io";
-import { FaAngleDown } from "react-icons/fa6";
-import { Link, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { FaAngleRight } from "react-icons/fa6";
-import { MyContext } from "../../../App";
-import CountryDropdown from "../../CountryDropdown";
-import Logo from "../../../assets/images/logo.jpg";
+import { FaAngleDown, FaAngleRight } from "react-icons/fa6";
+import { IoIosMenu } from "react-icons/io";
 import { RiLogoutCircleRFill } from "react-icons/ri";
+import { Link, useNavigate } from "react-router-dom";
+import { MyContext } from "../../../App";
+import Logo from "../../../assets/images/logo.jpg";
+import CountryDropdown from "../../CountryDropdown";
 
 const Navigation = (props) => {
   const [isopenSidebarVal, setisopenSidebarVal] = useState(false);
@@ -49,7 +48,7 @@ const Navigation = (props) => {
                 <span className="icon1 mr-2">
                   <IoIosMenu />
                 </span>
-                <span className="text">ALL CATEGORIES</span>
+                <span className="text">DANH MỤC</span>
                 <span className="icon2  ml-2">
                   <FaAngleDown />
                 </span>
@@ -194,14 +193,14 @@ const Navigation = (props) => {
                     <div className="pt-3 pl-3 pr-3">
                       <Link to="/signIn">
                         <Button className="btn-blue w-100 btn-big">
-                          Sign In
+                          ĐĂNG NHẬP
                         </Button>
                       </Link>
                     </div>
                   ) : (
                     <div className="pt-3 pl-3 pr-3"  onClick={logout}>
-                       <Button className="btn-blue w-100 btn-big">
-                         <RiLogoutCircleRFill/> Logout
+                      <Button className="btn-blue w-100 btn-big">
+                        <RiLogoutCircleRFill/> ĐĂNG XUẤT
                         </Button>
                     </div>
                   )}

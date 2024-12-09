@@ -30,9 +30,7 @@ const searchRoutes = require('./routes/search.js');
 const bannersSchema = require('./routes/banners.js');
 const homeSideBannerSchema = require('./routes/homeSideBanner.js');
 const homeBottomBannerSchema = require('./routes/homeBottomBanner.js');
-const paymentRoutes = require('./routes/payment.js'); // Nhập route thanh toán
 
-app.use("/api/payment", paymentRoutes); // Đăng ký route thanh toán
 app.use("/api/user",userRoutes);
 app.use("/uploads",express.static("uploads"));
 app.use(`/api/category`, categoryRoutes);

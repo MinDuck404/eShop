@@ -1,12 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import React, { useContext, useEffect, useState } from "react";
 import { IoBagCheckOutline } from "react-icons/io5";
-
-import { MyContext } from "../../App";
-import { fetchDataFromApi, postData, deleteData } from "../../utils/api";
-
 import { useNavigate } from "react-router-dom";
+import { MyContext } from "../../App";
+import { deleteData, fetchDataFromApi, postData } from "../../utils/api";
 
 const Checkout = () => {
   const [formFields, setFormFields] = useState({
@@ -26,7 +24,7 @@ const Checkout = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-
+    
     context.setEnableFilterTab(false);
     const user = JSON.parse(localStorage.getItem("user"));
     fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
@@ -54,12 +52,14 @@ const Checkout = () => {
   const checkout = (e) => {
     e.preventDefault();
 
-    // Kiểm tra thông tin form
+    console.log(cartData);
+
+    console.log(formFields);
     if (formFields.fullName === "") {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please fill full name ",
+        msg: "Vui lòng điền tên đầy đủ",
       });
       return false;
     }
@@ -68,7 +68,7 @@ const Checkout = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please fill country ",
+        msg: "Vui lòng điền quốc gia",
       });
       return false;
     }
@@ -77,7 +77,7 @@ const Checkout = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please fill Street address",
+        msg: "Vui lòng điền địa chỉ",
       });
       return false;
     }
@@ -86,7 +86,7 @@ const Checkout = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please fill  Street address",
+        msg: "Vui lòng điền địa chỉ đường",
       });
       return false;
     }
@@ -95,7 +95,7 @@ const Checkout = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please fill city ",
+        msg: "Vui lòng điền thành phố",
       });
       return false;
     }
@@ -104,7 +104,7 @@ const Checkout = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please fill state ",
+        msg: "Vui lòng điền tiểu bang",
       });
       return false;
     }
@@ -113,7 +113,7 @@ const Checkout = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please fill zipCode ",
+        msg: "Vui lòng điền mã bưu điện",
       });
       return false;
     }
@@ -122,7 +122,7 @@ const Checkout = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please fill phone Number ",
+        msg: "Vui lòng điền số điện thoại",
       });
       return false;
     }
@@ -131,7 +131,7 @@ const Checkout = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please fill email",
+        msg: "Vui lòng điền email",
       });
       return false;
     }
@@ -147,34 +147,59 @@ const Checkout = () => {
         year: "numeric",
       }),
     };
-  
-    const user = JSON.parse(localStorage.getItem("user"));
-  
-    const payLoad = {
-      name: addressInfo.name,
-      phoneNumber: formFields.phoneNumber,
-      address: addressInfo.address,
-      pincode: addressInfo.pincode,
-      amount: parseInt(totalAmount),
-      email: user.email,
-      userid: user.userId,
-      products: cartData,
-      date: addressInfo.date,
-    };
-  
-    // Gửi yêu cầu thanh toán tới MoMo
-    postData(`/api/payment/pay`, payLoad).then((res) => {
-      if (res.success) {
-        // Chuyển hướng tới URL thanh toán MoMo
-        window.location.href = res.payUrl;
-      } else {
-        context.setAlertBox({
-          open: true,
-          error: true,
-          msg: "Payment failed, please try again.",
+
+    var options = {
+      key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+      key_secret: process.env.REACT_APP_RAZORPAY_KEY_SECRET,
+      amount: parseInt(totalAmount * 100),
+      currency: "INR",
+      order_receipt: "order_rcptid_" + formFields.fullName,
+      name: "E-Bharat",
+      description: "for testing purpose",
+      handler: function (response) {
+        console.log(response);
+
+        const paymentId = response.razorpay_payment_id;
+
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        const payLoad = {
+          name: addressInfo.name,
+          phoneNumber: formFields.phoneNumber,
+          address: addressInfo.address,
+          pincode: addressInfo.pincode,
+          amount: parseInt(totalAmount),
+          paymentId: paymentId,
+          email: user.email,
+          userid: user.userId,
+          products: cartData,
+          date:addressInfo?.date
+        };
+
+        console.log(payLoad)
+          
+
+        postData(`/api/orders/create`, payLoad).then((res) => {
+fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
+            res?.length!==0 && res?.map((item)=>{
+                deleteData(`/api/cart/${item?.id}`).then((res) => {
+                })
+            })
+                setTimeout(()=>{
+                    context.getCartData();
+                },1000);
+                history("/orders");
+          });
         });
-      }
-    });
+      },
+
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    var pay = new window.Razorpay(options);
+    pay.open();
   };
 
   return (
@@ -183,7 +208,7 @@ const Checkout = () => {
         <form className="checkoutForm" onSubmit={checkout}>
           <div className="row">
             <div className="col-md-8">
-              <h2 className="hd">BILLING DETAILS</h2>
+              <h2 className="hd">CHI TIẾT THANH TOÁN</h2>
 
               <div className="row mt-3">
                 <div className="col-md-6">
@@ -213,7 +238,7 @@ const Checkout = () => {
                 </div>
               </div>
 
-              <h6>Street address *</h6>
+              <h6>Tên đường</h6>
 
               <div className="row">
                 <div className="col-md-12">
@@ -241,7 +266,7 @@ const Checkout = () => {
                 </div>
               </div>
 
-              <h6>Town / City *</h6>
+              <h6>Thị trấn / Thành phố *</h6>
 
               <div className="row">
                 <div className="col-md-12">
@@ -258,7 +283,7 @@ const Checkout = () => {
                 </div>
               </div>
 
-              <h6>State / County *</h6>
+              <h6>Tiểu bang / Quận *</h6>
 
               <div className="row">
                 <div className="col-md-12">
@@ -275,7 +300,7 @@ const Checkout = () => {
                 </div>
               </div>
 
-              <h6>Postcode / ZIP *</h6>
+              <h6>Mã bưu điện / ZIP *</h6>
 
               <div className="row">
                 <div className="col-md-12">
@@ -323,40 +348,63 @@ const Checkout = () => {
 
             <div className="col-md-4">
               <div className="card orderInfo">
-                <h4 className="hd">YOUR ORDER</h4>
+                <h4 className="hd">ĐƠN HÀNG CỦA BẠN</h4>
                 <div className="table-responsive mt-3">
                   <table className="table table-borderless">
                     <thead>
                       <tr>
-                        <th>Product</th>
-                        <th>Subtotal</th>
+                        <th>Sản phẩm</th>
+                        <th>Tạm tính</th>
                       </tr>
                     </thead>
+
                     <tbody>
-                      {cartData.map((item, index) => (
-                        <tr key={index}>
-                          <td>{item.name}</td>
-                          <td>{parseInt(item.price) * item.quantity}</td>
-                        </tr>
-                      ))}
+                      {cartData?.length !== 0 &&
+                        cartData?.map((item, index) => {
+                          return (
+                            <tr>
+                              <td>
+                                {item?.productTitle?.substr(0, 20) + "..."}{" "}
+                                <b>× {item?.quantity}</b>
+                              </td>
+
+                              <td>
+                                {item?.subTotal?.toLocaleString("en-US", {
+                                  style: "currency",
+                                  currency: "INR",
+                                })}
+                              </td>
+                            </tr>
+                          );
+                        })}
+
+                      <tr>
+                        <td>Tạm tính </td>
+
+                        <td>
+                          {(cartData?.length !== 0
+                            ? cartData
+                                ?.map(
+                                  (item) => parseInt(item.price) * item.quantity
+                                )
+                                .reduce((total, value) => total + value, 0)
+                            : 0
+                          )?.toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "INR",
+                          })}
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
-
-                  <div className="total">
-                    <h6>Total: {totalAmount}</h6>
-                  </div>
-
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                    fullWidth
-                    size="large"
-                    startIcon={<IoBagCheckOutline />}
-                  >
-                    Place Order
-                  </Button>
                 </div>
+
+                <Button
+                  type="submit"
+                  className="btn-blue bg-red btn-lg btn-big"
+                >
+                  <IoBagCheckOutline /> &nbsp; Thanh toán
+                </Button>
               </div>
             </div>
           </div>

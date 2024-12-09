@@ -1,21 +1,17 @@
-import Sidebar from "../../Components/Sidebar";
 import Button from "@mui/material/Button";
-import { IoIosMenu } from "react-icons/io";
-import { CgMenuGridR } from "react-icons/cg";
-import { HiViewGrid } from "react-icons/hi";
-import { TfiLayoutGrid4Alt } from "react-icons/tfi";
-import { FaAngleDown } from "react-icons/fa6";
+import CircularProgress from "@mui/material/CircularProgress";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useContext, useEffect, useState } from "react";
-import ProductItem from "../../Components/ProductItem";
-
+import { CgMenuGridR } from "react-icons/cg";
+import { FaAngleDown } from "react-icons/fa6";
+import { IoIosMenu } from "react-icons/io";
+import { TfiLayoutGrid4Alt } from "react-icons/tfi";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchDataFromApi } from "../../utils/api";
-import CircularProgress from "@mui/material/CircularProgress";
-import { FaFilter } from "react-icons/fa";
-
 import { MyContext } from "../../App";
+import ProductItem from "../../Components/ProductItem";
+import Sidebar from "../../Components/Sidebar";
+import { fetchDataFromApi } from "../../utils/api";
 
 const Listing = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -89,9 +85,6 @@ const Listing = () => {
         setisLoading(false);
       });
     }
-  
-
-
   };
 
   const handleChangePage = (event, value) => {

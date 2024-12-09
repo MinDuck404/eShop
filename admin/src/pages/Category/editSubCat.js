@@ -1,20 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import { emphasize, styled } from '@mui/material/styles';
-import Chip from '@mui/material/Chip';
-import HomeIcon from '@mui/icons-material/Home';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { MyContext } from '../../App';
+import HomeIcon from '@mui/icons-material/Home';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import CircularProgress from '@mui/material/CircularProgress';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import Button from '@mui/material/Button';
+import { emphasize, styled } from '@mui/material/styles';
+import React, { useContext, useEffect, useState } from 'react';
 import { FaCloudUploadAlt } from "react-icons/fa";
-import CircularProgress from '@mui/material/CircularProgress';
-import { editData, fetchDataFromApi, postData } from '../../utils/api';
-import { useNavigate } from 'react-router-dom';
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from 'react-router-dom';
+import { MyContext } from '../../App';
+import { editData, fetchDataFromApi } from '../../utils/api';
 
-//breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
         theme.palette.mode === 'light'
@@ -38,7 +36,6 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
 
 
 const EditSubCat = () => {
-
     const [data, setData] = useState([]);
     const [categoryVal, setcategoryVal] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -51,7 +48,6 @@ const EditSubCat = () => {
     const context = useContext(MyContext);
 
     let { id } = useParams();
-
 
     useEffect(()=>{
         fetchDataFromApi(`/api/subCat/${id}`).then((res)=>{
@@ -92,7 +88,7 @@ const EditSubCat = () => {
             context.setAlertBox({
                 open: true,
                 error: true,
-                msg: 'Please select a category'
+                msg: 'Vui lòng chọn danh mục'
             });
             return false;
         }
@@ -101,7 +97,7 @@ const EditSubCat = () => {
             context.setAlertBox({
                 open: true,
                 error: true,
-                msg: 'Please enter sub category'
+                msg: 'Vui lòng chọn danh mục phụ'
             });
             return false;
         }
@@ -120,7 +116,7 @@ const EditSubCat = () => {
     return (
         <div className="right-content w-100">
             <div className="card shadow border-0 w-100 flex-row p-4 mt-2">
-                <h5 className="mb-0">Edit Sub Category</h5>
+                <h5 className="mb-0">Chỉnh Sửa Danh Mục Phụ</h5>
                 <Breadcrumbs aria-label="breadcrumb" className="ml-auto breadcrumbs_">
                     <StyledBreadcrumb
                         component="a"
@@ -131,12 +127,12 @@ const EditSubCat = () => {
 
                     <StyledBreadcrumb
                         component="a"
-                        label="Edit Sub Category"
+                        label="Chỉnh Sửa Danh Mục Phụ"
                         href="#"
                         deleteIcon={<ExpandMoreIcon />}
                     />
                     <StyledBreadcrumb
-                        label="Edit Category"
+                        label="Chỉnh Sửa Danh Mục"
                         deleteIcon={<ExpandMoreIcon />}
                     />
                 </Breadcrumbs>
@@ -149,7 +145,7 @@ const EditSubCat = () => {
                             <div className='row'>
                                 <div className='col'>
                                     <div className='form-group'>
-                                        <h6>CATEGORY</h6>
+                                        <h6>DANH MỤC</h6>
                                         <Select
                                             value={categoryVal}
                                             onChange={handleChangeCategory}
@@ -159,7 +155,7 @@ const EditSubCat = () => {
                                             name="category"
                                         >
                                             <MenuItem value="">
-                                                <em value={null}>None</em>
+                                                <em value={null}>Không có</em>
                                             </MenuItem>
                                             {
                                                 context.catData?.categoryList?.length !== 0 && context.catData?.categoryList?.map((cat, index) => {
@@ -168,26 +164,19 @@ const EditSubCat = () => {
                                                     )
                                                 })
                                             }
-
                                         </Select>
                                     </div>
                                 </div>
 
-
-
                                 <div className='col'>
                                     <div className='form-group'>
-                                        <h6>SUB CATEGORY</h6>
+                                        <h6>DANH MỤC PHỤ</h6>
                                         <input type='text' name="subCat" value={formFields.subCat} onChange={inputChange} />
                                     </div>
                                 </div>
-
                             </div>
-
-
                             <Button type="submit" className="btn-blue btn-lg btn-big w-100"
-                            ><FaCloudUploadAlt /> &nbsp;  {isLoading === true ? <CircularProgress color="inherit" className="loader" /> : 'PUBLISH AND VIEW'}  </Button>
-
+                            ><FaCloudUploadAlt /> &nbsp;  {isLoading === true ? <CircularProgress color="inherit" className="loader" /> : 'TẢI LÊN VÀ XEM'}  </Button>
                         </div>
                     </div>
                 </div>

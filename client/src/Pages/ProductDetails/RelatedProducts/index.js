@@ -1,11 +1,10 @@
 import React, { useContext } from "react";
-import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
-import ProductItem from "../../../Components/ProductItem";
-
+import { Swiper, SwiperSlide } from 'swiper/react';
 import { MyContext } from "../../../App";
+import ProductItem from "../../../Components/ProductItem";
 
 const RelatedProducts = (props) => {
 
@@ -18,8 +17,6 @@ const RelatedProducts = (props) => {
                     <h3 className="mb-0 hd">{props.title}</h3>
                 </div>
             </div>
-
-
             <div className="product_row relatedProducts w-100 mt-0">
             {
                 context.windowWidth>992 ?
@@ -63,7 +60,7 @@ const RelatedProducts = (props) => {
                 :
 
                 <div className="productScroller">
-                 {
+{
                         props?.data?.length !== 0 && props?.data?.map((item, index) => {
                             return (
                                     <ProductItem item={item} key={index} itemView={props.itemView} />

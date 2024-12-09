@@ -1,9 +1,9 @@
 
 import React, { useContext } from "react";
-import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { Navigation, Autoplay } from 'swiper/modules';
+import { Autoplay, Navigation } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import { MyContext } from "../../App";
 
 const HomeBanner = (props) => {
@@ -37,8 +37,6 @@ const HomeBanner = (props) => {
                             )
                         })
                     }
-
-
                 </Swiper>
             </div>
         </div>

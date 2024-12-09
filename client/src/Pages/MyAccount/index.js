@@ -1,26 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { IoMdCloudUpload } from "react-icons/io";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import PropTypes from "prop-types";
+import React, { useContext, useEffect, useState } from "react";
+import { IoMdCloudUpload } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { MyContext } from "../../App";
+import NoUserImg from "../../assets/images/no-user.jpg";
 import {
   deleteData,
-  deleteImages,
   editData,
   fetchDataFromApi,
-  postData,
-  uploadImage,
+  uploadImage
 } from "../../utils/api";
-
-import { MyContext } from "../../App";
-
-import NoUserImg from "../../assets/images/no-user.jpg";
-import CircularProgress from "@mui/material/CircularProgress";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -162,7 +158,7 @@ const MyAccount = () => {
           context.setAlertBox({
             open: true,
             error: true,
-            msg: "Please select a valid JPG or PNG image file.",
+            msg: "Vui lòng chọn tệp hình ảnh hợp lệ với định dạng JPG hoặc PNG.",
           });
 
           return false;
@@ -188,7 +184,6 @@ const MyAccount = () => {
               item?.images.length !== 0 &&
                 item?.images?.map((img) => {
                   img_arr.push(img);
-                  //console.log(img)
                 });
             });
 
@@ -220,7 +215,7 @@ const MyAccount = () => {
                 context.setAlertBox({
                   open: true,
                   error: false,
-                  msg: "Images Uploaded!",
+                  msg: "Hình ảnh đã được tải lên!",
                 });
                 setUploading(false);
               }, 200);
@@ -263,14 +258,14 @@ const MyAccount = () => {
         context.setAlertBox({
           open: true,
           error: false,
-          msg: "user updated",
+          msg: "Người dùng đã được cập nhật",
         });
       });
     } else {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please fill all the details",
+        msg: "Vui lòng điền đầy đủ thông tin",
       });
       return false;
     }
@@ -289,7 +284,7 @@ const MyAccount = () => {
         context.setAlertBox({
           open: true,
           error: true,
-          msg: "Password and confirm password not match",
+          msg: "Mật khẩu và xác nhận mật khẩu không khớp",
         });
       } else {
         const user = JSON.parse(localStorage.getItem("user"));
@@ -313,7 +308,7 @@ const MyAccount = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please fill all the details",
+        msg: "Vui lòng điền tất cả các thông tin",
       });
       return false;
     }
@@ -322,7 +317,7 @@ const MyAccount = () => {
   return (
     <section className="section myAccountPage">
       <div className="container">
-        <h2 className="hd">My Account</h2>
+        <h2 className="hd">Tài Khoản</h2>
 
         <Box sx={{ width: "100%" }} className="myAccBox card border-0">
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -470,7 +465,7 @@ const MyAccount = () => {
                       className="btn-blue bg-red btn-lg btn-big"
                     >
                       {" "}
-                      Save
+                      Lưu
                     </Button>
                   </div>
                 </div>

@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Link } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
-import "./style.css";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { MyContext } from "../../App";
-import { Link } from "react-router-dom";
+import "./style.css";
 
 const Banners = (props) => {
   const context = useContext(MyContext);
@@ -82,7 +82,7 @@ const Banners = (props) => {
             {props?.data?.length !== 0 &&
               props?.data?.map((item, index) => {
                 return (
-                   <div className={`col_`}>
+                  <div className={`col_`}>
                       {item?.subCatId !== null ? (
                         <Link
                           to={`/products/subCat/${item?.subCatId}`}

@@ -5,15 +5,12 @@ const OtpInput = ({ length, onChange }) => {
 
   const handleChange = (element, index) => {
     const value = element.value;
-    if (isNaN(value)) return; // Only numbers allowed
-
-    // Update OTP value
+    if (isNaN(value)) return;
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
     onChange(newOtp.join(""));
 
-    // Focus on next input
     if (value && index < length - 1) {
       document.getElementById(`otp-input-${index + 1}`).focus();
     }

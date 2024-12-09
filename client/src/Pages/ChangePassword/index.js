@@ -1,12 +1,11 @@
-import { useContext, useEffect, useState } from "react";
-import Logo from "../../assets/images/logo.jpg";
-import { MyContext } from "../../App";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { Link, useNavigate } from "react-router-dom";
-
 import CircularProgress from "@mui/material/CircularProgress";
-import { editData, postData } from "../../utils/api";
+import TextField from "@mui/material/TextField";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { MyContext } from "../../App";
+import Logo from "../../assets/images/logo.jpg";
+import { postData } from "../../utils/api";
 
 
 const ChangePassword = () => {
@@ -41,7 +40,7 @@ const ChangePassword = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please enter new password",
+        msg: "Vui lòng nhập mật khẩu mới",
       });
       return false;
     }
@@ -50,7 +49,7 @@ const ChangePassword = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please confirm password",
+        msg: "Vui lòng xác nhận mật khẩu",
       });
       return false;
     }
@@ -60,7 +59,7 @@ const ChangePassword = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Password and confirm password not match",
+        msg: "Mật khẩu và xác nhận mật khẩu không khớp",
       });
       return false;
     }
@@ -108,7 +107,7 @@ const ChangePassword = () => {
 
           <form className="mt-3" onSubmit={changePass}>
             <h2 className="mb-4">
-              Change Password
+            Đổi Mật Khẩu
             </h2>
 
 

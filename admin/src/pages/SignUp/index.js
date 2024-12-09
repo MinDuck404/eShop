@@ -1,29 +1,19 @@
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useContext, useEffect, useState } from "react";
-import Logo from "../../assets/images/logo.png";
-import patern from "../../assets/images/pattern.webp";
-import { MyContext } from "../../App";
+import { FaPhoneAlt, FaUserCircle } from "react-icons/fa";
+import { IoMdEye, IoMdEyeOff, IoMdHome } from "react-icons/io";
+import { IoShieldCheckmarkSharp } from "react-icons/io5";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
-import { IoMdEye } from "react-icons/io";
-import { IoMdEyeOff } from "react-icons/io";
-import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
-import { FaUserCircle } from "react-icons/fa";
-import { IoShieldCheckmarkSharp } from "react-icons/io5";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import { FaPhoneAlt } from "react-icons/fa";
-
+import { Link, useNavigate } from "react-router-dom";
+import { MyContext } from "../../App";
 import googleIcon from "../../assets/images/googleIcon.png";
-import { IoMdHome } from "react-icons/io";
-import { postData } from "../../utils/api";
-
-import { useNavigate } from "react-router-dom";
-import CircularProgress from "@mui/material/CircularProgress";
-
-import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import Logo from "../../assets/images/logo.png";
+import patern from "../../assets/images/pattern.webp";
 import { firebaseApp } from "../../firebase";
+import { postData } from "../../utils/api";
 
 const auth = getAuth(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
@@ -70,7 +60,7 @@ const SignUp = () => {
         context.setAlertBox({
           open: true,
           error: true,
-          msg: "name can not be blank!",
+          msg: "Tên không được để trống!",
         });
         return false;
       }
@@ -79,7 +69,7 @@ const SignUp = () => {
         context.setAlertBox({
           open: true,
           error: true,
-          msg: "email can not be blank!",
+          msg: "Email không được để trống!",
         });
         return false;
       }
@@ -88,7 +78,7 @@ const SignUp = () => {
         context.setAlertBox({
           open: true,
           error: true,
-          msg: "phone can not be blank!",
+          msg: "Số điện thoại không được để trống!",
         });
         return false;
       }
@@ -97,7 +87,7 @@ const SignUp = () => {
         context.setAlertBox({
           open: true,
           error: true,
-          msg: "password can not be blank!",
+          msg: "Mật khẩu không được để trống!",
         });
         return false;
       }
@@ -106,7 +96,7 @@ const SignUp = () => {
         context.setAlertBox({
           open: true,
           error: true,
-          msg: "confirm password can not be blank!",
+          msg: "Xác nhận mật khẩu không được để trống!",
         });
         return false;
       }
@@ -115,7 +105,7 @@ const SignUp = () => {
         context.setAlertBox({
           open: true,
           error: true,
-          msg: "password not match",
+          msg: "Mật khẩu xác nhận không khớp!",
         });
         return false;
       }
@@ -127,7 +117,6 @@ const SignUp = () => {
           console.log(res);
 
           if (res.status !== "FAILED") {
-          
             localStorage.setItem("userEmail", formfields.email);
 
             setTimeout(() => {
@@ -145,8 +134,7 @@ const SignUp = () => {
         })
         .catch((error) => {
           setIsLoading(false);
-          console.error("Error posting data:", error);
-          // Handle error (e.g., show an error message)
+          console.error("Lỗi gửi dữ liệu:", error);
         });
     } catch (error) {
       console.log(error);
@@ -158,7 +146,7 @@ const SignUp = () => {
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
-        // The signed-in user info.
+
         const user = result.user;
 
         const fields = {
@@ -210,7 +198,7 @@ const SignUp = () => {
         context.setAlertBox({
           open: true,
           error: false,
-          msg: "User authentication Successfully!",
+          msg: "Đăng nhập người dùng thành công!",
         });
 
         // window.location.href = "/";
@@ -239,23 +227,20 @@ const SignUp = () => {
         <div className="row">
           <div className="col-md-8 d-flex align-items-center flex-column part1 justify-content-center">
             <h1>
-              BEST UX/UI FASHION{" "}
-              <span className="text-sky">ECOMMERCE DASHBOARD</span> & ADMIN
-              PANEL
+              GEARZONE - CÔNG NGHỆ SỐ{" "}
+              <span className="text-sky">THIẾT BỊ CÔNG NGHỆ MỚI NHẤT</span>
             </h1>
             <p>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text
-              ever since the 1500s, when an unknown printer took a galley of
-              type and scrambled it to make a type specimen book. It has
-              survived not only five centuries
+              GearZone chuyên cung cấp các thiết bị công nghệ số tiên tiến, từ
+              smartphone, máy tính bảng, laptop đến các phụ kiện số, đáp ứng mọi
+              nhu cầu công nghệ của bạn. Khám phá ngay các sản phẩm công nghệ
+              số mới nhất tại GearZone.
             </p>
 
             <div className="w-100 mt-4">
               <Link to={"/"}>
-                {" "}
                 <Button className="btn-blue btn-lg btn-big">
-                  <IoMdHome /> Go To Home
+                  <IoMdHome /> Trở về Trang Chủ
                 </Button>
               </Link>
             </div>
@@ -268,7 +253,7 @@ const SignUp = () => {
                 className="d-flex align-items-center flex-column logo"
               >
                 <img src={Logo} />
-                <span className="ml-2">ECOMMERCE</span>
+                <span className="ml-2">GearZone</span>
               </Link>
 
               <div className="wrapper mt-3 card border">
@@ -284,7 +269,7 @@ const SignUp = () => {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="enter your name"
+                      placeholder="Nhập tên của bạn"
                       onFocus={() => focusInput(0)}
                       onBlur={() => setInputIndex(null)}
                       autoFocus
@@ -304,7 +289,7 @@ const SignUp = () => {
                     <input
                       type="email"
                       className="form-control"
-                      placeholder="enter your email"
+                      placeholder="Nhập email của bạn"
                       onFocus={() => focusInput(1)}
                       onBlur={() => setInputIndex(null)}
                       name="email"
@@ -323,7 +308,7 @@ const SignUp = () => {
                     <input
                       type="number"
                       className="form-control"
-                      placeholder="enter your Phone"
+                      placeholder="Nhập số điện thoại của bạn"
                       onFocus={() => focusInput(2)}
                       onBlur={() => setInputIndex(null)}
                       name="phone"
@@ -342,7 +327,7 @@ const SignUp = () => {
                     <input
                       type={`${isShowPassword === true ? "text" : "password"}`}
                       className="form-control"
-                      placeholder="enter your password"
+                      placeholder="Nhập mật khẩu của bạn"
                       onFocus={() => focusInput(3)}
                       onBlur={() => setInputIndex(null)}
                       name="password"
@@ -358,85 +343,78 @@ const SignUp = () => {
                   </div>
 
                   <div
-                    className={`form-group position-relative ${
-                      inputIndex === 4 && "focus"
-                    }`}
-                  >
-                    <span className="icon">
-                      <IoShieldCheckmarkSharp />
-                    </span>
-                    <input
-                      type={`${
-                        isShowConfirmPassword === true ? "text" : "password"
-                      }`}
-                      className="form-control"
-                      placeholder="confirm your password"
-                      onFocus={() => focusInput(4)}
-                      onBlur={() => setInputIndex(null)}
-                      name="confirmPassword"
-                      onChange={onchangeInput}
-                    />
+  className={`form-group position-relative ${
+    inputIndex === 4 && "focus"
+  }`}
+>
+  <span className="icon">
+    <IoShieldCheckmarkSharp />
+  </span>
+  <input
+    type={`${
+      isShowConfirmPassword === true ? "text" : "password"
+    }`}
+    className="form-control"
+    placeholder="Xác nhận mật khẩu của bạn"
+    onFocus={() => focusInput(4)}
+    onBlur={() => setInputIndex(null)}
+    name="confirmPassword"
+    onChange={onchangeInput}
+/>
 
-                    <span
-                      className="toggleShowPassword"
-                      onClick={() =>
-                        setisShowConfirmPassword(!isShowConfirmPassword)
-                      }
-                    >
-                      {isShowConfirmPassword === true ? (
-                        <IoMdEyeOff />
-                      ) : (
-                        <IoMdEye />
-                      )}
-                    </span>
-                  </div>
+<span
+  className="toggleShowPassword"
+  onClick={() =>
+    setisShowConfirmPassword(!isShowConfirmPassword)
+  }
+>
+  {isShowConfirmPassword === true ? (
+    <IoMdEyeOff />
+  ) : (
+    <IoMdEye />
+  )}
+</span>
+</div>
 
-                  {
-                    // <FormControlLabel
-                    //   control={<Checkbox />}
-                    //   label="I agree to the all Terms & Condiotions"
-                    // />
-                  }
+<div className="form-group">
+  <Button
+    type="submit"
+    className="btn-blue btn-lg w-100 btn-big"
+  >
+    {isLoading === true ? <CircularProgress /> : "Đăng Ký"}
+  </Button>
+</div>
 
-                  <div className="form-group">
-                    <Button
-                      type="submit"
-                      className="btn-blue btn-lg w-100 btn-big"
-                    >
-                      {isLoading === true ? <CircularProgress /> : "Sign Up "}
-                    </Button>
-                  </div>
+<div className="form-group text-center mb-0">
+  <div className="d-flex align-items-center justify-content-center or mt-3 mb-3">
+    <span className="line"></span>
+    <span className="txt">hoặc</span>
+    <span className="line"></span>
+  </div>
 
-                  <div className="form-group text-center mb-0">
-                    <div className="d-flex align-items-center justify-content-center or mt-3 mb-3">
-                      <span className="line"></span>
-                      <span className="txt">or</span>
-                      <span className="line"></span>
-                    </div>
+  <Button
+    variant="outlined"
+    className="w-100 btn-lg btn-big loginWithGoogle"
+    onClick={signInWithGoogle}
+  >
+    <img src={googleIcon} width="25px" /> &nbsp; Đăng nhập với Google
+  </Button>
+</div>
 
-                    <Button
-                      variant="outlined"
-                      className="w-100 btn-lg btn-big loginWithGoogle"
-                      onClick={signInWithGoogle}
-                    >
-                      <img src={googleIcon} width="25px" /> &nbsp; Sign In with
-                      Google
-                    </Button>
-                  </div>
-                </form>
+</form>
 
-                <span className="text-center d-block mt-3">
-                  Don't have an account?
-                  <Link to={"/login"} className="link color ml-2">
-                    Sign In
-                  </Link>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
+<span className="text-center d-block mt-3">
+  Bạn đã có tài khoản?
+  <Link to={"/login"} className="link color ml-2">
+    Đăng nhập
+  </Link>
+</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</>
   );
 };
 

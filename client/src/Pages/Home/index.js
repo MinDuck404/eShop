@@ -1,23 +1,21 @@
-import HomeBanner from "../../Components/HomeBanner";
 import Button from "@mui/material/Button";
-import { IoIosArrowRoundForward } from "react-icons/io";
+import CircularProgress from "@mui/material/CircularProgress";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { IoIosArrowRoundForward } from "react-icons/io";
+import { Link } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
-import ProductItem from "../../Components/ProductItem";
-import HomeCat from "../../Components/HomeCat";
-
+import { Swiper, SwiperSlide } from "swiper/react";
 import { MyContext } from "../../App";
-import { fetchDataFromApi } from "../../utils/api";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import CircularProgress from "@mui/material/CircularProgress";
-
 import homeBannerPlaceholder from "../../assets/images/homeBannerPlaceholder.jpg";
 import Banners from "../../Components/banners";
-import { Link } from "react-router-dom";
+import HomeBanner from "../../Components/HomeBanner";
+import HomeCat from "../../Components/HomeCat";
+import ProductItem from "../../Components/ProductItem";
+import { fetchDataFromApi } from "../../utils/api";
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -25,15 +23,12 @@ const Home = () => {
   const [selectedCat, setselectedCat] = useState();
   const [filterData, setFilterData] = useState([]);
   const [homeSlides, setHomeSlides] = useState([]);
-
   const [value, setValue] = React.useState(0);
-
   const [isLoading, setIsLoading] = useState(false);
   const [bannerList, setBannerList] = useState([]);
   const [randomCatProducts, setRandomCatProducts] = useState([]);
   const [homeSideBanners, setHomeSideBanners] = useState([]);
   const [homeBottomBanners, setHomeBottomBanners] = useState([]);
-
   const context = useContext(MyContext);
   const filterSlider = useRef();
 
@@ -120,7 +115,6 @@ const Home = () => {
         setFilterData(res.products);
         setIsLoading(false);
         filterSlider?.current?.swiper?.slideTo(0);
-        // console.log(selectedCat)
       });
     }
   }, [selectedCat]);
@@ -182,9 +176,9 @@ const Home = () => {
             <div className="col-md-9 productRow">
               <div className="d-flex align-items-center res-flex-column">
                 <div className="info" style={{ width: "35%" }}>
-                  <h3 className="mb-0 hd">Popular Products</h3>
+                  <h3 className="mb-0 hd">Sản Phẩm Phổ Biến</h3>
                   <p className="text-light text-sml mb-0">
-                    Do not miss the current offers until the end of March.
+                    Đừng bỏ lỡ các ưu đãi mới nhất dành riêng cho bạn!
                   </p>
                 </div>
 
@@ -259,9 +253,9 @@ const Home = () => {
 
               <div className="d-flex align-items-center mt-2">
                 <div className="info w-75">
-                  <h3 className="mb-0 hd">NEW PRODUCTS</h3>
+                  <h3 className="mb-0 hd">SẢN PHẨM MỚI</h3>
                   <p className="text-light text-sml mb-0">
-                    New products with updated stocks.
+                    Sản phẩm mới đã được cập nhật.
                   </p>
                 </div>
               </div>
@@ -293,9 +287,9 @@ const Home = () => {
 
           <div className="d-flex align-items-center mt-4">
             <div className="info">
-              <h3 className="mb-0 hd">featured products</h3>
+              <h3 className="mb-0 hd">Sản phẩm nổi bật</h3>
               <p className="text-light text-sml mb-0">
-                Do not miss the current offers until the end of March.
+                Đừng bỏ lỡ các sản phẩm vô cùng hấp dẫn dành riêng cho bạn!
               </p>
             </div>
           </div>
@@ -373,7 +367,7 @@ const Home = () => {
                 <div className="info">
                   <h3 className="mb-0 hd">{randomCatProducts?.catName}</h3>
                   <p className="text-light text-sml mb-0">
-                    Do not miss the current offers until the end of March.
+                    Đừng bỏ lỡ các sản phẩm vô cùng hấp dẫn dành riêng cho bạn!
                   </p>
                 </div>
 
@@ -458,6 +452,5 @@ const Home = () => {
     </>
   );
 };
-
 
 export default Home;

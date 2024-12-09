@@ -1,29 +1,18 @@
 
-import React, { useEffect, useRef } from "react";
-import { emphasize, styled } from '@mui/material/styles';
+import HomeIcon from '@mui/icons-material/Home';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Chip from '@mui/material/Chip';
-import HomeIcon from '@mui/icons-material/Home';
-import Button from '@mui/material/Button';
-
-import { MdBrandingWatermark } from "react-icons/md";
-import { BiSolidCategoryAlt } from "react-icons/bi";
-import UserAvatarImgComponent from "../../components/userAvatarImg";
 import Rating from '@mui/material/Rating';
-import { FaReply } from "react-icons/fa";
-import { MdFilterVintage } from "react-icons/md";
-import { IoIosColorPalette } from "react-icons/io";
-import { MdPhotoSizeSelectActual } from "react-icons/md";
-import { IoIosPricetags } from "react-icons/io";
-import { FaShoppingCart } from "react-icons/fa";
-import { MdRateReview } from "react-icons/md";
+import { emphasize, styled } from '@mui/material/styles';
+import React, { useEffect, useState } from "react";
+import { BiSolidCategoryAlt } from "react-icons/bi";
 import { BsPatchCheckFill } from "react-icons/bs";
+import { MdBrandingWatermark, MdFilterVintage, MdRateReview } from "react-icons/md";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
-import { fetchDataFromApi } from "../../utils/api";
 import ProductZoom from '../../components/ProductZoom';
+import UserAvatarImgComponent from "../../components/userAvatarImg";
+import { fetchDataFromApi } from "../../utils/api";
 
-//breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
         theme.palette.mode === 'light'
@@ -77,7 +66,7 @@ const ProductDetails = () => {
         <>
             <div className="right-content w-100 productDetails">
                 <div className="card shadow border-0 w-100 flex-row p-4">
-                    <h5 className="mb-0">Product View</h5>
+                    <h5 className="mb-0">Xem Sản Phẩm</h5>
                     <Breadcrumbs aria-label="breadcrumb" className="ml-auto breadcrumbs_">
                         <StyledBreadcrumb
                             component="a"

@@ -1,22 +1,17 @@
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useContext, useEffect, useState } from "react";
-import Logo from "../../assets/images/logo.png";
-import patern from "../../assets/images/pattern.webp";
-import { MyContext } from "../../App";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
-import { IoMdEye } from "react-icons/io";
-import { IoMdEyeOff } from "react-icons/io";
-import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import { MyContext } from "../../App";
 import googleIcon from "../../assets/images/googleIcon.png";
-import { useNavigate } from "react-router-dom";
-import { editData, postData } from "../../utils/api";
-import CircularProgress from "@mui/material/CircularProgress";
-
-import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import Logo from "../../assets/images/logo.png";
+import patern from "../../assets/images/pattern.webp";
 import { firebaseApp } from "../../firebase";
+import { editData, postData } from "../../utils/api";
 
 const auth = getAuth(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
@@ -67,7 +62,7 @@ const Login = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "email can not be blank!",
+        msg: "Email không được để trống!",
       });
       return false;
     }
@@ -77,7 +72,7 @@ const Login = () => {
         context.setAlertBox({
           open: true,
           error: true,
-          msg: "password can not be blank!",
+          msg: "Mật khẩu không được để trống!",
         });
         return false;
       }
@@ -102,7 +97,7 @@ const Login = () => {
               context.setAlertBox({
                 open: true,
                 error: false,
-                msg: "User Login Successfully!",
+                msg: "Đăng nhập thành công!",
               });
 
               setTimeout(() => {
@@ -115,12 +110,11 @@ const Login = () => {
               context.setAlertBox({
                 open: true,
                 error: true,
-                msg: "you are not a admin",
+                msg: "Bạn không phải là quản trị viên!",
               });
               setIsLoading(false);
             }
-          }
-          else {
+          } else {
             if (res?.isVerify === false) {
               setIsLoading(true);
               setIsOpenVerifyEmailBox(true);
@@ -170,9 +164,9 @@ const Login = () => {
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
-        // The signed-in user info.
+        // Thông tin người dùng đã đăng nhập.
         const user = result.user;
-
+  
         const fields = {
           name: user.providerData[0].displayName,
           email: user.providerData[0].email,
@@ -181,26 +175,26 @@ const Login = () => {
           phone: user.providerData[0].phoneNumber,
           isAdmin: true,
         };
-
+  
         postData("/api/user/authWithGoogle", fields).then((res) => {
           try {
             if (res.error !== true) {
               localStorage.setItem("token", res.token);
-
+  
               const user = {
                 name: res.user?.name,
                 email: res.user?.email,
                 userId: res.user?.id,
               };
-
+  
               localStorage.setItem("user", JSON.stringify(user));
-
+  
               context.setAlertBox({
                 open: true,
                 error: false,
                 msg: res.msg,
               });
-
+  
               setTimeout(() => {
                 context.setIsLogin(true);
                 history("/dashboard");
@@ -218,22 +212,22 @@ const Login = () => {
             setIsLoading(false);
           }
         });
-
+  
         context.setAlertBox({
           open: true,
           error: false,
-          msg: "User authentication Successfully!",
+          msg: "Xác thực người dùng thành công!",
         });
-
+  
         // window.location.href = "/";
       })
       .catch((error) => {
-        // Handle Errors here.
+        // Xử lý lỗi ở đây.
         const errorCode = error.code;
         const errorMessage = error.message;
-        // The email of the user's account used.
+        // Email của tài khoản người dùng đã sử dụng.
         const email = error.customData.email;
-        // The AuthCredential type that was used.
+        // Loại AuthCredential đã được sử dụng.
         const credential = GoogleAuthProvider.credentialFromError(error);
         context.setAlertBox({
           open: true,
@@ -243,7 +237,7 @@ const Login = () => {
         // ...
       });
   };
-
+  
   return (
     <>
       <img src={patern} className="loginPatern" />
@@ -251,13 +245,13 @@ const Login = () => {
         <div className="loginBox">
           <Link to={"/"} className="d-flex align-items-center flex-column logo">
             <img src={Logo} />
-            <span className="ml-2">ECOMMERCE</span>
+            <span className="ml-2">GEARZONE</span>
           </Link>
           <div className="wrapper mt-3 card border">
             {isOpenVerifyEmailBox === true && (
-              <h2 className="mb-4">Verify Email</h2>
+              <h2 className="mb-4">Xác minh Email</h2>
             )}
-
+  
             <form onSubmit={signIn}>
               <div
                 className={`form-group position-relative ${
@@ -270,7 +264,7 @@ const Login = () => {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="enter your email"
+                  placeholder="Nhập email của bạn"
                   onFocus={() => focusInput(0)}
                   onBlur={() => setInputIndex(null)}
                   autoFocus
@@ -292,7 +286,7 @@ const Login = () => {
                     <input
                       type={`${isShowPassword === true ? "text" : "password"}`}
                       className="form-control"
-                      placeholder="enter your password"
+                      placeholder="Nhập mật khẩu của bạn"
                       onFocus={() => focusInput(1)}
                       onBlur={() => setInputIndex(null)}
                       name="password"
@@ -312,17 +306,17 @@ const Login = () => {
                       type="submit"
                       className="btn-blue btn-lg w-100 btn-big"
                     >
-                      {isLoading === true ? <CircularProgress /> : "Sign In "}
+                      {isLoading === true ? <CircularProgress /> : "Đăng Nhập"}
                     </Button>
                   </div>
 
                   <div className="form-group text-center mb-0">
                     <Link to={"/forgot-password"} className="link">
-                      FORGOT PASSWORD
+                      Quên Mật Khẩu
                     </Link>
                     <div className="d-flex align-items-center justify-content-center or mt-3 mb-3">
                       <span className="line"></span>
-                      <span className="txt">or</span>
+                      <span className="txt">hoặc</span>
                       <span className="line"></span>
                     </div>
 
@@ -331,8 +325,7 @@ const Login = () => {
                       className="w-100 btn-lg btn-big loginWithGoogle"
                       onClick={signInWithGoogle}
                     >
-                      <img src={googleIcon} width="25px" /> &nbsp; Sign In with
-                      Google
+                      <img src={googleIcon} width="25px" /> &nbsp; Đăng Nhập Với Google
                     </Button>
                   </div>
                 </>
@@ -347,9 +340,9 @@ const Login = () => {
           {isOpenVerifyEmailBox === false && (
             <div className="wrapper mt-3 card border footer p-3">
               <span className="text-center">
-                Don't have an account?
+                Chưa có tài khoản? 
                 <Link to={"/signUp"} className="link color ml-2">
-                  Register
+                  Đăng Kí
                 </Link>
               </span>
             </div>

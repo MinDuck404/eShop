@@ -1,30 +1,28 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
-import "./responsive.css";
-import { BrowserRouter, Route, Router, Routes, json } from "react-router-dom";
-import Home from "./Pages/Home";
-import Listing from "./Pages/Listing";
-import ProductDetails from "./Pages/ProductDetails";
-import Header from "./Components/Header";
-import { createContext, useEffect, useState } from "react";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { createContext, useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "./App.css";
 import Footer from "./Components/Footer";
+import Header from "./Components/Header";
 import ProductModal from "./Components/ProductModal";
 import Cart from "./Pages/Cart";
+import ChangePassword from "./Pages/ChangePassword";
+import Checkout from "./Pages/Checkout";
+import Home from "./Pages/Home";
+import Listing from "./Pages/Listing";
+import MyAccount from "./Pages/MyAccount";
+import MyList from "./Pages/MyList";
+import Orders from "./Pages/Orders";
+import ProductDetails from "./Pages/ProductDetails";
+import SearchPage from "./Pages/Search";
 import SignIn from "./Pages/SignIn";
 import SignUp from "./Pages/SignUp";
-import MyList from "./Pages/MyList";
-import Checkout from "./Pages/Checkout";
-import Orders from "./Pages/Orders";
-import MyAccount from "./Pages/MyAccount";
-import SearchPage from "./Pages/Search";
 import VerifyOTP from "./Pages/VerifyOTP";
-import ChangePassword from "./Pages/ChangePassword";
-
-
+import "./responsive.css";
 import { fetchDataFromApi, postData } from "./utils/api";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
 
 const MyContext = createContext();
 
@@ -289,3 +287,4 @@ function App() {
 export default App;
 
 export { MyContext };
+

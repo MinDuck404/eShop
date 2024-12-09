@@ -1,28 +1,19 @@
-import React, { useContext, useEffect, useState } from "react";
-import Button from "@mui/material/Button";
-
-import { FaPencilAlt } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import Pagination from "@mui/material/Pagination";
-import { MyContext } from "../../App";
-
-import { Link } from "react-router-dom";
-
-import { emphasize, styled } from "@mui/material/styles";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Chip from "@mui/material/Chip";
-import HomeIcon from "@mui/icons-material/Home";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
+import HomeIcon from "@mui/icons-material/Home";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import { emphasize, styled } from "@mui/material/styles";
+import React, { useContext, useEffect, useState } from "react";
+import { IoCloseSharp } from "react-icons/io5";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-import { IoCloseSharp } from "react-icons/io5";
-
-import { deleteData, editData, fetchDataFromApi } from "../../utils/api";
+import { Link } from "react-router-dom";
+import { MyContext } from "../../App";
+import { deleteData, fetchDataFromApi } from "../../utils/api";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-//breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
     theme.palette.mode === "light"
@@ -67,7 +58,7 @@ const SubCategory = () => {
         context.setProgress({
           open: true,
           error: false,
-          msg: "Category Deleted!",
+          msg: "Danh mục đã được xoá!",
         });
       });
     });
@@ -83,7 +74,7 @@ const SubCategory = () => {
         context.setProgress({
           open: true,
           error: false,
-          msg: "Category Deleted!",
+          msg: "Danh mục đã được xoá!",
         });
       });
     });
@@ -93,7 +84,7 @@ const SubCategory = () => {
     <>
       <div className="right-content w-100">
         <div className="card shadow border-0 w-100 flex-row p-4 align-items-center">
-          <h5 className="mb-0">Sub Category List</h5>
+          <h5 className="mb-0">Quản Lý Danh Mục Phụ</h5>
 
           <div className="ml-auto d-flex align-items-center">
             <Breadcrumbs
@@ -115,7 +106,7 @@ const SubCategory = () => {
 
             <Link to="/subCategory/add">
               <Button className="btn-blue  ml-3 pl-3 pr-3">
-                Add Sub Category
+                Thêm Danh Mục Phụ
               </Button>
             </Link>
           </div>
@@ -126,9 +117,9 @@ const SubCategory = () => {
             <table className="table table-bordered table-striped v-align">
               <thead className="thead-dark">
                 <tr>
-                  <th style={{ width: "100px" }}>CATEGORY IMAGE</th>
-                  <th>CATEGORY</th>
-                  <th>SUB CATEGORY</th>
+                  <th style={{ width: "100px" }}>Hình Ảnh</th>
+                  <th>Danh Mục</th>
+                  <th>Danh Mục Phụ</th>
                 </tr>
               </thead>
 

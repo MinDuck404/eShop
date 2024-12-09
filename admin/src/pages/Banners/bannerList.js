@@ -1,27 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import HomeIcon from "@mui/icons-material/Home";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Button from "@mui/material/Button";
-
+import Chip from "@mui/material/Chip";
+import { emphasize, styled } from "@mui/material/styles";
+import React, { useContext, useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import Pagination from "@mui/material/Pagination";
-import { MyContext } from "../../App";
-
-import { Link } from "react-router-dom";
-
-import { emphasize, styled } from "@mui/material/styles";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Chip from "@mui/material/Chip";
-import HomeIcon from "@mui/icons-material/Home";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
-
-import { deleteData, editData, fetchDataFromApi } from "../../utils/api";
+import { Link } from "react-router-dom";
+import { MyContext } from "../../App";
+import { deleteData, fetchDataFromApi } from "../../utils/api";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-//breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
     theme.palette.mode === "light"
@@ -63,7 +56,7 @@ const BannersList = () => {
         context.setProgress({
           open: true,
           error: false,
-          msg: "Banner Deleted!",
+          msg: "Banner đã bị xóa!",
         });
         fetchDataFromApi("/api/banners").then((res) => {
           setSlideList(res);
@@ -71,14 +64,13 @@ const BannersList = () => {
 
         });
       });
-   
   };
 
   return (
     <>
       <div className="right-content w-100">
         <div className="card shadow border-0 w-100 flex-row p-4 align-items-center">
-          <h5 className="mb-0">Banner Slide List</h5>
+          <h5 className="mb-0">Danh sách slide banner</h5>
 
           <div className="ml-auto d-flex align-items-center">
             <Breadcrumbs
@@ -100,7 +92,7 @@ const BannersList = () => {
 
             <Link to="/banners/add">
               <Button className="btn-blue  ml-3 pl-3 pr-3">
-                Add Home Banner
+                Thêm Banner Trang Chủ
               </Button>
             </Link>
           </div>
@@ -111,8 +103,8 @@ const BannersList = () => {
             <table className="table table-bordered table-striped v-align">
               <thead className="thead-dark">
                 <tr>
-                  <th style={{ width: "200px" }}>IMAGE</th>
-                  <th>ACTION</th>
+                  <th style={{ width: "200px" }}>HÌNH ẢNH</th>
+                  <th>TRẠNG THÁI</th>
                 </tr>
               </thead>
 

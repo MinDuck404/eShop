@@ -1,23 +1,20 @@
-import React from "react";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import HomeIcon from "@mui/icons-material/Home";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { emphasize, styled } from "@mui/material/styles";
-import Chip from "@mui/material/Chip";
-import { useContext, useEffect, useState } from "react";
-import { FaCloudUploadAlt } from "react-icons/fa";
+import HomeIcon from "@mui/icons-material/Home";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import { emphasize, styled } from "@mui/material/styles";
+import React, { useContext, useEffect, useState } from "react";
+import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { MyContext } from "../../App";
 import {
   deleteData,
   deleteImages,
-  editData,
   fetchDataFromApi,
   postData,
-  uploadImage,
+  uploadImage
 } from "../../utils/api";
-import { useNavigate } from "react-router-dom";
-import { FaRegImages } from "react-icons/fa";
-import { MyContext } from "../../App";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import { IoCloseSharp } from "react-icons/io5";
@@ -25,7 +22,6 @@ import { IoCloseSharp } from "react-icons/io5";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 
-//breadcrumb code
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
     theme.palette.mode === "light"
@@ -95,9 +91,7 @@ const AddCategory = () => {
       console.log(files);
       setUploading(true);
 
-      //const fd = new FormData();
       for (var i = 0; i < files.length; i++) {
-        // Validate file type
         if (
           files[i] &&
           (files[i].type === "image/jpeg" ||
@@ -112,7 +106,7 @@ const AddCategory = () => {
           context.setAlertBox({
             open: true,
             error: true,
-            msg: "Please select a valid JPG or PNG image file.",
+            msg: "Vui lòng chọn tệp hình ảnh hợp lệ định dạng JPG hoặc PNG.",
           });
 
           return false;
@@ -137,8 +131,6 @@ const AddCategory = () => {
               item?.images.length !== 0 &&
                 item?.images?.map((img) => {
                   img_arr.push(img);
-
-                  //console.log(img)
                 });
             });
 
@@ -165,7 +157,7 @@ const AddCategory = () => {
             context.setAlertBox({
               open: true,
               error: false,
-              msg: "Images Uploaded!",
+              msg: "Hình ảnh đã được tải lên!",
             });
           }, 500);
         }
@@ -180,13 +172,12 @@ const AddCategory = () => {
       context.setAlertBox({
         open: true,
         error: false,
-        msg: "Image Deleted!",
+        msg: "Hình ảnh đã bị xóa!",
       });
     });
 
     if (imgIndex > -1) {
-      // only splice array when item is found
-      previews.splice(index, 1); // 2nd parameter means remove one item only
+      previews.splice(index, 1);
     }
   };
 
@@ -224,7 +215,7 @@ const AddCategory = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Please fill all the details",
+        msg: "Vui lòng điền đầy đủ thông tin",
       });
       return false;
     }
@@ -234,7 +225,7 @@ const AddCategory = () => {
     <>
       <div className="right-content w-100">
         <div className="card shadow border-0 w-100 flex-row p-4 mt-2">
-          <h5 className="mb-0">Add Category</h5>
+          <h5 className="mb-0">Thêm Danh Mục</h5>
           <Breadcrumbs aria-label="breadcrumb" className="ml-auto breadcrumbs_">
             <StyledBreadcrumb
               component="a"
@@ -261,7 +252,7 @@ const AddCategory = () => {
             <div className="col-sm-9">
               <div className="card p-4 mt-0">
                 <div className="form-group">
-                  <h6>Category Name</h6>
+                  <h6>Tên Danh Mục</h6>
                   <input
                     type="text"
                     name="name"
@@ -271,7 +262,7 @@ const AddCategory = () => {
                 </div>
 
                 <div className="form-group">
-                  <h6>Color</h6>
+                  <h6>Màu sắc</h6>
                   <input
                     type="text"
                     name="color"
@@ -281,7 +272,7 @@ const AddCategory = () => {
                 </div>
 
                 <div className="imagesUploadSec">
-                  <h5 class="mb-4">Media And Published</h5>
+                  <h5 class="mb-4">Tải Lên</h5>
 
                   <div className="imgUploadBox d-flex align-items-center">
                     {previews?.length !== 0 &&
@@ -310,7 +301,7 @@ const AddCategory = () => {
                       {uploading === true ? (
                         <div className="progressBar text-center d-flex align-items-center justify-content-center flex-column">
                           <CircularProgress />
-                          <span>Uploading...</span>
+                          <span>Đang tải lên...</span>
                         </div>
                       ) : (
                         <>
@@ -324,7 +315,7 @@ const AddCategory = () => {
                           />
                           <div className="info">
                             <FaRegImages />
-                            <h5>image upload</h5>
+                            <h5>Hình ảnh</h5>
                           </div>
                         </>
                       )}
@@ -341,7 +332,7 @@ const AddCategory = () => {
                     {isLoading === true ? (
                       <CircularProgress color="inherit" className="loader" />
                     ) : (
-                      "PUBLISH AND VIEW"
+                      "TẢI LÊN VÀ XEM"
                     )}{" "}
                   </Button>
                 </div>
