@@ -127,36 +127,42 @@ history("/signIn");
                                                 {
                                                     cartData?.length !== 0 && cartData?.map((item, index) => {
                                                         return (
-                                                            <tr>
-                                                                <td width="35%">
-                                                                    <Link to={`/product/${item?.productId}`}>
-                                                                        <div className="d-flex align-items-center cartItemimgWrapper">
-                                                                            <div className="imgWrapper">
-                                                                                <img src={item?.image}
-                                                                                    className="w-100" alt={item?.productTitle} />
-                                                                            </div>
+                                                        <tr key={index}>
+                                                            <td width="35%">
+                                                            <Link to={`/product/${item?.productId}`}>
+                                                                <div className="d-flex align-items-center cartItemimgWrapper">
+                                                                <div className="imgWrapper">
+                                                                    <img src={item?.image} className="w-100" alt={item?.productTitle} />
+                                                                </div>
 
-                                                                            <div className="info px-3">
-                                                                                <h6>
-                                                                                    {item?.productTitle?.substr(0, 30) + '...'}
-
-                                                                                </h6>
-                                                                                <Rating name="read-only" value={item?.rating} readOnly size="small" />
-                                                                            </div>
-
-                                                                        </div>
-                                                                    </Link>
-                                                                </td>
-                                                                <td width="15%">Rs {item?.price}</td>
-                                                                <td width="25%">
-                                                                    <QuantityBox quantity={quantity} item={item} selectedItem={selectedItem} value={item?.quantity} />
-                                                                </td>
-                                                                <td width="15%">Rs. {item?.subTotal}</td>
-                                                                <td width="10%"><span className="remove" onClick={() => removeItem(item?._id)}><IoIosClose /></span></td>
-                                                            </tr>
+                                                                <div className="info px-3">
+                                                                    <h6>
+                                                                    {item?.productTitle?.substr(0, 30) + '...'}
+                                                                    </h6>
+                                                                    <Rating name="read-only" value={item?.rating} readOnly size="small" />
+                                                                </div>
+                                                                </div>
+                                                            </Link>
+                                                            </td>
+                                                            <td width="15%">
+                                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item?.price)}
+                                                            </td>
+                                                            <td width="25%">
+                                                            <QuantityBox quantity={quantity} item={item} selectedItem={selectedItem} value={item?.quantity} />
+                                                            </td>
+                                                            <td width="15%">
+                                                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item?.subTotal)}
+                                                            </td>
+                                                            <td width="10%">
+                                                            <span className="remove" onClick={() => removeItem(item?._id)}>
+                                                                <IoIosClose />
+                                                            </span>
+                                                            </td>
+                                                        </tr>
                                                         )
                                                     })
                                                 }
+
 
 
                                             </tbody>
@@ -173,7 +179,7 @@ history("/signIn");
                                             <span className="ml-auto text-red font-weight-bold">
                                             {
                                                 (context.cartData?.length !== 0 ?
-                                                    context.cartData?.map(item => parseInt(item.price) * item.quantity).reduce((total, value) => total + value, 0) : 0)?.toLocaleString('en-US', { style: 'currency', currency: 'INR' })
+                                                    context.cartData?.map(item => parseInt(item.price) * item.quantity).reduce((total, value) => total + value, 0) : 0)?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
                                             }
                                             </span>
                                         </div>
@@ -193,7 +199,7 @@ history("/signIn");
                                             <span className="ml-auto text-red font-weight-bold">
                                             {
                                                 (context.cartData?.length !== 0 ?
-                                                    context.cartData?.map(item => parseInt(item.price) * item.quantity).reduce((total, value) => total + value, 0) : 0)?.toLocaleString('en-US', { style: 'currency', currency: 'INR' })
+                                                    context.cartData?.map(item => parseInt(item.price) * item.quantity).reduce((total, value) => total + value, 0) : 0)?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
                                             }
                                             </span>
                                         </div>

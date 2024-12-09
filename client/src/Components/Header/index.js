@@ -259,7 +259,7 @@ const Header = () => {
                                 )
                                 .reduce((total, value) => total + value, 0)
                             : 0
-                          )?.toLocaleString("en-US", {
+                          )?.toLocaleString("vi-VN", {
                             style: "currency",
                             currency: "VND",
                           })}
