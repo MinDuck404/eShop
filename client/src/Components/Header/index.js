@@ -261,7 +261,7 @@ const Header = () => {
                             : 0
                           )?.toLocaleString("en-US", {
                             style: "currency",
-                            currency: "USD",
+                            currency: "VND",
                           })}
                         </span>
                       )}

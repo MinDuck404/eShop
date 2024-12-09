@@ -104,7 +104,7 @@ history("/signIn");
             <section className="section cartPage">
                 <div className="container">
                     <h2 className="hd mb-1">Giỏ Hàng Của Bạn</h2>
-                    <p>Có <b className="text-red">{cartData?.length}</b>sản phẩm trong giỏ hàng</p>
+                    <p>Có <b className="text-red">{cartData?.length}</b> sản phẩm trong giỏ hàng</p>
 
                     {
                         cartData?.length !== 0 ?

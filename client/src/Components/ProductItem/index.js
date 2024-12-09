@@ -229,10 +229,13 @@ const ProductItem = (props) => {
           />
 
           <div className="d-flex">
-            <span className="oldPrice"> {props?.item?.oldPrice}</span>
-            <span className="netPrice text-danger ml-2">
-              {props?.item?.price}
+            <span className="oldPrice">
+              {props?.item?.oldPrice?.toLocaleString("vi-VN")}₫
             </span>
+            <span className="netPrice text-danger ml-2">
+              {props?.item?.price?.toLocaleString("vi-VN")}₫
+            </span>
+
           </div>
         </div>
       </div>

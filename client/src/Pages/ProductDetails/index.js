@@ -267,16 +267,18 @@ const ProductDetails = () => {
                         className="text-light cursor ml-2"
                         onClick={gotoReviews}
                       >
-                        {reviewsData?.length} Review
+                        {reviewsData?.length} Đánh giá
                       </span>
                     </div>
                   </li>
                 </ul>
 
                 <div className="d-flex info mb-3">
-                  <span className="oldPrice">Rs: {productData?.oldPrice}</span>
+                  <span className="oldPrice">
+                    {productData?.oldPrice?.toLocaleString("vi-VN")}₫
+                  </span>
                   <span className="netPrice text-danger ml-2">
-                    Rs: {productData?.price}
+                    {productData?.price?.toLocaleString("vi-VN")}₫
                   </span>
                 </div>
 
@@ -286,7 +288,7 @@ const ProductDetails = () => {
                   <span className="badge badge-danger">HẾT HÀNG</span>
                 )}
 
-                <p className="mt-3">Rs: {productData?.description}</p>
+                <p className="mt-3">{productData?.description}</p>
 
                 {productData?.productRam?.length !== 0 && (
                   <div className="productSize d-flex align-items-center">
@@ -380,15 +382,15 @@ const ProductDetails = () => {
                     >
                       <BsCartFill /> &nbsp;
                       {context.addingInCart === true
-                        ? "adding..."
-                        : " Add to cart"}
+                        ? "Đang thêm..."
+                        : " Thêm vào giỏ"}
                     </Button>
 
                     <Tooltip
                       title={`${
                         isAddedToMyList === true
-                          ? "Added to Wishlist"
-                          : "Add to Wishlist"
+                          ? "Đã thêm vào Wishlist"
+                          : "Thêm vào Wishlist"
                       }`}
                       placement="top"
                     >
@@ -404,7 +406,7 @@ const ProductDetails = () => {
                       </Button>
                     </Tooltip>
 
-                    <Tooltip title="Add to Compare" placement="top">
+                    <Tooltip title="Thêm để so sánh" placement="top">
                       <Button className="btn-blue btn-lg btn-big btn-circle ml-2">
                         <MdOutlineCompareArrows />
                       </Button>
@@ -427,7 +429,7 @@ const ProductDetails = () => {
                       setActiveTabs(0);
                     }}
                   >
-                    Description
+                    Thông tin sản phẩm
                   </Button>
                 </li>
                 <li className="list-inline-item">
@@ -447,7 +449,7 @@ const ProductDetails = () => {
                       setActiveTabs(2);
                     }}
                   >
-                    Reviews ({reviewsData?.length})
+                    Đánh giá ({reviewsData?.length})
                   </Button>
                 </li>
               </ul>
@@ -557,7 +559,7 @@ const ProductDetails = () => {
                 <div className="tabContent">
                   <div className="row">
                     <div className="col-md-8">
-                      <h3>Customer questions & answers</h3>
+                      <h3>Câu hỏi & câu trả lời của khách hàng</h3>
                       <br />
 
                       {reviewsData?.length !== 0 &&
@@ -597,11 +599,11 @@ const ProductDetails = () => {
                       <br className="res-hide" />
 
                       <form className="reviewForm" onSubmit={addReview}>
-                        <h4>Add a review</h4>
+                        <h4>Đánh giá sản phẩm</h4>
                         <div className="form-group">
                           <textarea
                             className="form-control shadow"
-                            placeholder="Write a Review"
+                            placeholder="Viết đánh giá"
                             name="review"
                             value={reviews.review}
                             onChange={onChangeInput}
@@ -633,7 +635,7 @@ const ProductDetails = () => {
                                 className="loader"
                               />
                             ) : (
-                              "Submit Review"
+                              "Đăng"
                             )}
                           </Button>
                         </div>

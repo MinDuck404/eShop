@@ -336,14 +336,25 @@ const Checkout = () => {
                       {cartData.map((item, index) => (
                         <tr key={index}>
                           <td>{item.name}</td>
-                          <td>{parseInt(item.price) * item.quantity}</td>
+                          <td>
+                            {new Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            }).format(parseInt(item.price) * item.quantity)}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
 
                   <div className="total">
-                    <h6>Tổng cộng: {totalAmount}</h6>
+                    <h6>
+                      Tổng cộng:{" "}
+                      {new Intl.NumberFormat("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      }).format(totalAmount)}
+                    </h6>
                   </div>
 
                   <Button
