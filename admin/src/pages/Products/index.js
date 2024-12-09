@@ -368,17 +368,19 @@ const Products = () => {
                               {item?.subCatName}
                             </TableCell>
                             <TableCell style={{ minWidth: columns.minWidth }}>
-                              <span className="badge badge-secondary">
+                              <span>
                                 {item?.brand}
                               </span>
                             </TableCell>
                             <TableCell style={{ minWidth: columns.minWidth }}>
-                              <div style={{ width: "70px" }}>
-                                <del className="old">Rs {item?.oldPrice}</del>
-                                <span className="new text-danger  d-block w-100">
-                                  Rs {item?.price}
-                                </span>
-                              </div>
+                            <div style={{ width: "95px" }}>
+                              <del className="old">
+                                {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(item?.oldPrice)}
+                              </del>
+                              <span className="new text-danger d-block w-100">
+                                {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(item?.price)}
+                              </span>
+                            </div>
                             </TableCell>
                             <TableCell style={{ minWidth: columns.minWidth }}>
                               <Rating

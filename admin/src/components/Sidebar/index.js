@@ -94,6 +94,16 @@ const Sidebar = () => {
               }`}
             >
               <ul className="submenu">
+              <li>
+                  <NavLink
+                    exact
+                    activeClassName="is-active"
+                    to="/homeBannerSlide/list"
+                    onClick={() => context.setIsOpenNav(false)}
+                  >
+                    Quản lý Home Slides
+                  </NavLink>
+                </li>
                 <li>
                   <NavLink
                     exact
@@ -101,17 +111,7 @@ const Sidebar = () => {
                     to="/homeBannerSlide/add"
                     onClick={() => context.setIsOpenNav(false)}
                   >
-                    Add Home Banner Slide
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink
-                    exact
-                    activeClassName="is-active"
-                    to="/homeBannerSlide/list"
-                    onClick={() => context.setIsOpenNav(false)}
-                  >
-                    Home Slides List
+                    Thêm Home Banner Slide
                   </NavLink>
                 </li>
               </ul>

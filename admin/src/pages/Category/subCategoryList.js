@@ -154,7 +154,7 @@ const SubCategory = () => {
                             {item?.children?.length !== 0 &&
                               item?.children?.map((subCat, index) => {
                                 return (
-                                  <span className="badge badge-primary mx-1">
+                                  <span className="mx-1">
                                     {subCat.name}{" "}
                                     <IoCloseSharp
                                       className="cursor"

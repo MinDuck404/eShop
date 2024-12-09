@@ -671,6 +671,9 @@ body.dark .close_ svg{font-size: 22px; color: #000 !important; opacity: 0.7;}
 
 .cursor{cursor: pointer;}
 
+.badge {
+  color: black; 
+}
 
 
 .productZoom{ width: 100%; height: auto;  padding: 0px; overflow: hidden; border-radius: 15px;}
