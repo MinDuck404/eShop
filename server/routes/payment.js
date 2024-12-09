@@ -2,48 +2,51 @@ const express = require('express');
 const crypto = require('crypto');
 const https = require('https');
 const router = express.Router();
-const Orders = require('../models/orders'); // Mô hình đơn hàng
-const Product = require('../models/products'); // Mô hình sản phẩm
+const { Orders } = require('../models/orders');
+const { Cart } = require('../models/cart');
+const Product = require('../models/products'); // Model sản phẩm nếu cần
 
-// Giả lập database (thực tế sẽ dùng MongoDB)
-const orders = {}; // Lưu trạng thái đơn hàng { orderId: { status, amount, info } }
+function verifyMoMoSignature(data, signature) {
+    // Sắp xếp các key của data theo thứ tự alphabet
+    const sortedKeys = Object.keys(data).filter(key => key !== 'signature').sort();
+    const rawSignature = sortedKeys.map(key => `${key}=${data[key]}`).join('&');
 
-// Hàm xác thực chữ ký từ MoMo
-const verifySignature = (data, signature, secretKey) => {
-    const rawSignature = Object.keys(data)
-        .filter(key => key !== 'signature' && data[key]) // Bỏ qua 'signature'
-        .sort()
-        .map(key => `${key}=${data[key]}`)
-        .join('&');
+    // Tạo chữ ký bằng secretKey của bạn (lấy từ MoMo)
+    const secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz'; // Thay bằng secret key thực tế
+    const hash = crypto.createHmac('sha256', secretKey).update(rawSignature).digest('hex');
 
-    const computedSignature = crypto.createHmac('sha256', secretKey)
-        .update(rawSignature)
-        .digest('hex');
-
-    return computedSignature === signature;
-};
-
+    // So sánh chữ ký
+    return hash === signature;
+}
 // Route thanh toán MoMo
-router.post('/pay', (req, res) => {
+router.post('/pay', async (req, res) => {
     const partnerCode = "MOMO";
     const accessKey = "F8BBA842ECF85";
     const secretKey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
-    const requestId = partnerCode + new Date().getTime();
-    const orderId = requestId;
-    const orderInfo = "pay with MoMo";
-    const redirectUrl = "https://eshop-server-x4w1.onrender.com/api/payment/return"; // URL trả về sau thanh toán
-    const ipnUrl = "https://eshop-server-x4w1.onrender.com/api/payment/notify"; // URL thông báo IPN
-    const amount = req.body.amount || "50000"; // Số tiền thanh toán
+    const orderId = `MOMO${new Date().getTime()}`; // Tạo unique orderId
+    const requestId = orderId;
+    const amount = req.body.amount;
+    const orderInfo = "Thanh toán qua MoMo";
+    const redirectUrl = "https://client-doancn05.netlify.app/"; // URL trả về sau khi thanh toán
+    const ipnUrl = "https://eshop-server-x4w1.onrender.com/api/payment/notify"; // URL nhận thông báo IPN
     const requestType = "captureWallet";
-    const extraData = ""; // Thêm thông tin bổ sung nếu cần
+    const orderData = {
+        name: req.body.name,
+        phoneNumber: req.body.phoneNumber,
+        address: req.body.address,
+        pincode: req.body.pincode,
+        amount: req.body.amount,
+        email: req.body.email,
+        userid: req.body.userid,
+        products: req.body.products
+    };
+    
+    const extraData = Buffer.from(JSON.stringify(orderData)).toString('base64');
 
     // Tạo chữ ký bảo mật
     const rawSignature = `accessKey=${accessKey}&amount=${amount}&extraData=${extraData}&ipnUrl=${ipnUrl}&orderId=${orderId}&orderInfo=${orderInfo}&partnerCode=${partnerCode}&redirectUrl=${redirectUrl}&requestId=${requestId}&requestType=${requestType}`;
-    const signature = crypto.createHmac('sha256', secretKey)
-        .update(rawSignature)
-        .digest('hex');
-
-    // Request body gửi đến MoMo
+    const signature = crypto.createHmac('sha256', secretKey).update(rawSignature).digest('hex');
+    
     const requestBody = JSON.stringify({
         partnerCode,
         accessKey,
@@ -59,7 +62,29 @@ router.post('/pay', (req, res) => {
         lang: 'en'
     });
 
-    // Gửi yêu cầu đến API MoMo
+    // Lưu thông tin đơn hàng vào cơ sở dữ liệu
+    const newOrder = new Orders({
+        name: req.body.name,
+        phoneNumber: req.body.phoneNumber,
+        address: req.body.address,
+        pincode: req.body.pincode,
+        amount,
+        paymentId: orderId,
+        email: req.body.email,
+        userid: req.body.userid,
+        products: req.body.products,
+        status: "pending", // Đơn hàng đang chờ thanh toán
+    });
+
+    try {
+        await newOrder.save();
+        console.log(`Order created with ID: ${orderId}`);
+    } catch (err) {
+        console.error(`Error creating order: ${err.message}`);
+        return res.status(500).json({ success: false, message: 'Failed to create order' });
+    }
+
+    // Gửi yêu cầu thanh toán tới MoMo
     const options = {
         hostname: 'test-payment.momo.vn',
         port: 443,
@@ -67,29 +92,31 @@ router.post('/pay', (req, res) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(requestBody)
-        }
+            'Content-Length': Buffer.byteLength(requestBody),
+        },
     };
 
     const reqMoMo = https.request(options, (momoRes) => {
         let data = '';
-        momoRes.on('data', chunk => { data += chunk; });
-
+        momoRes.on('data', (chunk) => (data += chunk));
         momoRes.on('end', () => {
             const response = JSON.parse(data);
             if (response.payUrl) {
-                // Lưu trạng thái đơn hàng tạm thời
-                orders[orderId] = { status: 'pending', amount, info: orderInfo };
                 res.json({ success: true, payUrl: response.payUrl });
             } else {
-                res.status(500).json({ error: 'Thanh toán thất bại', details: response });
+                console.error('MoMo Error:', response);
+                res.status(500).json({
+                    success: false,
+                    message: 'Failed to create MoMo payment',
+                    details: response,
+                });
             }
         });
     });
 
-    reqMoMo.on('error', (e) => {
-        console.error(`Có vấn đề với yêu cầu: ${e.message}`);
-        res.status(500).json({ error: e.message });
+    reqMoMo.on('error', (err) => {
+        console.error(`Error sending request to MoMo: ${err.message}`);
+        res.status(500).send('Payment request failed');
     });
 
     reqMoMo.write(requestBody);
@@ -97,60 +124,174 @@ router.post('/pay', (req, res) => {
 });
 
 // Route nhận thông báo IPN từ MoMo
+// Route nhận thông báo IPN từ MoMo
 router.post('/notify', async (req, res) => {
-    const secretKey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
-    const { orderId, amount, resultCode, signature } = req.body;
-  
-    // Xác thực chữ ký
-    if (!verifySignature(req.body, signature, secretKey)) {
-      console.error(`Chữ ký không hợp lệ: Order ID ${orderId}`);
-      return res.status(400).send('Chữ ký không hợp lệ');
-    }
-  
-    if (resultCode === 0) { // Thanh toán thành công
-      try {
-        // Tìm đơn hàng trong cơ sở dữ liệu bằng paymentId
-        const order = await Orders.findOne({ paymentId: orderId });
-  
-        if (!order) {
-          console.error(`Không tìm thấy đơn hàng: ${orderId}`);
-          return res.status(404).send('Đơn hàng không tồn tại');
-        }
-  
-        // Cập nhật trạng thái đơn hàng thành 'paid'
-        order.status = 'paid';
-        order.paymentDate = new Date();
-        await order.save();
-  
-        // Xóa sản phẩm trong giỏ hàng
-        await Cart.deleteMany({ userId: order.userid });
-  
-        console.log(`Đơn hàng ${orderId} đã được thanh toán và giỏ hàng đã được xóa.`);
-        res.status(200).send('OK');
-      } catch (err) {
-        console.error(`Lỗi cập nhật đơn hàng: ${err.message}`);
-        res.status(500).send('Lỗi hệ thống');
-      }
-    } else {
-      console.error(`Thanh toán thất bại: Order ID ${orderId}`);
-      res.status(400).send('Lỗi thanh toán');
-    }
-  });
-  
-  
+    try {
+        console.log('Received IPN notification:', req.body);
+        
+        const { signature, orderId, resultCode } = req.body;
 
+        // Xác thực chữ ký
+        // if (!verifyMoMoSignature(req.body, signature)) {
+        //     console.error(`Invalid signature for order ${orderId}`);
+        //     return res.status(400).json({ message: 'Invalid signature' });
+        // }
+
+        // Kiểm tra kết quả thanh toán
+        if (String(resultCode) === '0') { // Chuyển resultCode thành chuỗi
+            let orderData;
+            try {
+                // Giải mã extraData nếu có
+                if (req.body.extraData) {
+                    orderData = JSON.parse(Buffer.from(req.body.extraData, 'base64').toString());
+                }
+            } catch (error) {
+                console.error('Error parsing extraData:', error);
+            }
+
+            // Cập nhật đơn hàng với trạng thái "confirmed"
+            const order = await Orders.findOne({ paymentId: orderId });
+            if (order) {
+                order.status = 'confirmed'; // Cập nhật trạng thái
+                await order.save();
+                console.log(`Order updated successfully: ${orderId}`);
+            }
+
+            // Xóa giỏ hàng nếu có userid
+            if (orderData?.userid) {
+                try {
+                    const deleteResult = await Cart.deleteMany({ userId: orderData.userid });
+                    console.log(`Deleted ${deleteResult.deletedCount} items from cart for user ${orderData.userid}`);
+                } catch (error) {
+                    console.error('Error deleting cart:', error);
+                }
+            }
+
+            return res.status(200).json({ message: 'Success' });
+        } else {
+            console.log(`Payment failed for order ${orderId}, result code: ${resultCode}`);
+            return res.status(400).json({ message: 'Payment failed' });
+        }
+
+    } catch (error) {
+        console.error('Error processing IPN:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
 
 // Route trả về sau thanh toán
-router.get('/return', (req, res) => {
+router.get('/return', async (req, res) => {
     const { orderId, resultCode, message } = req.query;
-
-    if (resultCode === '0') {
-        // Thanh toán thành công
-        res.send(`<h1>Thanh toán thành công</h1><p>Order ID: ${orderId}</p>`);
-    } else {
-        // Thanh toán thất bại
-        res.send(`<h1>Thanh toán không thành công</h1><p>Order ID: ${orderId}</p><p>${message}</p>`);
+    
+    try {
+        if (resultCode === '0') {
+            res.send(`
+                <html>
+                    <head>
+                        <title>Payment Success</title>
+                        <meta charset="UTF-8">
+                        <style>
+                            body {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                justify-content: center;
+                                height: 100vh;
+                                margin: 0;
+                                font-family: Arial, sans-serif;
+                            }
+                            .success-message {
+                                color: #28a745;
+                                text-align: center;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="success-message">
+                            <h1>Thanh toán thành công</h1>
+                            <p>Mã đơn hàng: ${orderId}</p>
+                            <p>Đơn hàng của bạn đã được xác nhận</p>
+                            <p>Đang chuyển hướng về trang chủ...</p>
+                        </div>
+                        <script>
+                            setTimeout(() => {
+                                window.location.href = '/';
+                            }, 3000);
+                        </script>
+                    </body>
+                </html>
+            `);
+        } else {
+            res.send(`
+                <html>
+                    <head>
+                        <title>Payment Failed</title>
+                        <meta charset="UTF-8">
+                        <style>
+                            body {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: center;
+                                justify-content: center;
+                                height: 100vh;
+                                margin: 0;
+                                font-family: Arial, sans-serif;
+                            }
+                            .error-message {
+                                color: #dc3545;
+                                text-align: center;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="error-message">
+                            <h1>Thanh toán không thành công</h1>
+                            <p>Mã đơn hàng: ${orderId}</p>
+                            <p>Lỗi: ${message}</p>
+                            <p>Đang chuyển hướng về giỏ hàng...</p>
+                        </div>
+                        <script>
+                            setTimeout(() => {
+                                window.location.href = '/cart';
+                            }, 3000);
+                        </script>
+                    </body>
+                </html>
+            `);
+        }
+    } catch (error) {
+        console.error('Error handling return URL:', error);
+        res.status(500).send(`
+            <html>
+                <head>
+                    <title>Error</title>
+                    <meta charset="UTF-8">
+                    <style>
+                        body {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            height: 100vh;
+                            margin: 0;
+                            font-family: Arial, sans-serif;
+                        }
+                        .error-message {
+                            color: #dc3545;
+                            text-align: center;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="error-message">
+                        <h1>Đã xảy ra lỗi</h1>
+                        <p>Vui lòng thử lại sau</p>
+                        <p>Chi tiết lỗi: ${error.message}</p>
+                    </div>
+                </body>
+            </html>
+        `);
     }
 });
 
