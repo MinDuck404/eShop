@@ -1,10 +1,12 @@
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import React, { useContext, useEffect, useState } from "react";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 import { IoBagCheckOutline } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+
 import { MyContext } from "../../App";
-import { deleteData, fetchDataFromApi, postData } from "../../utils/api";
+import { fetchDataFromApi, postData, deleteData } from "../../utils/api";
+
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
   const [formFields, setFormFields] = useState({
@@ -24,7 +26,7 @@ const Checkout = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    
+
     context.setEnableFilterTab(false);
     const user = JSON.parse(localStorage.getItem("user"));
     fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
@@ -52,14 +54,12 @@ const Checkout = () => {
   const checkout = (e) => {
     e.preventDefault();
 
-    console.log(cartData);
-
-    console.log(formFields);
+    // Kiểm tra thông tin form
     if (formFields.fullName === "") {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Vui lòng điền tên đầy đủ",
+        msg: "Vui lòng nhập Họ và Tên",
       });
       return false;
     }
@@ -68,7 +68,7 @@ const Checkout = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Vui lòng điền quốc gia",
+        msg: "Vui lòng nhập Quốc gia",
       });
       return false;
     }
@@ -77,7 +77,7 @@ const Checkout = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Vui lòng điền địa chỉ",
+        msg: "Vui lòng nhập Địa chỉ Đường",
       });
       return false;
     }
@@ -86,7 +86,7 @@ const Checkout = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Vui lòng điền địa chỉ đường",
+        msg: "Vui lòng nhập Thông tin Địa chỉ bổ sung",
       });
       return false;
     }
@@ -95,7 +95,7 @@ const Checkout = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Vui lòng điền thành phố",
+        msg: "Vui lòng nhập Thành phố",
       });
       return false;
     }
@@ -104,7 +104,7 @@ const Checkout = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Vui lòng điền tiểu bang",
+        msg: "Vui lòng nhập Tỉnh/Thành",
       });
       return false;
     }
@@ -113,7 +113,7 @@ const Checkout = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Vui lòng điền mã bưu điện",
+        msg: "Vui lòng nhập Mã Bưu chính",
       });
       return false;
     }
@@ -122,7 +122,7 @@ const Checkout = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Vui lòng điền số điện thoại",
+        msg: "Vui lòng nhập Số điện thoại",
       });
       return false;
     }
@@ -131,7 +131,7 @@ const Checkout = () => {
       context.setAlertBox({
         open: true,
         error: true,
-        msg: "Vui lòng điền email",
+        msg: "Vui lòng nhập Email",
       });
       return false;
     }
@@ -148,58 +148,33 @@ const Checkout = () => {
       }),
     };
 
-    var options = {
-      key: process.env.REACT_APP_RAZORPAY_KEY_ID,
-      key_secret: process.env.REACT_APP_RAZORPAY_KEY_SECRET,
-      amount: parseInt(totalAmount * 100),
-      currency: "INR",
-      order_receipt: "order_rcptid_" + formFields.fullName,
-      name: "E-Bharat",
-      description: "for testing purpose",
-      handler: function (response) {
-        console.log(response);
+    const user = JSON.parse(localStorage.getItem("user"));
 
-        const paymentId = response.razorpay_payment_id;
-
-        const user = JSON.parse(localStorage.getItem("user"));
-
-        const payLoad = {
-          name: addressInfo.name,
-          phoneNumber: formFields.phoneNumber,
-          address: addressInfo.address,
-          pincode: addressInfo.pincode,
-          amount: parseInt(totalAmount),
-          paymentId: paymentId,
-          email: user.email,
-          userid: user.userId,
-          products: cartData,
-          date:addressInfo?.date
-        };
-
-        console.log(payLoad)
-          
-
-        postData(`/api/orders/create`, payLoad).then((res) => {
-fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
-            res?.length!==0 && res?.map((item)=>{
-                deleteData(`/api/cart/${item?.id}`).then((res) => {
-                })
-            })
-                setTimeout(()=>{
-                    context.getCartData();
-                },1000);
-                history("/orders");
-          });
-        });
-      },
-
-      theme: {
-        color: "#3399cc",
-      },
+    const payLoad = {
+      name: addressInfo.name,
+      phoneNumber: formFields.phoneNumber,
+      address: addressInfo.address,
+      pincode: addressInfo.pincode,
+      amount: parseInt(totalAmount),
+      email: user.email,
+      userid: user.userId,
+      products: cartData,
+      date: addressInfo.date,
     };
 
-    var pay = new window.Razorpay(options);
-    pay.open();
+    // Gửi yêu cầu thanh toán tới MoMo
+    postData(`/api/payment/pay`, payLoad).then((res) => {
+      if (res.success) {
+        // Chuyển hướng tới URL thanh toán MoMo
+        window.location.href = res.payUrl;
+      } else {
+        context.setAlertBox({
+          open: true,
+          error: true,
+          msg: "Thanh toán thất bại, vui lòng thử lại.",
+        });
+      }
+    });
   };
 
   return (
@@ -208,13 +183,13 @@ fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
         <form className="checkoutForm" onSubmit={checkout}>
           <div className="row">
             <div className="col-md-8">
-              <h2 className="hd">CHI TIẾT THANH TOÁN</h2>
+              <h2 className="hd">THÔNG TIN THANH TOÁN</h2>
 
               <div className="row mt-3">
                 <div className="col-md-6">
                   <div className="form-group">
                     <TextField
-                      label="Full Name *"
+                      label="Họ và Tên *"
                       variant="outlined"
                       className="w-100"
                       size="small"
@@ -227,7 +202,7 @@ fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
                 <div className="col-md-6">
                   <div className="form-group">
                     <TextField
-                      label="Country *"
+                      label="Quốc gia *"
                       variant="outlined"
                       className="w-100"
                       size="small"
@@ -238,13 +213,13 @@ fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
                 </div>
               </div>
 
-              <h6>Tên đường</h6>
+              <h6>Địa chỉ *</h6>
 
               <div className="row">
                 <div className="col-md-12">
                   <div className="form-group">
                     <TextField
-                      label="House number and street name"
+                      label="Số nhà và tên đường"
                       variant="outlined"
                       className="w-100"
                       size="small"
@@ -255,7 +230,7 @@ fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
 
                   <div className="form-group">
                     <TextField
-                      label="Apartment, suite, unit, etc. (optional)"
+                      label="Căn hộ, phòng, v.v. (tuỳ chọn)"
                       variant="outlined"
                       className="w-100"
                       size="small"
@@ -266,13 +241,13 @@ fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
                 </div>
               </div>
 
-              <h6>Thị trấn / Thành phố *</h6>
+              <h6>Thành phố *</h6>
 
               <div className="row">
                 <div className="col-md-12">
                   <div className="form-group">
                     <TextField
-                      label="City"
+                      label="Thành phố"
                       variant="outlined"
                       className="w-100"
                       size="small"
@@ -283,13 +258,13 @@ fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
                 </div>
               </div>
 
-              <h6>Tiểu bang / Quận *</h6>
+              <h6>Tỉnh / Thành phố *</h6>
 
               <div className="row">
                 <div className="col-md-12">
                   <div className="form-group">
                     <TextField
-                      label="State"
+                      label="Tỉnh/Thành phố"
                       variant="outlined"
                       className="w-100"
                       size="small"
@@ -300,13 +275,13 @@ fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
                 </div>
               </div>
 
-              <h6>Mã bưu điện / ZIP *</h6>
+              <h6>Mã Bưu chính *</h6>
 
               <div className="row">
                 <div className="col-md-12">
                   <div className="form-group">
                     <TextField
-                      label="ZIP Code"
+                      label="Mã Bưu chính"
                       variant="outlined"
                       className="w-100"
                       size="small"
@@ -321,7 +296,7 @@ fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
                 <div className="col-md-6">
                   <div className="form-group">
                     <TextField
-                      label="Phone Number"
+                      label="Số điện thoại"
                       variant="outlined"
                       className="w-100"
                       size="small"
@@ -334,7 +309,7 @@ fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
                 <div className="col-md-6">
                   <div className="form-group">
                     <TextField
-                      label="Email Address"
+                      label="Email"
                       variant="outlined"
                       className="w-100"
                       size="small"
@@ -354,57 +329,34 @@ fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
                     <thead>
                       <tr>
                         <th>Sản phẩm</th>
-                        <th>Tạm tính</th>
+                        <th>Thành tiền</th>
                       </tr>
                     </thead>
-
                     <tbody>
-                      {cartData?.length !== 0 &&
-                        cartData?.map((item, index) => {
-                          return (
-                            <tr>
-                              <td>
-                                {item?.productTitle?.substr(0, 20) + "..."}{" "}
-                                <b>× {item?.quantity}</b>
-                              </td>
-
-                              <td>
-                                {item?.subTotal?.toLocaleString("en-US", {
-                                  style: "currency",
-                                  currency: "INR",
-                                })}
-                              </td>
-                            </tr>
-                          );
-                        })}
-
-                      <tr>
-                        <td>Tạm tính </td>
-
-                        <td>
-                          {(cartData?.length !== 0
-                            ? cartData
-                                ?.map(
-                                  (item) => parseInt(item.price) * item.quantity
-                                )
-                                .reduce((total, value) => total + value, 0)
-                            : 0
-                          )?.toLocaleString("en-US", {
-                            style: "currency",
-                            currency: "INR",
-                          })}
-                        </td>
-                      </tr>
+                      {cartData.map((item, index) => (
+                        <tr key={index}>
+                          <td>{item.name}</td>
+                          <td>{parseInt(item.price) * item.quantity}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
-                </div>
 
-                <Button
-                  type="submit"
-                  className="btn-blue bg-red btn-lg btn-big"
-                >
-                  <IoBagCheckOutline /> &nbsp; Thanh toán
-                </Button>
+                  <div className="total">
+                    <h6>Tổng cộng: {totalAmount}</h6>
+                  </div>
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    fullWidth
+                    size="large"
+                    startIcon={<IoBagCheckOutline />}
+                  >
+                    Đặt hàng
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
