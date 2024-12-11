@@ -14,7 +14,6 @@
   <a href="#how-to-use">Hướng Dẫn Sử Dụng</a> •
   <a href="#demo">Demo</a> •
   <a href="#credits">Tín Dụng</a> •
-  <a href="#related">Liên Quan</a> •
   <a href="#license">Giấy Phép</a>
 </p>
 
