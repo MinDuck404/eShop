@@ -12,13 +12,13 @@
 <p align="center">
   <a href="#key-features">Tính Năng Nổi Bật</a> •
   <a href="#how-to-use">Hướng Dẫn Sử Dụng</a> •
-  <a href="#download">Tải Về</a> •
+  <a href="#demo">Demo</a> •
   <a href="#credits">Tín Dụng</a> •
   <a href="#related">Liên Quan</a> •
   <a href="#license">Giấy Phép</a>
 </p>
 
-![screenshot](https://github.com/MinDuck404/eShop/blob/main/screencapture-doancn05-name-vn-2024-12-11-22_13_40.png?raw=true)
+
 
 
 ## NGHIÊN CỨU VÀ XÂY DỰNG WEBSITE THƯƠNG MẠI ĐIỆN TỬ BÁN ĐỒ CÔNG NGHỆ SỬ DỤNG NODEJS
