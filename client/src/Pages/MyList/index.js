@@ -102,8 +102,9 @@ history("/signIn");
                                                                             </div>
                                                                         </Link>
                                                                     </td>
-                                                                    <td width="15%">{item?.price}đ</td>
-
+                                                                    <td width="15%">
+                                                                        {item?.price && new Intl.NumberFormat('vi-VN').format(item.price)} đ
+                                                                    </td>
 
                                                                     <td width="10%"><span className="remove" onClick={() => removeItem(item?._id)}><IoIosClose /></span></td>
                                                                 </tr>

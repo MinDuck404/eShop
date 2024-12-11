@@ -166,6 +166,11 @@ const ProductDetails = () => {
       context.addToCart(cartFields);
     } else {
       setTabError(true);
+      context.setAlertBox({
+        open: true,
+        error: true,
+        msg: "Vui lòng chọn đầy đủ thông tin trước khi thêm vào giỏ hàng.",
+      });
     }
   };
 
@@ -406,11 +411,11 @@ const ProductDetails = () => {
                       </Button>
                     </Tooltip>
 
-                    <Tooltip title="Thêm để so sánh" placement="top">
+                    {/* <Tooltip title="Thêm để so sánh" placement="top">
                       <Button className="btn-blue btn-lg btn-big btn-circle ml-2">
                         <MdOutlineCompareArrows />
                       </Button>
-                    </Tooltip>
+                    </Tooltip> */}
                   </div>
                 </div>
               </div>
@@ -432,7 +437,7 @@ const ProductDetails = () => {
                     Thông tin sản phẩm
                   </Button>
                 </li>
-                <li className="list-inline-item">
+                {/* <li className="list-inline-item">
                   <Button
                     className={`${activeTabs === 1 && "active"}`}
                     onClick={() => {
@@ -441,7 +446,7 @@ const ProductDetails = () => {
                   >
                     Additional info
                   </Button>
-                </li>
+                </li> */}
                 <li className="list-inline-item">
                   <Button
                     className={`${activeTabs === 2 && "active"}`}
@@ -460,7 +465,7 @@ const ProductDetails = () => {
                 <div className="tabContent">{productData?.description}</div>
               )}
 
-              {activeTabs === 1 && (
+              {/* {activeTabs === 1 && (
                 <div className="tabContent">
                   <div className="table-responsive">
                     <table className="table table-bordered">
@@ -553,7 +558,7 @@ const ProductDetails = () => {
                     </table>
                   </div>
                 </div>
-              )}
+              )} */}
 
               {activeTabs === 2 && (
                 <div className="tabContent">

@@ -60,11 +60,13 @@ history("/signIn");
                                     <th>Mã đơn hàng</th>
                                     <th>Mã thanh toán</th>
                                     <th>Sản phẩm</th>
-                                    <th>Số điện thoại</th>
+                                    <th>Họ tên</th>
+                                    <th>Số điện thoại</th>              
                                     <th>Địa chỉ</th>
-                                    <th>Số lượng</th>
+                                    <th>Mã bưu chính</th>
+                                    <th>Tổng tiền</th>
                                     <th>Email</th>
-                                    <th>User Id</th>
+                                    {/* <th>User Id</th> */}
                                     <th>Trang thái đơn hàng</th>
                                     <th>Ngày đặt hàng</th>
                                 </tr>
@@ -76,17 +78,17 @@ history("/signIn");
                                         return (
                                             <>
                                                 <tr key={index}>
-<td><span className='text-blue fonmt-weight-bold'>{order?.id}</span></td>
+                                                    <td><span className='text-blue fonmt-weight-bold'>{order?.id}</span></td>
                                                     <td><span className='text-blue fonmt-weight-bold'>{order?.paymentId}</span></td>
-                                                    <td><span className='text-blue fonmt-weight-bold cursor' onClick={() => showProducts(order?._id)}>Click here to view</span>
+                                                    <td><span className='text-blue fonmt-weight-bold cursor' onClick={() => showProducts(order?._id)}>Bấm vào đây để xem</span>
                                                     </td>
                                                     <td>{order?.name}</td>
                                                     <td>{order?.phoneNumber}</td>
                                                     <td>{order?.address}</td>
                                                     <td>{order?.pincode}</td>
-                                                    <td>{order?.amount}</td>
+                                                    <td>{order?.amount && new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(order.amount)}</td>
                                                     <td>{order?.email}</td>
-                                                    <td>{order?.userid}</td>
+                                                    {/* <td>{order?.userid}</td> */}
                                                     <td>
                                                         {order?.status === "pending" ?
                                                             <span className='badge badge-danger'>{order?.status}</span> :
@@ -120,12 +122,12 @@ history("/signIn");
                     <table className='table table-striped table-bordered'>
                         <thead className='thead-light'>
                             <tr>
-                                <th>Product Id</th>
-                                <th>Product Title</th>
-                                <th>Image</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                                <th>SubTotal</th>
+                                <th>Mã sản phẩm</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Hình ảnh</th>
+                                <th>Số lượng</th>
+                                <th>Giá</th>
+                                <th>Tổng</th>
                             </tr>
                         </thead>
 
@@ -139,13 +141,24 @@ history("/signIn");
                                                 {item?.productTitle?.substr(0,30)+'...'}
                                             </span></td>
                                             <td>
-                                                <div className='img'>
-                                                    <img src={item?.image} />
-                                                </div>
+                                            <div >
+                                                <img 
+                                                    src={item?.image} 
+                                                    alt="product" 
+                                                    style={{
+                                                    maxWidth: "100%",     
+                                                    height: "auto",      
+                                                    maxHeight: "100px",  
+                                                    objectFit: "contain",  
+                                                    display: "block"       
+                                                    }} 
+                                                />
+                                            </div>
+
                                             </td>
                                             <td>{item?.quantity}</td>
-                                            <td>{item?.price}</td>
-                                            <td>{item?.subTotal}</td>
+                                            <td>{item?.price && new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}</td>
+                                            <td>{item?.subTotal && new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.subTotal)}</td>
                                         </tr>
                                     )
                                 })

@@ -53,7 +53,7 @@ const columns = [
   },
   {
     id: "name",
-    label: "Tên sản phẩm",
+    label: "Tên khách hàng",
     minWidth: 130,
   },
   {
@@ -73,7 +73,7 @@ const columns = [
   },
   {
     id: "totalAmount",
-    label: "Số lượng",
+    label: "Giá tiền",
     minWidth: 120,
   },
   {
@@ -282,7 +282,7 @@ const Orders = () => {
                             </TableCell>
                             <TableCell>{order?.pincode}</TableCell>
                             <TableCell style={{ minWidth: columns.minWidth }}>
-                              <MdOutlineCurrencyRupee /> {order?.amount}
+                              {order?.amount && new Intl.NumberFormat('vi-VN').format(order.amount)} đ
                             </TableCell>
                             <TableCell style={{ minWidth: columns.minWidth }}>
                               <MdOutlineEmail /> {order?.email}
@@ -368,13 +368,28 @@ const Orders = () => {
                         <span>{item?.productTitle?.substr(0, 30) + "..."}</span>
                       </td>
                       <td>
-                        <div className="img">
-                          <img src={item?.image} />
-                        </div>
+                      <div>
+                        <img 
+                          src={item?.image} 
+                          alt="product" 
+                          style={{
+                            maxWidth: "100%",     
+                            height: "auto",        
+                            maxHeight: "100px",    
+                            objectFit: "contain", 
+                            display: "block"      
+                          }} 
+                        />
+                      </div>
+
                       </td>
                       <td>{item?.quantity}</td>
-                      <td>{item?.price}</td>
-                      <td>{item?.subTotal}</td>
+                      <td>
+                        {item?.price && new Intl.NumberFormat('vi-VN').format(item.price)} đ
+                      </td>
+                      <td>
+                        {item?.subTotal && new Intl.NumberFormat('vi-VN').format(item.subTotal)} đ
+                      </td>
                     </tr>
                   );
                 })}

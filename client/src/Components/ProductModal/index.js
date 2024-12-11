@@ -98,6 +98,11 @@ const ProductModal = (props) => {
             context.addToCart(cartFields);
         } else {
             setTabError(true);
+            context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "Vui lòng chọn đầy đủ thông tin trước khi thêm vào giỏ hàng.",
+              });
         }
 
     }
@@ -148,7 +153,7 @@ const ProductModal = (props) => {
                 <h4 class="mb-1 font-weight-bold pr-5">{props?.data?.name}</h4>
                 <div className='d-flex align-items-center'>
                     <div className='d-flex align-items-center mr-4'>
-                        <span>Brands:</span>
+                        <span>Hiệu:</span>
                         <span className='ml-2'><b>{props?.data?.brand}</b> </span>
                     </div>
 
@@ -166,13 +171,18 @@ const ProductModal = (props) => {
 
                     <div className='col-md-7'>
                         <div className='d-flex info align-items-center mb-3'>
-                            <span className='oldPrice lg mr-2'>Rs: {props?.data?.oldPrice}</span>
-                            <span className='netPrice text-danger lg'>Rs: {props?.data?.price}</span>
+                            <span className='oldPrice lg mr-2'>
+                                {props?.data?.oldPrice && new Intl.NumberFormat('vi-VN').format(props.data.oldPrice)} đ
+                            </span>
+                            <span className='netPrice text-danger lg'>
+                                {props?.data?.price && new Intl.NumberFormat('vi-VN').format(props.data.price)} đ
+                            </span>
                         </div>
 
-                        <span className="badge bg-success">IN STOCK</span>
 
-                        <p className='mt-3'>Rs: {props?.data?.description}</p>
+                        <span className="badge bg-success">Còn hàng</span>
+
+                        <p className='mt-3'>{props?.data?.description}</p>
 
 
 
@@ -236,7 +246,7 @@ const ProductModal = (props) => {
 
                             <Button className='btn-blue bg-red btn-lg btn-big btn-round ml-3' onClick={() => addtoCart()}><IoCartSharp />
                                 {
-                                    context.addingInCart === true ? "adding..." : " Add to cart"
+                                    context.addingInCart === true ? "Đang thêm..." : " Thêm vào giỏ"
                                 }
                             </Button>
                         </div>
@@ -249,20 +259,20 @@ const ProductModal = (props) => {
                                     isAddedToMyList === true ?
                                     <>
                                         <FaHeart className="text-danger" />
-                                        &nbsp; ADDED TO WISHLIST
+                                        &nbsp; Đã thêm vào Wishlist
                                     </>
 
                                     :
 
                                 <>
                                     <IoIosHeartEmpty />
-                                    &nbsp; ADD TO WISHLIST
+                                    &nbsp; Thêm vào Wishlist
                                 </>
                                 }
 
 
                             </Button>
-                            <Button className='btn-round btn-sml ml-3' variant="outlined"><MdOutlineCompareArrows /> &nbsp; COMPARE</Button>
+                            {/* <Button className='btn-round btn-sml ml-3' variant="outlined"><MdOutlineCompareArrows /> &nbsp; COMPARE</Button> */}
                         </div>
 
                     </div>

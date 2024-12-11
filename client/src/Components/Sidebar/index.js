@@ -16,7 +16,7 @@ import ProductItem from "../../Components/ProductItem";
 import { fetchDataFromApi } from "../../utils/api";
 
 const Sidebar = (props) => {
-  const [value, setValue] = useState([100, 100000]);
+  const [value, setValue] = useState([1000, 50000000]);
   const [value2, setValue2] = useState(0);
 
   const [subCatId, setSubCatId] = useState("");
@@ -114,19 +114,20 @@ const Sidebar = (props) => {
           <RangeSlider
             value={value}
             onInput={setValue}
-            min={100}
-            max={60000}
+            min={1000}
+            max={50000000}
             step={5}
           />
 
-          <div className="d-flex pt-2 pb-2 priceRange">
-            <span>
-              From: <strong className="text-dark">Rs: {value[0]}</strong>
-            </span>
-            <span className="ml-auto">
-              From: <strong className="text-dark">Rs: {value[1]}</strong>
-            </span>
-          </div>
+            <div className="d-flex pt-2 pb-2 priceRange">
+              <span>
+                From: <strong className="text-dark">{new Intl.NumberFormat('vi-VN').format(value[0])} ₫</strong>
+              </span>
+              <span className="ml-auto">
+                To: <strong className="text-dark">{new Intl.NumberFormat('vi-VN').format(value[1])} ₫</strong>
+              </span>
+            </div>
+
         </div>
 
         <div className="filterBox">

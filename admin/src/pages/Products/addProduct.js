@@ -59,7 +59,9 @@ const MenuProps = {
 const ProductUpload = () => {
   const [categoryVal, setcategoryVal] = useState("");
   const [subCatVal, setSubCatVal] = useState("");
+  const [currentImageURL, setCurrentImageURL] = useState("");
 
+  
   const [productRams, setProductRAMS] = useState([]);
   const [productWeight, setProductWeight] = useState([]);
   const [productSize, setProductSize] = useState([]);
@@ -73,7 +75,6 @@ const ProductUpload = () => {
 
   const [catData, setCatData] = useState([]);
   const [subCatData, setSubCatData] = useState([]);
-
   const [isLoading, setIsLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
 
@@ -105,7 +106,7 @@ const ProductUpload = () => {
     productRam: [],
     size: [],
     productWeight: [],
-    location: [],
+    images: [],
   });
 
   const productImages = useRef();
@@ -267,85 +268,73 @@ const ProductUpload = () => {
   let img_arr = [];
   let uniqueArray = [];
 
-  const onChangeFile = async (e, apiEndPoint) => {
+  const onChangeFile = async (e) => {
     try {
-      const files = e.target.files;
-      setUploading(true);
+        const files = e.target.files;
+        const imageUrls = [];
 
-      //const fd = new FormData();
-      for (var i = 0; i < files.length; i++) {
-        // Validate file type
-        if (
-          files[i] &&
-          (files[i].type === "image/jpeg" ||
-            files[i].type === "image/jpg" ||
-            files[i].type === "image/png" ||
-            files[i].type === "image/webp")
-        ) {
-          const file = files[i];
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            
+            // Kiểm tra loại file
+            if (
+                file &&
+                (file.type === "image/jpeg" ||
+                 file.type === "image/png" ||
+                 file.type === "image/webp")
+            ) {
+                // Upload lên server cục bộ hoặc lưu file vào thư mục tĩnh
+                const formData = new FormData();
+                formData.append("image", file);
 
-          formdata.append(`images`, file);
-        } else {
-          context.setAlertBox({
-            open: true,
-            error: true,
-            msg: "Vui lòng chọn một tệp hình ảnh hợp lệ ở định dạng JPG hoặc PNG.",
-          });
+                const response = await fetch("/api/uploadImage", {
+                    method: "POST",
+                    body: formData,
+                });
 
-          setUploading(false);
-          return false;
+                const result = await response.json();
+                if (result.url) {
+                    imageUrls.push(result.url);
+                }
+            } else {
+                context.setAlertBox({
+                    open: true,
+                    error: true,
+                    msg: "Vui lòng chọn file JPG hoặc PNG.",
+                });
+                return;
+            }
         }
-      }
+
+        // Cập nhật danh sách URL vào state và formFields
+        setPreviews([...previews, ...imageUrls]);
+        setFormFields({ ...formFields, images: [...formFields.images, ...imageUrls] });
     } catch (error) {
-      console.log(error);
+        console.error("Lỗi khi tải ảnh lên:", error);
     }
+};
 
-    uploadImage(apiEndPoint, formdata).then((res) => {
-      fetchDataFromApi("/api/imageUpload").then((response) => {
-        if (
-          response !== undefined &&
-          response !== null &&
-          response !== "" &&
-          response.length !== 0
-        ) {
-          response.length !== 0 &&
-            response.map((item) => {
-              item?.images.length !== 0 &&
-                item?.images?.map((img) => {
-                  img_arr.push(img);
-                });
-            });
-
-          uniqueArray = img_arr.filter(
-            (item, index) => img_arr.indexOf(item) === index
-          );
-          const appendedArray = [...previews, ...uniqueArray];
-
-          setPreviews(appendedArray);
-
-          setTimeout(() => {
-            setUploading(false);
-            img_arr = [];
-            uniqueArray=[];
-            fetchDataFromApi("/api/imageUpload").then((res) => {
-              res?.map((item) => {
-                item?.images?.map((img) => {
-                  deleteImages(`/api/products/deleteImage?img=${img}`).then((res) => {
-                    deleteData("/api/imageUpload/deleteAllImages");
-                  });
-                });
-              });
-            });
-            context.setAlertBox({
-              open: true,
-              error: false,
-              msg: "Ảnh đã được tải lên!",
-            });
-          }, 500);
-        }
-      });
-    });
+    // Hàm thêm URL ảnh
+    const addImageURL = () => {
+      if (currentImageURL.trim()) {
+        // Cập nhật mảng images trong formFields
+        setFormFields((prev) => ({
+          ...prev,
+          images: [...prev.images, currentImageURL.trim()], // Thêm URL vào mảng images
+        }));
+        setCurrentImageURL(""); // Reset input URL sau khi thêm
+      }
+    };
+    
+    
+   // Hàm xóa URL ảnh
+   const removeImageURL = (index) => {
+    setFormFields((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index),
+    }));
   };
+  
 
   const removeImg = async (index, imgUrl) => {
     const imgIndex = previews.indexOf(imgUrl);
@@ -391,9 +380,10 @@ const ProductUpload = () => {
 
     formFields.location = selectedLocation;
 
-    formFields.images = appendedArray;
+    formdata.append("images", JSON.stringify(formFields.images));
 
-    console.log(formFields);
+
+
 
     if (formFields.name === "") {
       context.setAlertBox({
@@ -494,17 +484,17 @@ const ProductUpload = () => {
       return false;
     }
 
-    if (previews.length === 0) {
-      context.setAlertBox({
-        open: true,
-        msg: "Vui lòng chọn hình ảnh",
-        error: true,
-      });
-      return false;
-    }
+    // if (previews.length === 0) {
+    //   context.setAlertBox({
+    //     open: true,
+    //     msg: "Vui lòng chọn hình ảnh",
+    //     error: true,
+    //   });
+    //   return false;
+    // }
 
     setIsLoading(true);
-
+    console.log("Dữ liệu gửi đi:", formFields); // Kiểm tra dữ liệu trước khi gửi
     postData("/api/products/create", formFields).then((res) => {
       context.setAlertBox({
         open: true,
@@ -828,75 +818,46 @@ const ProductUpload = () => {
             </div>
           </div>
 
-          <div className="card p-4 mt-0">
-            <div className="imagesUploadSec">
-              <h5 class="mb-4">ĐĂNG TẢI</h5>
-
-              <div className="imgUploadBox d-flex align-items-center">
-                {previews?.length !== 0 &&
-                  previews?.map((img, index) => {
-                    return (
-                      <div className="uploadBox" key={index}>
-                        <span
-                          className="remove"
-                          onClick={() => removeImg(index, img)}
-                        >
-                          <IoCloseSharp />
-                        </span>
-                        <div className="box">
-                          <LazyLoadImage
-                            alt={"image"}
-                            effect="blur"
-                            className="w-100"
-                            src={img}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
-
-                <div className="uploadBox">
-                  {uploading === true ? (
-                    <div className="progressBar text-center d-flex align-items-center justify-content-center flex-column">
-                      <CircularProgress />
-                      <span>Đang tải lên...</span>
-                    </div>
-                  ) : (
-                    <>
-                      <input
-                        type="file"
-                        multiple
-                        onChange={(e) =>
-                          onChangeFile(e, "/api/products/upload")
-                        }
-                        name="images"
-                      />
-                      <div className="info">
-                        <FaRegImages />
-                        <h5>Ảnh đã tải lên</h5>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              <br />
-
-              <Button
-                type="submit"
-                disabled={uploading === true ? true : false}
-                className="btn-blue btn-lg btn-big w-100"
+          <div className="form-group">
+        <h6>Thêm URL Ảnh</h6>
+        <div className="d-flex">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Nhập URL của ảnh"
+            value={currentImageURL}
+            onChange={(e) => setCurrentImageURL(e.target.value)}
+          />
+          <button
+            type="button"
+            className="btn btn-primary ml-2"
+            onClick={addImageURL}
+          >
+            Thêm
+          </button>
+        </div>
+      </div>
+      <div className="form-group">
+        <h6>Danh sách URL Ảnh</h6>
+        <ul>
+          {formFields.images.map((url, index) => (
+            <li key={index} className="d-flex align-items-center">
+              <img style={{ maxWidth: "150px" }} src={url}></img> {/* Hiển thị URL ảnh */}
+              <button
+                type="button"
+                className="btn btn-danger btn-sm ml-2"
+                onClick={() => removeImageURL(index)}
               >
-                <FaCloudUploadAlt /> &nbsp;{" "}
-                {isLoading === true ? (
-                  <CircularProgress color="inherit" className="loader" />
-                ) : (
-                  "TẢI LÊN VÀ XEM"
-                )}{" "}
-              </Button>
-            </div>
-          </div>
-        </form>
+                Xóa
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <button type="submit" className="btn btn-success">
+        Tạo Sản Phẩm
+      </button>
+    </form>
       </div>
     </>
   );

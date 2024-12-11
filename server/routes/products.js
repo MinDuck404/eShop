@@ -470,23 +470,22 @@ router.post(`/recentlyViewd`, async (req, res) => {
 router.post(`/create`, async (req, res) => {
   const category = await Category.findById(req.body.category);
   if (!category) {
-    return res.status(404).send("invalid Category!");
+    return res.status(404).send("Invalid Category!");
   }
 
-  const images_Array = [];
-  const uploadedImages = await ImageUpload.find();
+  // Lấy danh sách URL ảnh từ body của request
+  const images_Array = req.body.images;
 
-  const images_Arr = uploadedImages?.map((item) => {
-    item.images?.map((image) => {
-      images_Array.push(image);
-      console.log(image);
-    });
-  });
+  // Kiểm tra nếu `images_Array` không hợp lệ
+  if (!images_Array || !Array.isArray(images_Array) || images_Array.length === 0) {
+    return res.status(400).send("Images are required!");
+  }
 
-  product = new Product({
+  // Tạo sản phẩm mới với danh sách URL ảnh từ request
+  let product = new Product({
     name: req.body.name,
     description: req.body.description,
-    images: images_Array,
+    images: images_Array, // Sử dụng trực tiếp từ req.body
     brand: req.body.brand,
     price: req.body.price,
     oldPrice: req.body.oldPrice,
@@ -506,19 +505,17 @@ router.post(`/create`, async (req, res) => {
     location: req.body.location !== "" ? req.body.location : "All",
   });
 
-  product = await product.save();
-
-  if (!product) {
+  try {
+    product = await product.save();
+    res.status(201).json(product);
+  } catch (err) {
     res.status(500).json({
-      error: err,
+      error: err.message,
       success: false,
     });
   }
-
-  imagesArr = [];
-
-  res.status(201).json(product);
 });
+
 
 router.get("/:id", async (req, res) => {
   productEditId = req.params.id;
