@@ -819,45 +819,45 @@ const ProductUpload = () => {
           </div>
 
           <div className="form-group">
-        <h6>Thêm URL Ảnh</h6>
-        <div className="d-flex">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Nhập URL của ảnh"
-            value={currentImageURL}
-            onChange={(e) => setCurrentImageURL(e.target.value)}
-          />
-          <button
-            type="button"
-            className="btn btn-primary ml-2"
-            onClick={addImageURL}
-          >
-            Thêm
-          </button>
-        </div>
-      </div>
-      <div className="form-group">
-        <h6>Danh sách URL Ảnh</h6>
-        <ul>
-          {formFields.images.map((url, index) => (
-            <li key={index} className="d-flex align-items-center">
-              <img style={{ maxWidth: "150px" }} src={url}></img> {/* Hiển thị URL ảnh */}
+            <h6>Thêm URL Ảnh</h6>
+            <div className="d-flex">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Nhập URL của ảnh"
+                value={currentImageURL}
+                onChange={(e) => setCurrentImageURL(e.target.value)}
+              />
               <button
                 type="button"
-                className="btn btn-danger btn-sm ml-2"
-                onClick={() => removeImageURL(index)}
+                className="btn btn-primary ml-2"
+                onClick={addImageURL}
               >
-                Xóa
+                Thêm
               </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <button type="submit" className="btn btn-success">
-        Tạo Sản Phẩm
-      </button>
-    </form>
+            </div>
+          </div>
+          <div className="form-group">
+            <h6>Danh sách URL Ảnh</h6>
+            <ul>
+              {formFields.images.map((url, index) => (
+                <li key={index} className="d-flex align-items-center">
+                  <img style={{ maxWidth: "150px" }} src={url}></img> {/* Hiển thị URL ảnh */}
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm ml-2"
+                    onClick={() => removeImageURL(index)}
+                  >
+                    Xóa
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <button type="submit" className="btn btn-success">
+            Tạo Sản Phẩm
+          </button>
+        </form>
       </div>
     </>
   );

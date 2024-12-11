@@ -202,41 +202,27 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/create", async (req, res) => {
-  let catObj = {};
-
-  if (imagesArr.length > 0) {
-    catObj = {
+  try {
+    const category = new Category({
       name: req.body.name,
-      images: imagesArr,
+      images: req.body.images, // Directly use the image URLs from req.body
       color: req.body.color,
       slug: req.body.name,
-    };
-  } else {
-    catObj = {
-      name: req.body.name,
-      slug: req.body.name,
-    };
-  }
+      parentId: req.body.parentId, // Include parentId if applicable
+    });
 
-  if (req.body.parentId) {
-    catObj.parentId = req.body.parentId;
-  }
-
-  let category = new Category(catObj);
-
-  if (!category) {
+    const savedCategory = await category.save();
+    res.status(201).json(savedCategory);
+  } catch (err) {
+    console.error("Error saving category:", err);
     res.status(500).json({
-      error: err,
+      error: err.message,
       success: false,
     });
   }
-
-  category = await category.save();
-
-  imagesArr = [];
-
-  res.status(201).json(category);
 });
+
+
 
 router.delete("/deleteImage", async (req, res) => {
   const imgUrl = req.query.img;
