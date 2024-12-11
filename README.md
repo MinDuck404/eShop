@@ -45,7 +45,7 @@ Nhóm 05 - Khoa Công Nghệ Thông Tin
 Học viện Hàng không Việt Nam  
 
 #FITVAA
-<a id="how-to-use">
+<a id="how-to-use"><a/>
 ## Hướng Dẫn Sử Dụng
 
 Để sao chép và chạy ứng dụng này, bạn cần cài đặt [Git](https://git-scm.com), [Node.js](https://nodejs.org/en/download/) (đi kèm [npm](http://npmjs.com)), và [MongoDB](https://www.mongodb.com/) trên máy tính của bạn. Từ dòng lệnh:
@@ -119,7 +119,7 @@ $ npm start
 
 > **Lưu ý**
 > Đảm bảo rằng MongoDB đang chạy cục bộ hoặc cung cấp một connection string hợp lệ.
-<a id="demo">
+<a id="demo"><a/>
 ## Demo
 
 Bạn có thể [xem trực tiếp tại đây](https://doancn05.name.vn/) phiên bản mới nhất của eShop đã triển khai.
@@ -135,7 +135,7 @@ Bạn có thể [xem trực tiếp tại đây](https://doancn05.name.vn/) phiê
 - [Bootstrap](https://getbootstrap.com/)
 
 
- <a id="#icense">Giấy Phép</a>
+ <a id="icense">Giấy Phép</a>
 MIT
 
 ---
