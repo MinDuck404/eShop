@@ -23,7 +23,7 @@
 ## NGHIÊN CỨU VÀ XÂY DỰNG WEBSITE THƯƠNG MẠI ĐIỆN TỬ BÁN ĐỒ CÔNG NGHỆ SỬ DỤNG NODEJS
 
 ### Giới thiệu
-<a id="key-features">
+<a id="key-features"><a/>
 🎯 **Mục tiêu dự án**
 
 Xây dựng một website thương mại điện tử chuyên bán đồ công nghệ, mang đến trải nghiệm mua sắm trực tuyến nhanh chóng, tiện lợi và bảo mật. Dự án được phát triển sử dụng Node.js làm nền tảng chính, tích hợp các công nghệ hiện đại để đảm bảo hiệu suất và tính ổn định.
