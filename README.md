@@ -23,7 +23,7 @@
 ## NGHIÊN CỨU VÀ XÂY DỰNG WEBSITE THƯƠNG MẠI ĐIỆN TỬ BÁN ĐỒ CÔNG NGHỆ SỬ DỤNG NODEJS
 
 ### Giới thiệu
-<a id="#key-features">
+<a id="key-features">
 🎯 **Mục tiêu dự án**
 
 Xây dựng một website thương mại điện tử chuyên bán đồ công nghệ, mang đến trải nghiệm mua sắm trực tuyến nhanh chóng, tiện lợi và bảo mật. Dự án được phát triển sử dụng Node.js làm nền tảng chính, tích hợp các công nghệ hiện đại để đảm bảo hiệu suất và tính ổn định.
@@ -45,7 +45,7 @@ Nhóm 05 - Khoa Công Nghệ Thông Tin
 Học viện Hàng không Việt Nam  
 
 #FITVAA
-<a id="#how-to-use">
+<a id="how-to-use">
 ## Hướng Dẫn Sử Dụng
 
 Để sao chép và chạy ứng dụng này, bạn cần cài đặt [Git](https://git-scm.com), [Node.js](https://nodejs.org/en/download/) (đi kèm [npm](http://npmjs.com)), và [MongoDB](https://www.mongodb.com/) trên máy tính của bạn. Từ dòng lệnh:
@@ -119,11 +119,11 @@ $ npm start
 
 > **Lưu ý**
 > Đảm bảo rằng MongoDB đang chạy cục bộ hoặc cung cấp một connection string hợp lệ.
-<a id="#demo">
+<a id="demo">
 ## Demo
 
-Bạn có thể [xem trực tiếp tại](https://doancn05.name.vn/) phiên bản mới nhất của eShop để triển khai.
-<a id="#credits"><a/>
+Bạn có thể [xem trực tiếp tại đây](https://doancn05.name.vn/) phiên bản mới nhất của eShop đã triển khai.
+<a id="credits"><a/>
 ## Tín Dụng
 
 Ứng dụng này sử dụng các gói nguồn mở sau:
@@ -135,7 +135,7 @@ Bạn có thể [xem trực tiếp tại](https://doancn05.name.vn/) phiên bả
 - [Bootstrap](https://getbootstrap.com/)
 
 
- <a id="#license">Giấy Phép</a>
+ <a id="#icense">Giấy Phép</a>
 MIT
 
 ---
