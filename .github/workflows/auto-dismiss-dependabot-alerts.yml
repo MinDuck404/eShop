@@ -1,0 +1,82 @@
+name: Auto-dismiss unfixable Dependabot alerts
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # Run daily at 3:00 AM UTC
+  workflow_dispatch:       # Allow manual trigger
+
+permissions:
+  contents: read
+
+jobs:
+  auto-dismiss:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dismiss alerts for packages blocked by react-scripts
+        uses: actions/github-script@v7
+        env:
+          SECURITY_TOKEN: ${{ secrets.SECURITY_TOKEN }}
+        with:
+          script: |
+            // Packages that cannot be fixed because they are pinned by react-scripts@5.0.1
+            const BLOCKED_PACKAGES = [
+              'nth-check',
+              '@babel/runtime',
+              'svgo',
+              'underscore',
+            ];
+
+            const DISMISS_REASON = 'tolerable_risk';
+            const DISMISS_COMMENT =
+              'Blocked by react-scripts@5.0.1 — no patched version available upstream. ' +
+              'Auto-dismissed because the vulnerability cannot be resolved until ' +
+              'react-scripts releases a fix or the project migrates away from it.';
+
+            const owner = context.repo.owner;
+            const repo  = context.repo.repo;
+            const token = process.env.SECURITY_TOKEN;
+
+            if (!token) {
+              core.setFailed('SECURITY_TOKEN secret is not set. Please add a PAT with security_events scope.');
+              return;
+            }
+
+            const { Octokit } = require('@octokit/rest');
+            const octokit = new Octokit({ auth: token });
+
+            // Fetch all open Dependabot alerts (paginated)
+            let alerts = [];
+            let page = 1;
+            while (true) {
+              const { data } = await octokit.request(
+                'GET /repos/{owner}/{repo}/dependabot/alerts',
+                { owner, repo, state: 'open', per_page: 100, page }
+              );
+              if (data.length === 0) break;
+              alerts = alerts.concat(data);
+              page++;
+            }
+
+            core.info(`Found ${alerts.length} open Dependabot alert(s).`);
+
+            let dismissed = 0;
+            for (const alert of alerts) {
+              const pkgName = alert.security_vulnerability?.package?.name ?? '';
+              if (BLOCKED_PACKAGES.includes(pkgName)) {
+                core.info(`Dismissing alert #${alert.number} for package "${pkgName}"`);
+                await octokit.request(
+                  'PATCH /repos/{owner}/{repo}/dependabot/alerts/{alert_number}',
+                  {
+                    owner,
+                    repo,
+                    alert_number: alert.number,
+                    state: 'dismissed',
+                    dismissed_reason: DISMISS_REASON,
+                    dismissed_comment: DISMISS_COMMENT,
+                  }
+                );
+                dismissed++;
+              }
+            }
+
+            core.info(`Done. Dismissed ${dismissed} alert(s).`);
