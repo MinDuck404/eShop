@@ -4,7 +4,7 @@ import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
 
 import InnerImageZoom from 'react-inner-image-zoom';
-import 'react-inner-image-zoom/lib/InnerImageZoom/styles.css';
+import 'react-inner-image-zoom/lib/styles.min.css';
 import { useRef, useState } from 'react';
 
 const ProductZoom = (props) => {
