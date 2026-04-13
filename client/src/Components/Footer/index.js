@@ -4,7 +4,7 @@ import { CiBadgeDollar } from "react-icons/ci";
 import { FaFacebookF, FaInstagram, FaTwitter } from "react-icons/fa";
 import { FaComputer } from "react-icons/fa6";
 import { IoMailOutline } from "react-icons/io5";
-import { TbDiscount2, TbTruckDelivery } from "react-icons/tb";
+import { TbDiscount, TbTruckDelivery } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import newsLetterImg from "../../assets/images/newsletter.png";
 
@@ -59,7 +59,7 @@ const Footer = () => {
 
             <div className="col d-flex align-items-center">
               <span>
-                <TbDiscount2 />
+                <TbDiscount />
               </span>
               <span className="ml-2">Siêu Giảm Giá Mỗi Tháng</span>
             </div>
