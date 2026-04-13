@@ -42,13 +42,13 @@ jobs:
             }
 
             const { Octokit } = require('@octokit/rest');
-            const octokit = new Octokit({ auth: token });
+            const client = new Octokit({ auth: token });
 
             // Fetch all open Dependabot alerts (paginated)
             let alerts = [];
             let page = 1;
             while (true) {
-              const { data } = await octokit.request(
+              const { data } = await client.request(
                 'GET /repos/{owner}/{repo}/dependabot/alerts',
                 { owner, repo, state: 'open', per_page: 100, page }
               );
@@ -64,7 +64,7 @@ jobs:
               const pkgName = alert.security_vulnerability?.package?.name ?? '';
               if (BLOCKED_PACKAGES.includes(pkgName)) {
                 core.info(`Dismissing alert #${alert.number} for package "${pkgName}"`);
-                await octokit.request(
+                await client.request(
                   'PATCH /repos/{owner}/{repo}/dependabot/alerts/{alert_number}',
                   {
                     owner,
