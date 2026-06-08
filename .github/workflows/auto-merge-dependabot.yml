@@ -1,7 +1,7 @@
-name: Auto-merge Dependabot PRs
+name: Auto-merge Dependabot PRs (disabled)
 
 on:
-  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   auto-merge:
+    if: false
     runs-on: ubuntu-latest
     if: github.actor == 'dependabot[bot]'
     steps:
