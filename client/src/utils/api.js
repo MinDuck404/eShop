@@ -13,11 +13,16 @@ const params={
 
 export const fetchDataFromApi = async (url) => {
     try {
+        if (!process.env.REACT_APP_API_URL) {
+            console.warn("REACT_APP_API_URL is not set; skipping request to " + url);
+            return [];
+        }
         const { data } = await axios.get(process.env.REACT_APP_API_URL + url, params)
-        return data;
+        // Guard against non-JSON responses (e.g. an HTML page) so callers never crash on them
+        return data !== null && typeof data === "object" ? data : [];
     } catch (error) {
         console.log(error);
-        return error;
+        return [];
     }
 }
 
