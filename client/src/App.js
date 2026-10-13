@@ -75,13 +75,13 @@ function App() {
     getCountry("https://countriesnow.space/api/v0.1/countries/");
 
     fetchDataFromApi("/api/category").then((res) => {
-      setCategoryData(res.categoryList);
+      setCategoryData(Array.isArray(res?.categoryList) ? res.categoryList : []);
 
       const subCatArr = [];
 
-      res.categoryList?.length !== 0 &&
-        res.categoryList?.map((cat, index) => {
-          if (cat?.children.length !== 0) {
+      res?.categoryList?.length !== 0 &&
+        res?.categoryList?.map?.((cat, index) => {
+          if (cat?.children?.length) {
             cat?.children?.map((subCat) => {
               subCatArr.push(subCat);
             });
@@ -140,8 +140,8 @@ function App() {
 
   const getCountry = async (url) => {
     const responsive = await axios.get(url).then((res) => {
-      setCountryList(res.data.data);
-    });
+      setCountryList(Array.isArray(res?.data?.data) ? res.data.data : []);
+    }).catch((error) => console.log(error));
   };
 
   const handleClose = (event, reason) => {
