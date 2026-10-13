@@ -1,16 +1,15 @@
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MyContext } from "../../App";
 import GoogleImg from "../../assets/images/googleImg.png";
 import Logo from "../../assets/images/logo.jpg";
-import { firebaseApp } from "../../firebase";
+import { getFirebaseAuth } from "../../firebase";
 import { editData, postData } from "../../utils/api";
 
-const auth = getAuth(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
 
 const SignIn = () => {
@@ -132,6 +131,15 @@ const SignIn = () => {
   };
 
   const signInWithGoogle = () => {
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      context.setAlertBox({
+        open: true,
+        error: true,
+        msg: "Đăng nhập Google hiện chưa khả dụng.",
+      });
+      return;
+    }
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);

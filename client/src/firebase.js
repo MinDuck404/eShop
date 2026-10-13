@@ -1,7 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -15,3 +14,15 @@ const firebaseConfig = {
 
 // Initialize Firebase
 export const firebaseApp = initializeApp(firebaseConfig);
+
+// Firebase throws (auth/invalid-api-key) as soon as getAuth() runs without a key,
+// which would crash the whole app. Only create Auth when the key is configured.
+let auth = null;
+export const getFirebaseAuth = () => {
+  if (!firebaseConfig.apiKey) {
+    console.error("Firebase is not configured: REACT_APP_FIREBASE_API_KEY is missing.");
+    return null;
+  }
+  if (!auth) auth = getAuth(firebaseApp);
+  return auth;
+};

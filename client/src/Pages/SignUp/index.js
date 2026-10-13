@@ -10,10 +10,9 @@ import { useNavigate } from "react-router-dom";
 import GoogleImg from "../../assets/images/googleImg.png";
 import { postData } from "../../utils/api";
 
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { firebaseApp } from "../../firebase";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getFirebaseAuth } from "../../firebase";
 
-const auth = getAuth(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
 
 const SignUp = () => {
@@ -116,6 +115,15 @@ const SignUp = () => {
   
 
   const signInWithGoogle = () => {
+    const auth = getFirebaseAuth();
+    if (!auth) {
+      context.setAlertBox({
+        open: true,
+        error: true,
+        msg: "Đăng nhập Google hiện chưa khả dụng.",
+      });
+      return;
+    }
     signInWithPopup(auth, googleProvider)
       .then((result) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
